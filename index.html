@@ -1317,9 +1317,21 @@
       mostrarResultado('loading-inline');
       google.script.run
         .withSuccessHandler(payload => {
-           dadosChamadaGeral = payload.alunos.map(a => ({ ...a, status: '•', faltasIniciais: a.faltas, faltasAtuais: a.faltas }));
-           dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
            window.diasChamada = payload.datas || [];
+           const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5).trim();
+           const colIdx = window.diasChamada.indexOf(dataCurtaLocal);
+
+           dadosChamadaGeral = payload.alunos.map(a => {
+             let statusExistente = (colIdx !== -1 && a.historico && a.historico[colIdx]) ? String(a.historico[colIdx]).trim().toUpperCase() : '';
+             let statusInicial = (statusExistente === 'F') ? 'F' : '•';
+             let faltasIniciais = a.faltas;
+             if (statusExistente === 'F') {
+               faltasIniciais = a.faltas - 1;
+             }
+             return { ...a, status: statusInicial, faltasIniciais: faltasIniciais, faltasAtuais: a.faltas };
+           });
+
+           dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
            mostrarResultado('tela-chamada');
            alteracoesNaoSalvas = true;
 
@@ -1332,6 +1344,9 @@
            }
 
            renderizarListaChamada();
+
+           const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
+           document.getElementById('toggle-todos').checked = alunosAtivos.length > 0 && alunosAtivos.every(a => a.status === '•');
         })
         .withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
         .getDadosChamada(state.turmaId, mesExtenso, dataFormatada);
