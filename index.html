@@ -752,54 +752,56 @@
 
   <script>
     // =========================================================================
-    // PONTE DE ADAPTAÇÃO PARA DEPLOY NO GITHUB PAGES
+    // PONTE DE ADAPTAÇÃO HÍBRIDA PARA DEPLOY NO GITHUB PAGES OU GAS
     // =========================================================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxcq-C4aB4-8n7iawvN2kvCdj3lRMEtH1uKP80_66gYtCNKnL4xbNXmx6840H6ldTxfNw/exec"; // Cole aqui a URL gerada no Google Apps Script
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxcq-C4aB4-8n7iawvN2kvCdj3lRMEtH1uKP80_66gYtCNKnL4xbNXmx6840H6ldTxfNw/exec";
 
     if (typeof google === 'undefined') { window.google = {}; }
     if (!google.script) { google.script = {}; }
 
-    function criarGasRunner() {
-      let successCb = () => {};
-      let failureCb = () => {};
+    if (!google.script.run) {
+      function criarGasRunner() {
+        let successCb = () => {};
+        let failureCb = () => {};
 
-      const runner = {
-        withSuccessHandler(fn) {
-          successCb = fn;
-          return runner;
-        },
-        withFailureHandler(fn) {
-          failureCb = fn;
-          return runner;
-        }
-      };
+        const runner = {
+          withSuccessHandler(fn) {
+            successCb = fn;
+            return runner;
+          },
+          withFailureHandler(fn) {
+            failureCb = fn;
+            return runner;
+          }
+        };
 
-      return new Proxy(runner, {
-        get(target, prop) {
-          if (prop in target) { return target[prop]; }
-          return function(...args) {
-            fetch(GAS_WEB_APP_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ action: prop, args: args })
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.status === 'error') {
-                failureCb(new Error(data.message));
-              } else {
-                successCb(data.result);
-              }
-            })
-            .catch(err => failureCb(err));
-          };
-        }
+        return new Proxy(runner, {
+          get(target, prop) {
+            if (prop in target) { return target[prop]; }
+            return function(...args) {
+              fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: prop, args: args })
+              })
+              .then(res => res.json())
+              .then(data => {
+                if (data.status === 'error') {
+                  failureCb(new Error(data.message));
+                } else {
+                  successCb(data.result);
+                }
+              })
+              .catch(err => failureCb(err));
+            };
+          }
+        });
+      }
+
+      Object.defineProperty(google.script, 'run', {
+        get: function() { return criarGasRunner(); }
       });
     }
-
-    Object.defineProperty(google.script, 'run', {
-      get: function() { return criarGasRunner(); }
-    });
     // =========================================================================
 
     let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
@@ -832,6 +834,31 @@
     window.addEventListener('beforeunload', function (e) {
       if (alteracoesNaoSalvas) { e.preventDefault(); e.returnValue = ''; }
     });
+
+    // Função para gararantir datas no formato estrito DD/MM/AAAA
+    function formatarDataBR(dateObj) {
+      const dia = String(dateObj.getDate()).padStart(2, '0');
+      const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const ano = dateObj.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    // Converter Base64 em Blob para download seguro do PDF
+    function base64ToBlob(base64, mimeType = 'application/pdf') {
+      const parts = base64.split(',');
+      const byteCharacters = atob(parts.length > 1 ? parts[1] : parts[0]);
+      const byteArrays = [];
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+      return new Blob(byteArrays, { type: mimeType });
+    }
 
     // SELEÇÃO DE MODO (DIÁRIO / RELATÓRIO GERAL)
     function alternarModoNavegacao(novoModo) {
@@ -1123,7 +1150,7 @@
         if(inputD) dataUsada = new Date(inputD + 'T12:00:00');
       }
 
-      let dataFormatadaLocal = dataUsada.toLocaleDateString('pt-BR');
+      let dataFormatadaLocal = formatarDataBR(dataUsada);
       let meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
       let mesExtensoLocal = meses[dataUsada.getMonth()];
 
@@ -1151,7 +1178,7 @@
       const dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       const meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
       
-      dataFormatada = dataUsada.toLocaleDateString('pt-BR');
+      dataFormatada = formatarDataBR(dataUsada);
       mesExtenso = meses[dataUsada.getMonth()];
       return `${dias[dataUsada.getDay()]} - ${dataFormatada}`;
     }
@@ -1247,12 +1274,19 @@
       google.script.run
         .withSuccessHandler(base64Data => {
           mostrarResultado('tela-relatorio-geral');
-          const link = document.createElement('a');
-          link.href = base64Data;
-          link.download = `Relatorio_Frequencia_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          try {
+            const blob = base64ToBlob(base64Data, 'application/pdf');
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Relatorio_Frequencia_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 10000);
+          } catch (e) {
+            mostrarModal("ERRO", "Erro ao processar o PDF: " + e.message);
+          }
         })
         .withFailureHandler(err => {
           mostrarResultado('tela-relatorio-geral');
