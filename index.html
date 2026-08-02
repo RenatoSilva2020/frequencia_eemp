@@ -1111,8 +1111,7 @@
     }
 
     function carregarStatusDosCards() {
-      const todosBadges = document.querySelectorAll('.status-container-card');
-      todosBadges.forEach(b => b.innerHTML = `<span class="badge-loading-card">...</span>`);
+      if (!state.unidade || !state.turno) return;
 
       let dataUsada = new Date();
       if(state.perfil === 'Supervisao' || state.perfil === 'Secretaria') {
@@ -1124,17 +1123,40 @@
       let meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
       let mesExtensoLocal = meses[dataUsada.getMonth()];
 
+      const cacheKeyLocal = 'status_cache_' + state.unidade + '_' + state.turno + '_' + dataFormatadaLocal;
+      let cachedData = null;
+      try {
+        const item = localStorage.getItem(cacheKeyLocal);
+        if (item) cachedData = JSON.parse(item);
+      } catch(e) {}
+
+      if (cachedData && Array.isArray(cachedData)) {
+        renderizarBadgesStatus(cachedData);
+      } else {
+        const todosBadges = document.querySelectorAll('.status-container-card');
+        todosBadges.forEach(b => b.innerHTML = `<span class="badge-loading-card">...</span>`);
+      }
+
       google.script.run.withSuccessHandler(turmasStatus => {
-        turmasStatus.forEach(t => {
-          const divStatus = document.getElementById(`status-card-${t.id}`);
-          if(divStatus) {
-            if(t.status === 'Pendente') divStatus.innerHTML = `<span class="badge-alerta-card">Pendente</span>`;
-            else if (t.status === 'Realizada') divStatus.innerHTML = `<span class="badge-sucesso-card">Realizada</span>`;
-            else if (t.status === 'SEM AULA' || t.status === 'Sem Aula') divStatus.innerHTML = `<span class="badge-loading-card" style="color:var(--secondary-text);">SEM AULA</span>`;
-            else divStatus.innerHTML = ``;
-          }
-        });
+        if (turmasStatus && Array.isArray(turmasStatus)) {
+          renderizarBadgesStatus(turmasStatus);
+          try {
+            localStorage.setItem(cacheKeyLocal, JSON.stringify(turmasStatus));
+          } catch(e) {}
+        }
       }).getPainelMonitoramento(state.unidade, state.turno, dataFormatadaLocal, mesExtensoLocal);
+    }
+
+    function renderizarBadgesStatus(turmasStatus) {
+      turmasStatus.forEach(t => {
+        const divStatus = document.getElementById(`status-card-${t.id}`);
+        if(divStatus) {
+          if(t.status === 'Pendente') divStatus.innerHTML = `<span class="badge-alerta-card">Pendente</span>`;
+          else if (t.status === 'Realizada') divStatus.innerHTML = `<span class="badge-sucesso-card">Realizada</span>`;
+          else if (t.status === 'SEM AULA' || t.status === 'Sem Aula') divStatus.innerHTML = `<span class="badge-loading-card" style="color:var(--secondary-text);">SEM AULA</span>`;
+          else divStatus.innerHTML = ``;
+        }
+      });
     }
 
     function calcularDatas() {
