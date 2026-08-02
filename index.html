@@ -1566,7 +1566,12 @@
 
       google.script.run.withSuccessHandler(dados => {
           mostrarResultado('tela-relatorio-geral');
-          document.getElementById('matriz-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">RELATÓRIO GERAL - MÊS DE ${dados.mes}</span>`;
+          document.getElementById('matriz-header-display').innerHTML = `
+            <div style="text-align:center; padding: 4px 0;">
+              <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
+              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
+            </div>
+          `;
 
           const wrapper = document.getElementById('matriz-tabela-wrapper');
           let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
@@ -1574,21 +1579,21 @@
           let trs = dados.alunos.map(a => {
             let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
             let tdsHist = a.historico.map(v => {
-              let val = String(v).toUpperCase();
+              let val = String(v || '').toUpperCase().trim();
               let color = 'inherit';
-              if (val === 'F') color = 'var(--danger-color)';
-              else if (val === '•' || val === 'P') color = 'var(--success-color)';
-              else if (val === '--') color = 'var(--secondary-text)';
-              return `<td style="font-weight: 600; color: ${color};">${val}</td>`;
+              let char = '';
+              if (val === 'F') { color = 'var(--danger-color)'; char = 'F'; }
+              else if (val === '--') { color = 'var(--secondary-text)'; char = '--'; }
+              return `<td style="font-weight: 700; color: ${color}; text-align: center;">${char}</td>`;
             }).join('');
 
             return `
               <tr>
-                <td style="color:var(--secondary-text); font-size:11px;">${a.simade || ''}</td>
+                <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
                 <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
                 ${tdsHist}
-                <td style="font-weight:600; color:var(--danger-color);">${a.totalFaltas}</td>
-                <td style="font-weight:600; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'};">${a.freqPercent}%</td>
+                <td style="font-weight:700; color:var(--danger-color); text-align: center;">${a.totalFaltas}</td>
+                <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}; text-align: center;">${a.freqPercent}%</td>
               </tr>
             `;
           }).join('');
@@ -1598,10 +1603,10 @@
               <thead>
                 <tr>
                   <th>SIMADE</th>
-                  <th style="text-align:left;">Estudante</th>
+                  <th style="text-align:left;">ESTUDANTE</th>
                   ${thDatas}
-                  <th>Faltas</th>
-                  <th>Freq.</th>
+                  <th>FALTAS</th>
+                  <th>FREQ.</th>
                 </tr>
               </thead>
               <tbody>${trs}</tbody>
