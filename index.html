@@ -1130,7 +1130,7 @@
           if(divStatus) {
             if(t.status === 'Pendente') divStatus.innerHTML = `<span class="badge-alerta-card">Pendente</span>`;
             else if (t.status === 'Realizada') divStatus.innerHTML = `<span class="badge-sucesso-card">Realizada</span>`;
-            else if (t.status === 'Sem Aula') divStatus.innerHTML = `<span class="badge-loading-card" style="color:var(--secondary-text);">Sem Aula</span>`;
+            else if (t.status === 'SEM AULA' || t.status === 'Sem Aula') divStatus.innerHTML = `<span class="badge-loading-card" style="color:var(--secondary-text);">SEM AULA</span>`;
             else divStatus.innerHTML = ``;
           }
         });
@@ -1589,12 +1589,10 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-          } catch (e) { mostrarModal("ERRO", "Erro ao processar o PDF: " + e.message); }
-        }).withFailureHandler(err => {
-          mostrarResultado('tela-relatorio-geral');
-          mostrarModal("ERRO", "Falha ao gerar o arquivo PDF: " + err.message);
-        }).exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
+            URL.revokeObjectURL(url);
+          } catch(e) { mostrarModal("ERRO", "Falha ao gerar o PDF localmente."); }
+        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
+        .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
     }
   </script>
 </body>
