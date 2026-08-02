@@ -544,12 +544,10 @@
 </head>
 <body>
 
-  <!-- ==========================================================================
-       ÍCONES SVG
-       ========================================================================== -->
+  <!-- ÍCONES SVG -->
   <svg style="display: none;">
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
-    <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
+    <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
     <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
     <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
     <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
@@ -560,9 +558,7 @@
     <symbol id="icon-pdf" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm12 6V9c0-.55-.45-1-1-1h-3v8h1.5v-2.5h1.5c.55 0 1-.45 1-1zm-2.5-1.5h-1v-1.5h1v1.5z"/></symbol>
   </svg>
 
-  <!-- ==========================================================================
-       MODAIS (SISTEMA)
-       ========================================================================== -->
+  <!-- MODAIS DE SISTEMA -->
   <aside id="custom-modal" class="modal-overlay">
     <div class="modal-box">
       <h3 id="modal-titulo">Aviso</h3>
@@ -595,9 +591,7 @@
     </div>
   </aside>
 
-  <!-- ==========================================================================
-       CONTEÚDO PRINCIPAL
-       ========================================================================== -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="card">
     
     <!-- TELA 0: LOGIN -->
@@ -686,9 +680,7 @@
         <div class="grid-cards" id="grid-turma"></div>
       </div>
       
-      <!-- ==========================================================================
-           ÁREA DE RESULTADOS DINÂMICOS
-           ========================================================================== -->
+      <!-- ÁREA DE RESULTADOS DINÂMICOS -->
       <section id="area-resultados" style="margin-top: 24px;">
         
         <div id="loading-inline">
@@ -784,13 +776,8 @@
     </section> 
   </main>
 
-  <!-- ==========================================================================
-       JAVASCRIPT PRINCIPAL
-       ========================================================================== -->
   <script>
-    // --------------------------------------------------------------------------
     // PONTE DE ADAPTAÇÃO HÍBRIDA (GAS E GITHUB PAGES)
-    // --------------------------------------------------------------------------
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNYn4JNw21S0bWCzR87UTvg3Go2y_UNDrd02YB7By2Mx9D3rXNN8wIiyCxKZca42Bh0w/exec";
 
     if (typeof google === 'undefined') { window.google = {}; }
@@ -830,9 +817,7 @@
       Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
     }
 
-    // --------------------------------------------------------------------------
-    // ESTADO GLOBAL & INICIALIZAÇÃO
-    // --------------------------------------------------------------------------
+    // ESTADO GLOBAL
     let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
     let dbTurmas = [];
     let dadosChamadaGeral = [];
@@ -864,9 +849,6 @@
       if (alteracoesNaoSalvas) { e.preventDefault(); e.returnValue = ''; }
     });
 
-    // --------------------------------------------------------------------------
-    // UTILITÁRIOS GERAIS
-    // --------------------------------------------------------------------------
     function formatarDataBR(dateObj) {
       const dia = String(dateObj.getDate()).padStart(2, '0');
       const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -887,9 +869,6 @@
       return new Blob(byteArrays, { type: mimeType });
     }
 
-    // --------------------------------------------------------------------------
-    // CONTROLE DE NAVEGAÇÃO & LOGIN
-    // --------------------------------------------------------------------------
     let perfilSelecionado = '';
 
     function alternarModoNavegacao(novoModo) {
@@ -971,9 +950,6 @@
       document.getElementById('tela-login').style.display = 'block';
     }
 
-    // --------------------------------------------------------------------------
-    // GERENCIAMENTO DE MODAIS
-    // --------------------------------------------------------------------------
     let callbackFechamentoModal = null;
     let callbackConfirmacao = null;
 
@@ -1011,9 +987,6 @@
       document.getElementById('modal-adicionar-estudante').style.display = 'none';
     }
 
-    // --------------------------------------------------------------------------
-    // SELEÇÃO & INTERFACE GERAL (PAINEL DE FILTROS)
-    // --------------------------------------------------------------------------
     function setSelecao(tipo, valor, btnElement) {
       if (alteracoesNaoSalvas) {
         mostrarConfirm("Você tem uma chamada em andamento. Deseja descartar os dados para mudar os filtros?", () => {
@@ -1066,6 +1039,7 @@
         gridTurma.innerHTML = '';
         
         if(turmasFiltradas.length > 0) {
+          const frag = document.createDocumentFragment();
           turmasFiltradas.forEach(t => {
             const card = document.createElement('div');
             card.className = 'card-turma';
@@ -1084,8 +1058,9 @@
                  });
               } else { executarAcaoCard(t, card, gridTurma); }
             };
-            gridTurma.appendChild(card);
+            frag.appendChild(card);
           });
+          gridTurma.appendChild(frag);
           document.getElementById('bloco-turma').style.display = 'block';
           if (state.modo === 'diario') carregarStatusDosCards();
         } else {
@@ -1174,9 +1149,6 @@
       else resetarUI();
     }
 
-    // --------------------------------------------------------------------------
-    // LÓGICA DE CHAMADA (DIÁRIO E RELATÓRIOS)
-    // --------------------------------------------------------------------------
     function confirmarAdicionarEstudante() {
       const nome = document.getElementById('novo-nome').value;
       const simade = document.getElementById('novo-simade').value;
@@ -1295,6 +1267,7 @@
       document.getElementById('contador-alunos').innerText = `Alunos: ${dadosChamadaGeral.length}`;
       const ul = document.getElementById('lista-alunos-chamada');
       ul.innerHTML = '';
+      const frag = document.createDocumentFragment();
 
       dadosChamadaGeral.forEach((aluno, i) => {
         const li = document.createElement('li');
@@ -1335,8 +1308,9 @@
              <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
           </div>
         `;
-        ul.appendChild(li);
+        frag.appendChild(li);
       });
+      ul.appendChild(frag);
     }
 
     function toggleHistoricoChamada(index) {
@@ -1410,9 +1384,6 @@
         }).salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
     }
 
-    // --------------------------------------------------------------------------
-    // RELATÓRIOS & MATRIZ MENSAL
-    // --------------------------------------------------------------------------
     function abrirRelatorioTurma(turmaId) {
       mostrarResultado('loading-inline');
       google.script.run.withSuccessHandler(dados => {
@@ -1434,6 +1405,7 @@
     function renderizarListaRelatorio() {
       const ul = document.getElementById('lista-relatorio-alunos');
       ul.innerHTML = '';
+      const frag = document.createDocumentFragment();
       
       dadosRelatorioGeral.forEach((aluno, index) => {
         const li = document.createElement('li');
@@ -1490,8 +1462,9 @@
              <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
           </div>
         `;
-        ul.appendChild(li);
+        frag.appendChild(li);
       });
+      ul.appendChild(frag);
     }
 
     function toggleHistorico(index) {
