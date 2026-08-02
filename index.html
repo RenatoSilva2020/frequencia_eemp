@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Diário de Classe Digital</title>
   <style>
     /* ==========================================================================
@@ -41,6 +42,7 @@
       padding: 24px 16px; 
       color: var(--primary-text); 
       line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
     }
     
     .card { 
@@ -533,12 +535,35 @@
     .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
     
     /* ==========================================================================
-       RESPONSIVIDADE
+       RESPONSIVIDADE E OTIMIZAÇÃO MOBILE
        ========================================================================== */
-    @media (max-width: 500px) {
-      .profile-tabs { flex-direction: column; }
-      #tela-login { padding: 32px 20px; margin: 20px auto;}
-      .modo-nav { flex-direction: column; }
+    @media (max-width: 640px) {
+      body { padding: 12px 10px; }
+      .card { max-width: 100%; }
+      .tela-branca { padding: 20px 16px; border-radius: var(--radius-md); margin-bottom: 16px; }
+      #tela-login { padding: 28px 18px; margin: 16px auto; border-radius: var(--radius-md); }
+      #tela-login h1 { font-size: 22px; }
+      #tela-login p { font-size: 13px; margin-bottom: 20px; }
+      .logo-escola { height: 75px; }
+      .profile-tabs { flex-direction: column; gap: 8px; }
+      .profile-tab { padding: 14px 10px; font-size: 14px; min-height: 48px; }
+      .modo-nav { flex-direction: column; gap: 8px; }
+      .modo-btn { padding: 14px 10px; font-size: 13px; min-height: 48px; }
+      .header-painel { padding: 16px 18px; flex-direction: column; align-items: flex-start; gap: 12px; border-radius: var(--radius-md); }
+      .header-painel h2 { font-size: 18px; }
+      .btn-grid { gap: 8px; }
+      .btn-choice { flex: 1 1 100%; padding: 14px 12px; font-size: 14px; min-height: 48px; }
+      .grid-cards { grid-template-columns: 1fr; gap: 12px; }
+      .card-turma { padding: 16px 18px; }
+      .btn-brand, .btn-principal { padding: 16px 18px; font-size: 14px; min-height: 50px; }
+      .row-item { padding: 14px 12px; }
+      .simade { font-size: 11px; width: 65px; margin-right: 8px; }
+      .student-name { font-size: 13px; }
+      .total-faltas { font-size: 15px; width: 45px; }
+      .header-relatorio-actions { flex-direction: column; align-items: stretch; }
+      .botoes-acao-relatorio { justify-content: space-between; }
+      .btn-ordenar { flex: 1; justify-content: center; padding: 12px 10px; }
+      .modal-box { padding: 24px 20px; border-radius: var(--radius-md); }
     }
   </style>
 </head>
