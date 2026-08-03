@@ -129,6 +129,8 @@
     }
 
 
+
+
     .modo-nav { 
       display: flex; 
       background: #f8fafc; 
@@ -164,6 +166,8 @@
     @keyframes slideUpFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 
+
+
     .login-input-group { text-align: left; margin-bottom: 24px; }
     .login-input-group label, .selection-label { 
       display: block; 
@@ -196,6 +200,8 @@
       border-color: var(--brand-color); 
       box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12); 
     }
+
+
 
 
     .btn-brand, .btn-principal { 
@@ -248,6 +254,8 @@
     }
 
 
+
+
     /* ==========================================================================
        PAINEL E ELEMENTOS VISUAIS
        ========================================================================== */
@@ -282,6 +290,8 @@
       text-transform: uppercase;
       box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
     }
+
+
 
 
     .selection-group { margin-bottom: 28px; }
@@ -348,6 +358,8 @@
     .info-turma { font-size: 12px; color: var(--secondary-text); font-weight: 500; text-transform: uppercase; }
 
 
+
+
     .status-container-card { position: absolute; top: 18px; right: 18px; }
     .badge-alerta-card { 
       display: inline-block; 
@@ -407,6 +419,8 @@
     }
 
 
+
+
     /* ==========================================================================
        INDICADORES DE CARREGAMENTO & CABEÇALHOS DE ÁREA
        ========================================================================== */
@@ -414,6 +428,8 @@
     .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top: 4px solid var(--brand-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .loading-text { color: var(--secondary-text); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
+
+
 
 
     .header-data { display: flex; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px; }
@@ -481,6 +497,8 @@
     .btn-ordenar svg { width: 18px; height: 18px; fill: currentColor; }
 
 
+
+
     .alert-row { 
       background-color: var(--danger-light) !important; 
       border: 2px solid var(--danger-color) !important; 
@@ -495,6 +513,8 @@
       font-weight: 600;
       letter-spacing: 0.5px;
     }
+
+
 
 
     .student-row-header { display: flex; align-items: center; width: 100%; cursor: pointer; padding: 4px 0; }
@@ -526,6 +546,8 @@
     .cell-N { color: var(--secondary-text); font-weight: normal; opacity: 0.5; }
 
 
+
+
     .matriz-container { 
       width: 100%; 
       overflow-x: auto; 
@@ -545,6 +567,8 @@
     .btn-attendance svg { width: 32px; height: 32px; }
     .icon-present { fill: var(--success-color); }
     .icon-absent { fill: var(--danger-color); }
+
+
 
 
     /* ==========================================================================
@@ -613,6 +637,8 @@
 <body>
 
 
+
+
   <!-- ÍCONES SVG -->
   <svg style="display: none;">
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
@@ -628,6 +654,8 @@
   </svg>
 
 
+
+
   <!-- MODAIS DE SISTEMA -->
   <aside id="custom-modal" class="modal-overlay">
     <div class="modal-box">
@@ -636,6 +664,8 @@
       <button class="btn-principal" onclick="fecharModal()">OK</button>
     </div>
   </aside>
+
+
 
 
   <aside id="confirm-modal" class="modal-overlay">
@@ -650,6 +680,8 @@
   </aside>
 
 
+
+
   <aside id="modal-adicionar-estudante" class="modal-overlay">
     <div class="modal-box">
       <h3>Adicionar Estudante</h3>
@@ -662,6 +694,8 @@
       </div>
     </div>
   </aside>
+
+
 
 
   <!-- CONTEÚDO PRINCIPAL -->
@@ -689,8 +723,12 @@
       </div>
 
 
+
+
       <div id="login-actions-dynamic"></div>
     </section>
+
+
 
 
     <!-- TELA 1: PAINEL GERAL DE NAVEGAÇÃO -->
@@ -704,11 +742,15 @@
       </header>
 
 
+
+
       <!-- SELETOR DE MODO -->
       <nav class="modo-nav">
         <button class="modo-btn selected" id="modo-diario-btn" onclick="alternarModoNavegacao('diario')">📝 Chamada / Diário</button>
         <button class="modo-btn" id="modo-relatorio-btn" onclick="alternarModoNavegacao('relatorio_geral')">📊 Relatório Geral (Mês)</button>
       </nav>
+
+
 
 
       <!-- FILTROS -->
@@ -722,6 +764,8 @@
       </div>
 
 
+
+
       <div class="selection-group" id="bloco-unidade" style="display: none;">
         <span class="selection-label">Unidade</span>
         <div class="btn-grid" id="grid-unidade">
@@ -731,10 +775,14 @@
       </div>
 
 
+
+
       <div class="selection-group" id="bloco-data" style="display:none;">
         <span class="selection-label">Data de Referência</span>
         <input type="date" id="input-data" onchange="atualizarInterface()">
       </div>
+
+
 
 
       <div class="selection-group" id="bloco-mes-geral" style="display:none;">
@@ -756,6 +804,8 @@
       </div>
 
 
+
+
       <div class="selection-group" id="bloco-turma" style="display:none;">
         <span class="selection-label" id="label-turmas-acao">Selecione uma turma para abrir</span>
         <div class="grid-cards" id="grid-turma"></div>
@@ -770,12 +820,16 @@
         </div>
 
 
+
+
         <!-- TELA 2: LISTA DE CHAMADA -->
         <article id="tela-chamada" class="resultado-section tela-branca" style="display:none;">
           <header class="header-data">
             <div class="icon-circle"><svg><use href="#icon-calendar"></use></svg></div>
             <div class="header-text" id="data-chamada-display"></div>
           </header>
+
+
 
 
           <button id="btn-add-estudante-chamada" class="btn-principal btn-secondary" style="margin-bottom: 24px; width: 100%; border: 2px dashed var(--brand-color); color: var(--brand-color);" onclick="abrirModalAdicionar()">
@@ -794,11 +848,15 @@
           <ul class="list-wrapper" id="lista-alunos-chamada"></ul>
 
 
+
+
           <div style="display: flex; gap: 16px; margin-top: 24px;">
             <button class="btn-principal btn-secondary" style="width: 100%; margin-top:12px; font-size:14px;" onclick="voltarInicio()">CANCELAR / VOLTAR</button>
             <button class="btn-principal" id="btn-salvar" onclick="enviarChamada()">SALVAR CHAMADA</button>
           </div>
         </article>
+
+
 
 
         <!-- TELA 3: RELATÓRIO DA TURMA (RESUMO DIÁRIO) -->
@@ -817,6 +875,8 @@
           </button>
 
 
+
+
           <div class="header-relatorio-actions">
             <div class="stat-item-small">
               <span id="stat-aulas">0</span>
@@ -833,6 +893,8 @@
           </div>
 
 
+
+
           <div class="col-header" style="margin-top: 10px;">
             <span style="width: 60px; text-align:center;">Freq.</span>
             <span style="width: 60px; text-align:center;">Consec.</span>
@@ -842,8 +904,12 @@
           <ul class="list-wrapper" id="lista-relatorio-alunos"></ul>
 
 
+
+
           <button class="btn-principal btn-secondary" style="margin-top: 24px; width: 100%; font-size: 14px;" onclick="voltarInicio()">VOLTAR PARA AS TURMAS</button>
         </article>
+
+
 
 
         <!-- TELA 4: RELATÓRIO GERAL DE FREQUÊNCIA (MATRIZ DO MÊS) -->
@@ -857,11 +923,17 @@
           </header>
 
 
+
+
           <div class="matriz-container" id="matriz-tabela-wrapper"></div>
+
+
 
 
           <button class="btn-principal btn-secondary" style="margin-top: 24px; width: 100%; font-size: 14px;" onclick="voltarInicio()">VOLTAR PARA AS TURMAS</button>
         </article>
+
+
 
 
       </section>
@@ -869,19 +941,27 @@
   </main>
 
 
+
+
   <script>
     // PONTE DE ADAPTAÇÃO HÍBRIDA (GAS E GITHUB PAGES)
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNYn4JNw21S0bWCzR87UTvg3Go2y_UNDrd02YB7By2Mx9D3rXNN8wIiyCxKZca42Bh0w/exec";
+
+
 
 
     if (typeof google === 'undefined') { window.google = {}; }
     if (!google.script) { google.script = {}; }
 
 
+
+
     if (!google.script.run) {
       function criarGasRunner() {
         let successCb = () => {};
         let failureCb = () => {};
+
+
 
 
         const proxy = new Proxy({}, {
@@ -909,10 +989,14 @@
         });
 
 
+
+
         return proxy;
       }
       Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
     }
+
+
 
 
     // ESTADO GLOBAL
@@ -926,6 +1010,8 @@
     let mesExtenso = "";
     let dataFormatada = "";
     let alteracoesNaoSalvas = false;
+
+
 
 
     window.onload = () => {
@@ -944,16 +1030,23 @@
       inputData.max = localISOTime;
 
 
+
+
       const MESES_LISTA = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
       document.getElementById('select-mes-geral').value = MESES_LISTA[hoje.getMonth()];
       
       selecionarPerfil('Professor');
+      history.replaceState({ page: 'home' }, '');
     };
+
+
 
 
     window.addEventListener('beforeunload', function (e) {
       if (alteracoesNaoSalvas) { e.preventDefault(); e.returnValue = ''; }
     });
+
+
 
 
     function formatarDataBR(dateObj) {
@@ -962,6 +1055,8 @@
       const ano = dateObj.getFullYear();
       return `${dia}/${mes}/${ano}`;
     }
+
+
 
 
     function base64ToBlob(base64, mimeType = 'application/pdf') {
@@ -978,7 +1073,11 @@
     }
 
 
+
+
     let perfilSelecionado = '';
+
+
 
 
     function alternarModoNavegacao(novoModo) {
@@ -991,6 +1090,8 @@
     }
 
 
+
+
     function aplicarModoNavegacao(novoModo) {
       state.modo = novoModo;
       document.getElementById('modo-diario-btn').classList.toggle('selected', novoModo === 'diario');
@@ -998,6 +1099,8 @@
       mostrarResultado('');
       atualizarInterface();
     }
+
+
 
 
     function selecionarPerfil(perfil) {
@@ -1021,6 +1124,8 @@
     }
 
 
+
+
     function processarLogin() {
       if (perfilSelecionado === 'Secretaria' || perfilSelecionado === 'Supervisao') {
         const senhaInput = document.getElementById('input-senha-inline');
@@ -1031,6 +1136,8 @@
         });
       } else { efetuarLogin(perfilSelecionado); }
     }
+
+
 
 
     function efetuarLogin(perfil) {
@@ -1046,7 +1153,13 @@
       document.getElementById('bloco-turma').style.display = 'none';
       mostrarResultado(''); 
       aplicarModoNavegacao('diario');
+      
+      if (!history.state || history.state.page !== 'home') {
+        history.replaceState({ page: 'home' }, '');
+      }
     }
+
+
 
 
     function fazerLogout() {
@@ -1058,6 +1171,8 @@
     }
 
 
+
+
     function sairDeFato() {
       state.perfil = '';
       document.getElementById('tela-painel').style.display = 'none';
@@ -1067,8 +1182,12 @@
     }
 
 
+
+
     let callbackFechamentoModal = null;
     let callbackConfirmacao = null;
+
+
 
 
     function mostrarModal(titulo, msg, callback = null) {
@@ -1084,11 +1203,15 @@
     }
 
 
+
+
     function mostrarConfirm(msg, callback) {
       document.getElementById('confirm-mensagem').innerText = msg;
       document.getElementById('confirm-modal').style.display = 'flex';
       callbackConfirmacao = callback;
     }
+
+
 
 
     function fecharConfirm(resultado) {
@@ -1098,6 +1221,8 @@
     }
 
 
+
+
     function abrirModalAdicionar() {
       document.getElementById('novo-nome').value = '';
       document.getElementById('novo-simade').value = '';
@@ -1105,9 +1230,13 @@
     }
 
 
+
+
     function fecharModalAdicionar() {
       document.getElementById('modal-adicionar-estudante').style.display = 'none';
     }
+
+
 
 
     function setSelecao(tipo, valor, btnElement) {
@@ -1119,12 +1248,16 @@
     }
 
 
+
+
     function aplicarSelecao(tipo, valor, btnElement) {
       state[tipo] = valor;
       const container = btnElement.parentElement;
       const botoes = container.getElementsByClassName('btn-choice');
       for(let b of botoes) b.classList.remove('selected');
       btnElement.classList.add('selected');
+
+
 
 
       if (tipo === 'turno') {
@@ -1141,6 +1274,8 @@
       }
       atualizarInterface();
     }
+
+
 
 
     function atualizarInterface() {
@@ -1160,9 +1295,13 @@
       }
 
 
+
+
       if (state.unidade && state.turno) {
         const gridTurma = document.getElementById('grid-turma');
         gridTurma.innerHTML = '';
+
+
 
 
         if (isCarregandoTurmas) {
@@ -1205,7 +1344,12 @@
     }
 
 
+
+
     function executarAcaoCard(t, card, gridTurma) {
+      if (!history.state || history.state.page !== 'detail') {
+        history.pushState({ page: 'detail' }, '');
+      }
       mostrarResultado(''); 
       state.turmaId = t.id;
       state.turmaNome = t.nome;
@@ -1215,6 +1359,8 @@
       card.classList.add('selected');
 
 
+
+
       calcularDatas(); 
       if (state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz();
       else if (state.perfil === 'Professor') prepararDiario();
@@ -1222,8 +1368,12 @@
     }
 
 
+
+
     function carregarStatusDosCards() {
       if (!state.unidade || !state.turno) return;
+
+
 
 
       let dataUsada = new Date();
@@ -1233,13 +1383,19 @@
       }
 
 
+
+
       let dataFormatadaLocal = formatarDataBR(dataUsada);
       let meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
       let mesExtensoLocal = meses[dataUsada.getMonth()];
 
 
+
+
       const todosBadges = document.querySelectorAll('.status-container-card');
       todosBadges.forEach(b => b.innerHTML = `<span class="badge-loading-card"><span class="mini-spinner"></span> Lendo</span>`);
+
+
 
 
       google.script.run.withSuccessHandler(turmasStatus => {
@@ -1248,6 +1404,8 @@
         }
       }).getPainelMonitoramento(state.unidade, state.turno, dataFormatadaLocal, mesExtensoLocal);
     }
+
+
 
 
     function renderizarBadgesStatus(turmasStatus) {
@@ -1261,6 +1419,8 @@
         }
       });
     }
+
+
 
 
     function calcularDatas() {
@@ -1278,6 +1438,8 @@
     }
 
 
+
+
     function mostrarResultado(idBloco) {
       document.querySelectorAll('.resultado-section').forEach(el => el.style.display = 'none');
       document.getElementById('loading-inline').style.display = 'none';
@@ -1288,6 +1450,7 @@
         document.querySelectorAll('.selection-group').forEach(el => el.style.display = 'none');
         const nav = document.querySelector('.modo-nav');
         if (nav) nav.style.display = 'none';
+
 
         const bloco = document.getElementById(idBloco);
         if(bloco) {
@@ -1300,8 +1463,10 @@
          const nav = document.querySelector('.modo-nav');
          if (nav) nav.style.display = 'flex';
 
+
          const groups = document.querySelectorAll('.selection-group');
          if (groups.length > 0) groups[0].style.display = 'block';
+
 
          const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
          document.getElementById('bloco-unidade').style.display = state.turno === 'Noite' ? 'block' : 'none';
@@ -1312,19 +1477,30 @@
     }
 
 
+
+
     function resetarUI() {
       state.turmaId = ""; state.turmaNome = ""; alteracoesNaoSalvas = false;
       mostrarResultado(''); 
       let todosC = document.getElementById('grid-turma').getElementsByClassName('card-turma');
       for(let c of todosC) c.classList.remove('selected');
       window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      
+      if (history.state && history.state.page === 'detail') {
+        window._isManualReset = true;
+        history.back();
+      }
     }
+
+
 
 
     function voltarInicio() {
       if (alteracoesNaoSalvas) mostrarConfirm("Deseja cancelar? Os dados não salvos serão perdidos.", resetarUI);
       else resetarUI();
     }
+
+
 
 
     function confirmarAdicionarEstudante() {
@@ -1363,6 +1539,8 @@
     }
 
 
+
+
     function confirmarAlteracaoStatus(index, contexto, event) {
       event.stopPropagation();
       let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
@@ -1372,6 +1550,8 @@
          alterarStatusRapido(index, contexto, null);
       });
     }
+
+
 
 
     function alterarStatusRapido(index, contexto, event) {
@@ -1395,6 +1575,8 @@
       }
 
 
+
+
       google.script.run.withFailureHandler(err => {
           aluno.inativo = !novoStatusInativo;
           if (contexto === 'chamada') {
@@ -1409,6 +1591,8 @@
     }
 
 
+
+
     function prepararDiario() {
       const dataHeader = calcularDatas();
       document.getElementById('data-chamada-display').innerHTML = `<strong>${state.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">${dataHeader}</span>`;
@@ -1416,11 +1600,15 @@
       document.getElementById('btn-add-estudante-chamada').style.display = state.perfil === 'Professor' ? 'none' : 'block';
 
 
+
+
       mostrarResultado('loading-inline');
       google.script.run.withSuccessHandler(payload => {
            window.diasChamada = payload.datas || [];
            const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5).trim();
            const colIdx = window.diasChamada.indexOf(dataCurtaLocal);
+
+
 
 
            dadosChamadaGeral = payload.alunos.map(a => {
@@ -1432,9 +1620,13 @@
            });
 
 
+
+
            dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
            mostrarResultado('tela-chamada');
            alteracoesNaoSalvas = true;
+
+
 
 
            const btnSalvar = document.getElementById('btn-salvar');
@@ -1444,7 +1636,11 @@
            } else { btnSalvar.disabled = false; }
 
 
+
+
            renderizarListaChamada();
+
+
 
 
            const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
@@ -1454,11 +1650,15 @@
     }
 
 
+
+
     function renderizarListaChamada() {
       document.getElementById('contador-alunos').innerText = `Alunos: ${dadosChamadaGeral.length}`;
       const ul = document.getElementById('lista-alunos-chamada');
       ul.innerHTML = '';
       const frag = document.createDocumentFragment();
+
+
 
 
       dadosChamadaGeral.forEach((aluno, i) => {
@@ -1475,12 +1675,16 @@
         }).join('');
 
 
+
+
         let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
         let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
         let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
         let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
         
         let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+
+
 
 
         li.innerHTML = `
@@ -1498,6 +1702,8 @@
           </div>
 
 
+
+
           <div class="history-panel" id="history-panel-chamada-${i}">
              <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
              <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
@@ -1509,10 +1715,14 @@
     }
 
 
+
+
     function toggleHistoricoChamada(index) {
       const panel = document.getElementById(`history-panel-chamada-${index}`);
       panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     }
+
+
 
 
     function togglePresenca(i) {
@@ -1542,6 +1752,8 @@
     }
 
 
+
+
     function alternarTodos() {
       const todosPresentes = document.getElementById('toggle-todos').checked;
       dadosChamadaGeral.forEach((aluno, i) => { 
@@ -1568,6 +1780,8 @@
     }
 
 
+
+
     function enviarChamada() {
       document.getElementById('btn-salvar').disabled = true;
       mostrarResultado('loading-inline');
@@ -1582,6 +1796,8 @@
           mostrarResultado('tela-chamada');
         }).salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
     }
+
+
 
 
     function abrirRelatorioTurma(turmaId) {
@@ -1603,6 +1819,8 @@
         }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
         .getRelatorioTurma(turmaId, mesExtenso);
     }
+
+
 
 
     function renderizarListaRelatorio() {
@@ -1631,11 +1849,15 @@
         aluno.faltasConsecutivas = calcConsec;
 
 
+
+
         let aulasMatriculado = historicoAluno.filter(v => v !== '--' && v !== '' && v !== null && v !== undefined).length;
         let aulasPrevistas = aulasMatriculado > 0 ? aulasMatriculado : (window.aulasPrevistasGeral > 0 ? window.aulasPrevistasGeral : historicoAluno.length);
         let presencas = Math.max(0, aulasPrevistas - calcTotal);
         let freqPercent = aulasPrevistas > 0 ? Math.round((presencas / aulasPrevistas) * 100) : 100;
         let corFrequencia = freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)';
+
+
 
 
         let alerta = calcConsec >= 4 ? `<span class="alert-tag">ALERTA</span>` : '';
@@ -1648,12 +1870,16 @@
         }).join('');
 
 
+
+
         let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
         let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
         let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
         let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
         
         let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+
+
 
 
         li.innerHTML = `
@@ -1675,6 +1901,8 @@
     }
 
 
+
+
     function toggleHistorico(index) {
       const panel = document.getElementById(`history-panel-${index}`);
       if (panel.style.display === 'block') panel.style.display = 'none';
@@ -1683,6 +1911,8 @@
         panel.style.display = 'block';
       }
     }
+
+
 
 
     function ordenarRelatorio() {
@@ -1696,6 +1926,8 @@
     }
 
 
+
+
     function ordenarPorOrdemAlfabetica() {
       dadosRelatorioGeral.sort((a, b) => {
         if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
@@ -1707,9 +1939,13 @@
     }
 
 
+
+
     function carregarRelatorioGeralMatriz() {
       const mesSelecionado = document.getElementById('select-mes-geral').value;
       mostrarResultado('loading-inline');
+
+
 
 
       google.script.run.withSuccessHandler(dados => {
@@ -1722,8 +1958,12 @@
           `;
 
 
+
+
           const wrapper = document.getElementById('matriz-tabela-wrapper');
           let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
+
+
 
 
           let trs = dados.alunos.map(a => {
@@ -1738,6 +1978,8 @@
             }).join('');
 
 
+
+
             return `
               <tr>
                 <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
@@ -1748,6 +1990,8 @@
               </tr>
             `;
           }).join('');
+
+
 
 
           wrapper.innerHTML = `
@@ -1769,9 +2013,13 @@
     }
 
 
+
+
     function exportarRelatorioPDF() {
       const mesSelecionado = document.getElementById('select-mes-geral').value;
       mostrarResultado('loading-inline');
+
+
 
 
       google.script.run.withSuccessHandler(base64Data => {
@@ -1790,6 +2038,27 @@
         }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
         .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
     }
+
+    // Escuta os eventos do botão voltar do dispositivo/navegador
+    window.addEventListener('popstate', function(event) {
+      if (window._isManualReset) {
+        window._isManualReset = false;
+        return;
+      }
+      if (alteracoesNaoSalvas) {
+        history.pushState({ page: 'detail' }, '');
+        mostrarConfirm("Deseja cancelar? Os dados não salvos serão perdidos.", () => {
+          alteracoesNaoSalvas = false;
+          history.back();
+        });
+      } else {
+        state.turmaId = ""; state.turmaNome = ""; alteracoesNaoSalvas = false;
+        mostrarResultado('');
+        let todosC = document.getElementById('grid-turma').getElementsByClassName('card-turma');
+        for(let c of todosC) c.classList.remove('selected');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   </script>
 </body>
 </html>
