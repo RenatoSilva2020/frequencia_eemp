@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Diário de Classe Digital</title>
   <style>
-    /* ==========================================================================
-       VARIÁVEIS GERAIS
-       ========================================================================== */
+    /* VARIÁVEIS GERAIS */
     :root {
       --bg-color: #f1f5f9; 
       --card-bg: #ffffff;
@@ -32,9 +30,6 @@
       --radius-sm: 12px;
     }
     
-    /* ==========================================================================
-       ESTILOS BASE
-       ========================================================================== */
     body { 
       font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; 
       background-color: var(--bg-color); 
@@ -45,10 +40,7 @@
       -webkit-text-size-adjust: 100%;
     }
     
-    .card { 
-      max-width: 960px; 
-      margin: 0 auto; 
-    }
+    .card { max-width: 960px; margin: 0 auto; }
     
     .tela-branca { 
       background: var(--card-bg); 
@@ -60,9 +52,6 @@
       contain: content;
     }
     
-    /* ==========================================================================
-       TELA DE LOGIN & NAVEGAÇÃO
-       ========================================================================== */
     #tela-login { 
       max-width: 420px; 
       margin: 40px auto; 
@@ -92,11 +81,7 @@
       letter-spacing: -0.5px; 
     }
     
-    #tela-login p { 
-      color: var(--secondary-text); 
-      font-size: 15px; 
-      margin-bottom: 32px; 
-    }
+    #tela-login p { color: var(--secondary-text); font-size: 15px; margin-bottom: 32px; }
     
     .profile-tabs { 
       display: flex; 
@@ -174,9 +159,6 @@
       letter-spacing: 0.6px;
     }
     
-    /* ==========================================================================
-       INPUTS & BOTÕES GERAIS
-       ========================================================================== */
     .login-input-group input, input[type="date"], input[type="text"], select { 
       width: 100%; 
       box-sizing: border-box; 
@@ -246,9 +228,6 @@
       box-shadow: var(--shadow-md);
     }
 
-    /* ==========================================================================
-       PAINEL E ELEMENTOS VISUAIS
-       ========================================================================== */
     .header-painel { 
       display: flex; 
       justify-content: space-between; 
@@ -405,9 +384,6 @@
       flex-shrink: 0;
     }
 
-    /* ==========================================================================
-       INDICADORES DE CARREGAMENTO & CABEÇALHOS DE ÁREA
-       ========================================================================== */
     #loading-inline { text-align: center; padding: 40px; display: none; }
     .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top: 4px solid var(--brand-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -426,9 +402,6 @@
     input:checked + .slider { background-color: var(--brand-color); }
     input:checked + .slider:before { transform: translateX(20px); }
     
-    /* ==========================================================================
-       LISTAGEM DE ESTUDANTES
-       ========================================================================== */
     .list-wrapper { list-style: none; padding: 0; margin: 0; }
     .row-item { 
       display: flex; 
@@ -465,9 +438,6 @@
       letter-spacing: 0.5px;
     }
     
-    /* ==========================================================================
-       AÇÕES & RELATÓRIOS (RESUMO DIÁRIO E MATRIZ GERAL)
-       ========================================================================== */
     .header-relatorio-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
     .stat-item-small { background: white; padding: 12px 20px; border-radius: var(--radius-sm); text-align: center; box-shadow: var(--shadow-sm); border: 2px solid var(--border-color); display: flex; flex-direction: column; min-width: 110px; }
     .stat-item-small span { font-size: 22px; font-weight: 700; color: var(--brand-color); line-height: 1;}
@@ -541,9 +511,6 @@
     .icon-present { fill: var(--success-color); }
     .icon-absent { fill: var(--danger-color); }
 
-    /* ==========================================================================
-       MODAIS E SOBREPOSIÇÕES
-       ========================================================================== */
     .modal-overlay { 
       position: fixed; 
       top: 0; left: 0; 
@@ -571,9 +538,6 @@
     .modal-actions { display: flex; gap: 12px; }
     .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
     
-    /* ==========================================================================
-       RESPONSIVIDADE E OTIMIZAÇÃO MOBILE
-       ========================================================================== */
     @media (max-width: 640px) {
       body { padding: 12px 10px; }
       .card { max-width: 100%; }
@@ -843,39 +807,40 @@
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNYn4JNw21S0bWCzR87UTvg3Go2y_UNDrd02YB7By2Mx9D3rXNN8wIiyCxKZca42Bh0w/exec";
 
     if (typeof google === 'undefined') { window.google = {}; }
-    if (!google.script) { google.script = {}; }
-
-    if (!google.script.run) {
+    if (!google.script || !google.script.run) {
+      google.script = google.script || {};
+      
       function criarGasRunner() {
-        let successCb = () => {};
-        let failureCb = () => {};
-
-        const proxy = new Proxy({}, {
-          get(target, prop) {
-            if (prop === 'withSuccessHandler') {
-              return function(fn) { successCb = fn; return proxy; };
+        function Runner(onSuccess, onFailure) {
+          this.onSuccess = onSuccess || function() {};
+          this.onFailure = onFailure || function() {};
+          return new Proxy(this, {
+            get(target, prop) {
+              if (prop === 'withSuccessHandler') {
+                return function(fn) { target.onSuccess = fn; return target; };
+              }
+              if (prop === 'withFailureHandler') {
+                return function(fn) { target.onFailure = fn; return target; };
+              }
+              return function(...args) {
+                fetch(GAS_WEB_APP_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                  body: JSON.stringify({ action: prop, args: args })
+                })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.status === 'error') target.onFailure(new Error(data.message));
+                  else target.onSuccess(data.result);
+                })
+                .catch(err => target.onFailure(err));
+              };
             }
-            if (prop === 'withFailureHandler') {
-              return function(fn) { failureCb = fn; return proxy; };
-            }
-            return function(...args) {
-              fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: prop, args: args })
-              })
-              .then(res => res.json())
-              .then(data => {
-                if (data.status === 'error') failureCb(new Error(data.message));
-                else successCb(data.result);
-              })
-              .catch(err => failureCb(err));
-            };
-          }
-        });
-
-        return proxy;
+          });
+        }
+        return new Runner();
       }
+
       Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
     }
 
@@ -892,11 +857,18 @@
     let alteracoesNaoSalvas = false;
 
     window.onload = () => {
-      google.script.run.withSuccessHandler(res => { 
-        dbTurmas = res; 
-        isCarregandoTurmas = false;
-        if(state.turno) atualizarInterface();
-      }).getTurmasDisponiveis();
+      google.script.run
+        .withSuccessHandler(res => { 
+          dbTurmas = res || []; 
+          isCarregandoTurmas = false;
+          if (state.turno) atualizarInterface();
+        })
+        .withFailureHandler(err => {
+          console.error("Erro ao obter turmas:", err);
+          isCarregandoTurmas = false;
+          if (state.turno) atualizarInterface();
+        })
+        .getTurmasDisponiveis();
       
       const hoje = new Date();
       const tzOffset = hoje.getTimezoneOffset() * 60000;
@@ -1298,7 +1270,7 @@
     }
 
     function confirmarAlteracaoStatus(index, contexto, event) {
-      event.stopPropagation();
+      if (event) event.stopPropagation();
       let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
       let acao = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
       
@@ -1347,340 +1319,286 @@
       document.getElementById('btn-add-estudante-chamada').style.display = state.perfil === 'Professor' ? 'none' : 'block';
 
       mostrarResultado('loading-inline');
-      google.script.run.withSuccessHandler(payload => {
-           window.diasChamada = payload.datas || [];
-           const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5).trim();
-           const colIdx = window.diasChamada.indexOf(dataCurtaLocal);
+      google.script.run
+        .withSuccessHandler(payload => {
+          window.diasChamada = payload.datas || [];
+          const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5);
+          const colIndex = payload.datas.indexOf(dataCurtaLocal);
 
-           dadosChamadaGeral = payload.alunos.map(a => {
-             let statusExistente = (colIdx !== -1 && a.historico && a.historico[colIdx]) ? String(a.historico[colIdx]).trim().toUpperCase() : '';
-             let statusInicial = (statusExistente === 'F') ? 'F' : '•';
-             let faltasIniciais = a.faltas;
-             if (statusExistente === 'F') faltasIniciais = a.faltas - 1;
-             return { ...a, status: statusInicial, faltasIniciais: faltasIniciais, faltasAtuais: a.faltas };
-           });
+          dadosChamadaGeral = payload.alunos.map(a => {
+            let statusHoje = '•';
+            if (colIndex !== -1 && a.historico && a.historico[colIndex] !== undefined) {
+              const val = String(a.historico[colIndex] || '').toUpperCase().trim();
+              if (val === 'F') statusHoje = 'F';
+              else if (val === 'P' || val === '•') statusHoje = '•';
+            }
+            return {
+              simade: a.simade,
+              nome: a.nome,
+              inativo: a.inativo,
+              status: statusHoje,
+              faltasIniciais: a.faltas || 0,
+              faltasAtuais: a.faltas || 0
+            };
+          });
 
-           dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           mostrarResultado('tela-chamada');
-           alteracoesNaoSalvas = true;
-
-           const btnSalvar = document.getElementById('btn-salvar');
-           if (payload.dataValida === false) {
-             btnSalvar.disabled = true;
-             mostrarModal("DATA NÃO PREVISTA", `A data ${payload.dataCurta || dataFormatada.substring(0,5)} não consta no calendário da planilha para o mês de ${mesExtenso}. Não é possível realizar chamada nesta data.`);
-           } else { btnSalvar.disabled = false; }
-
-           renderizarListaChamada();
-
-           const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
-           document.getElementById('toggle-todos').checked = alunosAtivos.length > 0 && alunosAtivos.every(a => a.status === '•');
-        }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
+          renderizarListaChamada();
+          mostrarResultado('tela-chamada');
+        })
+        .withFailureHandler(err => {
+          mostrarModal("ERRO", "Falha ao carregar lista de alunos: " + err.message);
+          mostrarResultado('');
+        })
         .getDadosChamada(state.turmaId, mesExtenso, dataFormatada);
     }
 
     function renderizarListaChamada() {
-      document.getElementById('contador-alunos').innerText = `Alunos: ${dadosChamadaGeral.length}`;
-      const ul = document.getElementById('lista-alunos-chamada');
-      ul.innerHTML = '';
-      const frag = document.createDocumentFragment();
+      const lista = document.getElementById('lista-alunos-chamada');
+      let html = '';
+      let contAtivos = 0;
+      let todosPresentes = true;
 
-      const historyHeaders = (window.diasChamada || []).map(d => `<th>${d}</th>`).join('');
-
-      dadosChamadaGeral.forEach((aluno, i) => {
-        const li = document.createElement('li');
-        li.className = 'row-item';
-        li.style.flexDirection = 'column'; 
-        li.style.alignItems = 'stretch';
-        li.style.padding = '14px 16px'; 
-        
-        let historyCells = '';
-        if (aluno.historico) {
-          for (let j = 0; j < aluno.historico.length; j++) {
-            let val = String(aluno.historico[j] || '').toUpperCase().trim();
-            let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
-            let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
-            historyCells += `<td class="${cClass}">${displayChar}</td>`;
-          }
+      dadosChamadaGeral.forEach((aluno, index) => {
+        if (!aluno.inativo) {
+          contAtivos++;
+          if (aluno.status === 'F') todosPresentes = false;
         }
 
-        let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-        let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
-        let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
-        let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-        
-        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+        const estiloInativo = aluno.inativo ? 'style="text-decoration: line-through; opacity: 0.5;"' : '';
+        const btnStatus = aluno.status === 'F' 
+          ? `<button class="btn-attendance" onclick="alternarPresenca(${index})"><svg class="icon-absent"><use href="#icon-cross"></use></svg></button>`
+          : `<button class="btn-attendance" onclick="alternarPresenca(${index})"><svg class="icon-present"><use href="#icon-check"></use></svg></button>`;
 
-        li.innerHTML = `
-          <div class="student-row-header" style="padding:0;">
-            <div class="simade" onclick="toggleHistoricoChamada(${i})" style="cursor:pointer; user-select:none; ${estiloNome}" title="Ver histórico">${aluno.simade}</div>
-            <div class="student-name" onclick="toggleHistoricoChamada(${i})" style="cursor:pointer; user-select:none; ${estiloNome}" title="Ver histórico">
-                ${aluno.nome} ${btnStatus}
-            </div>
-            <div class="total-faltas" id="div-faltas-${i}">${aluno.faltasAtuais < 10 ? '0'+aluno.faltasAtuais : aluno.faltasAtuais}</div>
-            <button class="btn-attendance" id="btn-att-${i}" onclick="togglePresenca(${i})" ${aluno.inativo ? 'style="opacity:0.2; cursor:not-allowed;"' : ''}>
-              <svg class="${aluno.inativo || aluno.status !== '•' ? 'icon-absent' : 'icon-present'}">
-                 <use href="${aluno.inativo ? '#icon-cross' : (aluno.status === '•' ? '#icon-check' : '#icon-cross')}"></use>
-              </svg>
-            </button>
-          </div>
-
-          <div class="history-panel" id="history-panel-chamada-${i}">
-             <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
-             <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
-          </div>
+        html += `
+          <li class="row-item ${aluno.inativo ? 'opacity-50' : ''}">
+            <span class="simade">${aluno.simade || ''}</span>
+            <span class="student-name" ${estiloInativo} onclick="confirmarAlteracaoStatus(${index}, 'chamada', event)">${aluno.nome}</span>
+            <span class="total-faltas">${aluno.status === 'F' ? (aluno.faltasIniciais + 1) : aluno.faltasIniciais}</span>
+            <div>${btnStatus}</div>
+          </li>
         `;
-        frag.appendChild(li);
       });
-      ul.appendChild(frag);
+
+      lista.innerHTML = html;
+      document.getElementById('contador-alunos').innerText = `Alunos: ${contAtivos}`;
+      document.getElementById('toggle-todos').checked = todosPresentes && contAtivos > 0;
     }
 
-    function toggleHistoricoChamada(index) {
-      const panel = document.getElementById(`history-panel-chamada-${index}`);
-      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function togglePresenca(i) {
-      const aluno = dadosChamadaGeral[i];
+    function alternarPresenca(index) {
+      const aluno = dadosChamadaGeral[index];
       if (aluno.inativo) return;
-      
-      const btn = document.getElementById(`btn-att-${i}`);
-      const divFaltas = document.getElementById(`div-faltas-${i}`);
-      
-      if (aluno.status === '•') {
-        aluno.status = 'F'; 
-        aluno.faltasAtuais = aluno.faltasIniciais + 1;
-        btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
-        divFaltas.style.color = 'var(--danger-color)'; 
-        divFaltas.style.fontSize = '18px';
-      } else {
-        aluno.status = '•'; 
-        aluno.faltasAtuais = aluno.faltasIniciais;
-        btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
-        divFaltas.style.color = ''; 
-        divFaltas.style.fontSize = '';
-      }
-      divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
-      
-      const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
-      document.getElementById('toggle-todos').checked = alunosAtivos.length > 0 && alunosAtivos.every(a => a.status === '•');
+      aluno.status = aluno.status === 'F' ? '•' : 'F';
+      alteracoesNaoSalvas = true;
+      renderizarListaChamada();
     }
 
     function alternarTodos() {
-      const todosPresentes = document.getElementById('toggle-todos').checked;
-      const statusChar = todosPresentes ? '•' : 'F';
-      const iconClass = todosPresentes ? 'icon-present' : 'icon-absent';
-      const iconHref = todosPresentes ? '#icon-check' : '#icon-cross';
-
-      dadosChamadaGeral.forEach((aluno, i) => { 
-        if(!aluno.inativo) { 
-          aluno.status = statusChar;
-          aluno.faltasAtuais = todosPresentes ? aluno.faltasIniciais : aluno.faltasIniciais + 1;
-          
-          const btn = document.getElementById(`btn-att-${i}`);
-          const divFaltas = document.getElementById(`div-faltas-${i}`);
-          if(btn && divFaltas) {
-            btn.innerHTML = `<svg class="${iconClass}"><use href="${iconHref}"></use></svg>`;
-            divFaltas.style.color = todosPresentes ? '' : 'var(--danger-color)';
-            divFaltas.style.fontSize = todosPresentes ? '' : '18px';
-            divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
-          }
+      const chk = document.getElementById('toggle-todos').checked;
+      dadosChamadaGeral.forEach(aluno => {
+        if (!aluno.inativo) {
+          aluno.status = chk ? '•' : 'F';
         }
       });
+      alteracoesNaoSalvas = true;
+      renderizarListaChamada();
     }
 
     function enviarChamada() {
-      document.getElementById('btn-salvar').disabled = true;
-      mostrarResultado('loading-inline');
+      if (!state.turmaId) return;
+      const btnSalvar = document.getElementById('btn-salvar');
+      btnSalvar.disabled = true;
+      btnSalvar.innerText = "SALVANDO...";
+
+      const presencas = dadosChamadaGeral.map(a => ({
+        nome: a.nome,
+        status: a.status,
+        inativo: a.inativo
+      }));
+
       google.script.run
         .withSuccessHandler(res => {
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarModal("SUCESSO!", res, () => { resetarUI(); carregarStatusDosCards(); }); 
+          btnSalvar.disabled = false;
+          btnSalvar.innerText = "SALVAR CHAMADA";
+          alteracoesNaoSalvas = false;
+          mostrarModal("SUCESSO", res, () => {
+            resetarUI();
+          });
         })
         .withFailureHandler(err => {
-          mostrarModal("ERRO", err.message);
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarResultado('tela-chamada');
-        }).salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
+          btnSalvar.disabled = false;
+          btnSalvar.innerText = "SALVAR CHAMADA";
+          mostrarModal("ERRO", "Falha ao salvar chamada: " + err.message);
+        })
+        .salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, presencas);
     }
 
     function abrirRelatorioTurma(turmaId) {
+      const dataHeader = calcularDatas();
+      document.getElementById('relatorio-header-display').innerHTML = `<strong>${state.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">${dataHeader}</span>`;
+      
+      document.getElementById('btn-retroativa').style.display = (state.perfil === 'Supervisao' || state.perfil === 'Secretaria') ? 'block' : 'none';
+      document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
+
       mostrarResultado('loading-inline');
-      google.script.run.withSuccessHandler(dados => {
-           mostrarResultado('tela-relatorio');
-           document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
-           document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
-           
-           document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
-           
-           window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
-           document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
-           
-           window.datasRelatorioGeral = dados.datas || []; 
-           dadosRelatorioGeral = dados.alunos;
-           dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           renderizarListaRelatorio();
-        }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
+      google.script.run
+        .withSuccessHandler(res => {
+          document.getElementById('stat-aulas').innerText = res.aulasPrevistas || 0;
+          window.datasRelatorioTurma = res.datas || [];
+
+          dadosRelatorioGeral = (res.alunos || []).map(a => {
+            const historico = a.historico || [];
+            let consec = 0;
+            for (let i = historico.length - 1; i >= 0; i--) {
+              const val = String(historico[i] || '').toUpperCase().trim();
+              if (val === 'F') consec++;
+              else if (val === 'P' || val === '•') break;
+            }
+
+            const totalFaltas = historico.filter(v => String(v || '').toUpperCase().trim() === 'F').length;
+            const aulasValidas = historico.filter(v => v !== '--' && v !== '' && v !== null).length;
+            const presencas = Math.max(0, aulasValidas - totalFaltas);
+            const freqPercent = aulasValidas > 0 ? Math.round((presencas / aulasValidas) * 100) : 100;
+
+            return {
+              simade: a.simade,
+              nome: a.nome,
+              inativo: a.inativo,
+              faltas: totalFaltas,
+              consecutivas: consec,
+              freqPercent: freqPercent,
+              historico: historico
+            };
+          });
+
+          renderizarListaRelatorio();
+          mostrarResultado('tela-relatorio');
+        })
+        .withFailureHandler(err => {
+          mostrarModal("ERRO", "Falha ao carregar relatório: " + err.message);
+          mostrarResultado('');
+        })
         .getRelatorioTurma(turmaId, mesExtenso);
     }
 
     function renderizarListaRelatorio() {
-      const ul = document.getElementById('lista-relatorio-alunos');
-      ul.innerHTML = '';
-      const frag = document.createDocumentFragment();
-      const dias = window.datasRelatorioGeral || [];
-      const historyHeaders = dias.map(d => `<th>${d}</th>`).join('');
+      const lista = document.getElementById('lista-relatorio-alunos');
+      let html = '';
 
       dadosRelatorioGeral.forEach((aluno, index) => {
-        const li = document.createElement('li');
-        li.className = 'row-item';
-        li.style.flexDirection = 'column'; 
-        li.style.alignItems = 'stretch';
-        
-        const historicoAluno = aluno.historico || [];
-        let calcTotal = 0;
-        let calcConsec = 0;
-        let aulasMatriculado = 0;
-        let historyCells = '';
+        const alertaFrequencia = aluno.freqPercent < 75 || aluno.consecutivas >= 3;
+        const estiloInativo = aluno.inativo ? 'style="text-decoration: line-through; opacity: 0.5;"' : '';
+        const datas = window.datasRelatorioTurma || [];
 
-        for (let j = 0; j < historicoAluno.length; j++) {
-          let raw = historicoAluno[j];
-          let val = String(raw || '').toUpperCase().trim();
-          
-          if (val === 'F') {
-            calcTotal++;
-            calcConsec++;
-          } else if (val === '•' || val === 'P' || val === '--') {
-            calcConsec = 0;
-          }
-
-          if (raw !== '--' && raw !== '' && raw !== null && raw !== undefined) {
-            aulasMatriculado++;
-          }
-
-          let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
-          let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
-          historyCells += `<td class="${cClass}">${displayChar}</td>`;
-        }
-        
-        aluno.faltasTotais = calcTotal; 
-        aluno.faltasConsecutivas = calcConsec;
-
-        let aulasPrevistas = aulasMatriculado > 0 ? aulasMatriculado : (window.aulasPrevistasGeral > 0 ? window.aulasPrevistasGeral : historicoAluno.length);
-        let presencas = Math.max(0, aulasPrevistas - calcTotal);
-        let freqPercent = aulasPrevistas > 0 ? Math.round((presencas / aulasPrevistas) * 100) : 100;
-        let corFrequencia = freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)';
-
-        let alerta = calcConsec >= 4 ? `<span class="alert-tag">ALERTA</span>` : '';
-        if (calcConsec >= 4) li.classList.add('alert-row');
-
-        let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-        let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
-        let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
-        let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-        
-        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
-
-        li.innerHTML = `
-          <div class="student-row-header" onclick="toggleHistorico(${index})" title="Clique para ver o histórico">
-            <div class="simade" style="user-select:none; ${estiloNome}">${aluno.simade}</div>
-            <div class="student-name" style="user-select:none; ${estiloNome}">${aluno.nome} ${alerta} ${btnStatus}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:14px; color: ${corFrequencia}">${freqPercent}%</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px; color: ${calcConsec >= 4 ? 'var(--danger-color)' : 'inherit'}">${calcConsec}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px;">${calcTotal}</div>
-          </div>
-          <div class="history-panel" id="history-panel-${index}">
-             <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
-             <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
+        let tabelaHistorico = `
+          <div class="history-panel" id="history-${index}">
+            <table class="history-table">
+              <thead>
+                <tr>${datas.map(d => `<th>${d}</th>`).join('')}</tr>
+              </thead>
+              <tbody>
+                <tr>
+                  ${aluno.historico.map(v => {
+                    const val = String(v || '').toUpperCase().trim();
+                    if (val === 'F') return `<td class="cell-F">F</td>`;
+                    if (val === 'P' || val === '•') return `<td class="cell-P">•</td>`;
+                    return `<td class="cell-N">--</td>`;
+                  }).join('')}
+                </tr>
+              </tbody>
+            </table>
           </div>
         `;
-        frag.appendChild(li);
+
+        html += `
+          <li class="row-item ${alertaFrequencia && !aluno.inativo ? 'alert-row' : ''}" style="flex-direction: column; align-items: stretch;">
+            <div class="student-row-header" onclick="toggleHistorico(${index})">
+              <span class="simade">${aluno.simade || ''}</span>
+              <span class="student-name" ${estiloInativo}>
+                ${aluno.nome}
+                ${alertaFrequencia && !aluno.inativo ? '<span class="alert-tag">ALERTA</span>' : ''}
+              </span>
+              <span style="width: 60px; text-align:center; font-weight:700; color:${aluno.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'};">${aluno.freqPercent}%</span>
+              <span style="width: 60px; text-align:center; font-weight:700; color:${aluno.consecutivas >= 3 ? 'var(--danger-color)' : 'var(--primary-text)'};">${aluno.consecutivas}</span>
+              <span class="total-faltas">${aluno.faltas}</span>
+            </div>
+            ${tabelaHistorico}
+          </li>
+        `;
       });
-      ul.appendChild(frag);
+
+      lista.innerHTML = html;
     }
 
     function toggleHistorico(index) {
-      const panel = document.getElementById(`history-panel-${index}`);
-      if (panel.style.display === 'block') panel.style.display = 'none';
-      else {
-        document.querySelectorAll('.history-panel').forEach(p => p.style.display = 'none');
-        panel.style.display = 'block';
+      const panel = document.getElementById(`history-${index}`);
+      if (panel) {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
       }
     }
 
     function ordenarRelatorio() {
       relatorioOrdemCrescente = !relatorioOrdemCrescente;
       dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemCrescente) return a.faltasTotais - b.faltasTotais;
-        return b.faltasTotais - a.faltasTotais;
+        return relatorioOrdemCrescente ? a.faltas - b.faltas : b.faltas - a.faltas;
       });
       renderizarListaRelatorio();
     }
 
     function ordenarPorOrdemAlfabetica() {
-      dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemAZ) return (a.nome || '').localeCompare(b.nome || '');
-        return (b.nome || '').localeCompare(a.nome || '');
-      });
       relatorioOrdemAZ = !relatorioOrdemAZ;
+      dadosRelatorioGeral.sort((a, b) => {
+        return relatorioOrdemAZ ? (a.nome || '').localeCompare(b.nome || '') : (b.nome || '').localeCompare(a.nome || '');
+      });
       renderizarListaRelatorio();
     }
 
     function carregarRelatorioGeralMatriz() {
       const mesSelecionado = document.getElementById('select-mes-geral').value;
+      document.getElementById('matriz-header-display').innerHTML = `<strong>${state.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">Mês Referência: ${mesSelecionado}</span>`;
+
       mostrarResultado('loading-inline');
-
-      google.script.run.withSuccessHandler(dados => {
-          mostrarResultado('tela-relatorio-geral');
-          document.getElementById('matriz-header-display').innerHTML = `
-            <div style="text-align:center; padding: 4px 0;">
-              <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
-              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
-            </div>
-          `;
-
-          const wrapper = document.getElementById('matriz-tabela-wrapper');
-          let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
-
-          let trs = dados.alunos.map(a => {
-            let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-            let tdsHist = a.historico.map(v => {
-              let val = String(v || '').toUpperCase().trim();
-              let color = 'inherit';
-              let char = '';
-              if (val === 'F') { color = 'var(--danger-color)'; char = 'F'; }
-              else if (val === '--') { color = 'var(--secondary-text)'; char = '--'; }
-              else if (val !== '') { char = '•'; }
-              return `<td style="font-weight: 700; color: ${color}; text-align: center;">${char}</td>`;
-            }).join('');
-
-            return `
-              <tr>
-                <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
-                <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
-                ${tdsHist}
-                <td style="font-weight:700; color:var(--danger-color); text-align: center;">${a.totalFaltas}</td>
-                <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}; text-align: center;">${a.freqPercent}%</td>
-              </tr>
-            `;
-          }).join('');
-
-          wrapper.innerHTML = `
+      google.script.run
+        .withSuccessHandler(res => {
+          const container = document.getElementById('matriz-tabela-wrapper');
+          let html = `
             <table class="tabela-matriz">
               <thead>
                 <tr>
                   <th>SIMADE</th>
                   <th style="text-align:left;">ESTUDANTE</th>
-                  ${thDatas}
+                  ${(res.datas || []).map(d => `<th>${d}</th>`).join('')}
                   <th>FALTAS</th>
                   <th>FREQ.</th>
                 </tr>
               </thead>
-              <tbody>${trs}</tbody>
+              <tbody>
+                ${(res.alunos || []).map(a => {
+                  const estiloInativo = a.inativo ? 'style="text-decoration: line-through; opacity: 0.5;"' : '';
+                  return `
+                    <tr>
+                      <td>${a.simade || ''}</td>
+                      <td class="col-nome" ${estiloInativo}>${a.nome}</td>
+                      ${a.historico.map(v => {
+                        const val = String(v || '').toUpperCase().trim();
+                        if (val === 'F') return `<td class="cell-F">F</td>`;
+                        if (val === 'P' || val === '•') return `<td class="cell-P">•</td>`;
+                        return `<td class="cell-N">--</td>`;
+                      }).join('')}
+                      <td style="font-weight:700; color:var(--danger-color);">${a.totalFaltas}</td>
+                      <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}">${a.freqPercent}%</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
             </table>
           `;
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
+          container.innerHTML = html;
+          mostrarResultado('tela-relatorio-geral');
+        })
+        .withFailureHandler(err => {
+          mostrarModal("ERRO", "Falha ao gerar matriz: " + err.message);
+          mostrarResultado('');
+        })
         .getRelatorioGeralMatriz(state.turmaId, mesSelecionado);
     }
 
@@ -1688,42 +1606,38 @@
       const mesSelecionado = document.getElementById('select-mes-geral').value;
       mostrarResultado('loading-inline');
 
-      google.script.run.withSuccessHandler(base64Data => {
+      google.script.run
+        .withSuccessHandler(pdfBase64 => {
           mostrarResultado('tela-relatorio-geral');
-          try {
-            const blob = base64ToBlob(base64Data, 'application/pdf');
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Relatorio_Frequencia_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          } catch(e) { mostrarModal("ERRO", "Falha ao gerar o PDF localmente."); }
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
+          const blob = base64ToBlob(pdfBase64, 'application/pdf');
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `Relatorio_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .withFailureHandler(err => {
+          mostrarResultado('tela-relatorio-geral');
+          mostrarModal("ERRO", "Falha ao gerar PDF: " + err.message);
+        })
         .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
     }
 
-    // Escuta os eventos do botão voltar do dispositivo/navegador
-    window.addEventListener('popstate', function(event) {
+    window.addEventListener('popstate', function(e) {
       if (window._isManualReset) {
         window._isManualReset = false;
         return;
       }
       if (alteracoesNaoSalvas) {
-        history.pushState({ page: 'detail' }, '');
-        mostrarConfirm("Deseja cancelar? Os dados não salvos serão perdidos.", () => {
-          alteracoesNaoSalvas = false;
-          history.back();
-        });
-      } else {
-        state.turmaId = ""; state.turmaNome = ""; alteracoesNaoSalvas = false;
-        mostrarResultado('');
-        let todosC = document.getElementById('grid-turma').getElementsByClassName('card-turma');
-        for(let c of todosC) c.classList.remove('selected');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!confirm("Deseja sair sem salvar as alterações?")) {
+          history.pushState({ page: 'detail' }, '');
+          return;
+        }
+        alteracoesNaoSalvas = false;
       }
+      resetarUI();
     });
   </script>
 </body>
