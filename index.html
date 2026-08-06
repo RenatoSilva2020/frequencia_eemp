@@ -873,9 +873,10 @@
       Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
     }
 
-    // ESTADO GLOBAL
+    // ESTADO GLOBAL E CACHE DE FRONTEND
     let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
     let dbTurmas = [];
+    let cacheFront = {}; // Cache local em memória RAM do navegador
     let isCarregandoTurmas = true;
     let dadosChamadaGeral = [];
     let dadosRelatorioGeral = [];
@@ -1010,6 +1011,7 @@
 
     function sairDeFato() {
       state.perfil = '';
+      cacheFront = {}; // Limpa cache
       document.getElementById('tela-painel').style.display = 'none';
       mostrarResultado(''); 
       selecionarPerfil('Professor');
@@ -1268,6 +1270,7 @@
       
       google.script.run
         .withSuccessHandler(res => {
+           cacheFront = {}; // Limpa cache local do frontend
            if(res.sucesso) {
              mostrarModal("SUCESSO", res.mensagem, () => { 
                 if(state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz();
@@ -1307,6 +1310,7 @@
       const novoStatusInativo = !aluno.inativo;
       const nomeEstudante = aluno.nome;
       aluno.inativo = novoStatusInativo;
+      cacheFront = {}; // Invalida cache local
       
       if (contexto === 'chamada' && novoStatusInativo && aluno.status === 'F') {
         aluno.status = '•'; 
@@ -1341,6 +1345,7 @@
       document.getElementById('btn-add-estudante-chamada').style.display = state.perfil === 'Professor' ? 'none' : 'block';
 
       mostrarResultado('loading-inline');
+
       google.script.run.withSuccessHandler(payload => {
            window.diasChamada = payload.datas || [];
            const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5).trim();
@@ -1483,6 +1488,7 @@
     function enviarChamada() {
       document.getElementById('btn-salvar').disabled = true;
       mostrarResultado('loading-inline');
+      cacheFront = {}; // Limpa cache local após gravar
       google.script.run
         .withSuccessHandler(res => {
           document.getElementById('btn-salvar').disabled = false;
@@ -1496,23 +1502,33 @@
     }
 
     function abrirRelatorioTurma(turmaId) {
+      const cacheKey = `relatorio_${turmaId}_${mesExtenso}`;
+      if (cacheFront[cacheKey]) {
+        renderizarDadosRelatorioTurma(cacheFront[cacheKey]);
+        return;
+      }
+
       mostrarResultado('loading-inline');
       google.script.run.withSuccessHandler(dados => {
-           mostrarResultado('tela-relatorio');
-           document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
-           document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
-           
-           document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
-           
-           window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
-           document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
-           
-           window.datasRelatorioGeral = dados.datas || []; 
-           dadosRelatorioGeral = dados.alunos;
-           dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           renderizarListaRelatorio();
+           cacheFront[cacheKey] = dados;
+           renderizarDadosRelatorioTurma(dados);
         }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
         .getRelatorioTurma(turmaId, mesExtenso);
+    }
+
+    function renderizarDadosRelatorioTurma(dados) {
+      mostrarResultado('tela-relatorio');
+      document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
+      document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
+      document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
+      
+      window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
+      document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
+      
+      window.datasRelatorioGeral = dados.datas || []; 
+      dadosRelatorioGeral = dados.alunos;
+      dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
+      renderizarListaRelatorio();
     }
 
     function renderizarListaRelatorio() {
@@ -1613,59 +1629,71 @@
 
     function carregarRelatorioGeralMatriz() {
       const mesSelecionado = document.getElementById('select-mes-geral').value;
+      const cacheKey = `matriz_${state.turmaId}_${mesSelecionado}`;
+      
+      if (cacheFront[cacheKey]) {
+        renderizarMatrizRelatorio(cacheFront[cacheKey]);
+        return;
+      }
+
       mostrarResultado('loading-inline');
 
       google.script.run.withSuccessHandler(dados => {
-          mostrarResultado('tela-relatorio-geral');
-          document.getElementById('matriz-header-display').innerHTML = `
-            <div style="text-align:center; padding: 4px 0;">
-              <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
-              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
-            </div>
-          `;
-
-          const wrapper = document.getElementById('matriz-tabela-wrapper');
-          let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
-
-          let trs = dados.alunos.map(a => {
-            let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-            let tdsHist = a.historico.map(v => {
-              let val = String(v || '').toUpperCase().trim();
-              let color = 'inherit';
-              let char = '';
-              if (val === 'F') { color = 'var(--danger-color)'; char = 'F'; }
-              else if (val === '--') { color = 'var(--secondary-text)'; char = '--'; }
-              else if (val !== '') { char = '•'; }
-              return `<td style="font-weight: 700; color: ${color}; text-align: center;">${char}</td>`;
-            }).join('');
-
-            return `
-              <tr>
-                <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
-                <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
-                ${tdsHist}
-                <td style="font-weight:700; color:var(--danger-color); text-align: center;">${a.totalFaltas}</td>
-                <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}; text-align: center;">${a.freqPercent}%</td>
-              </tr>
-            `;
-          }).join('');
-
-          wrapper.innerHTML = `
-            <table class="tabela-matriz">
-              <thead>
-                <tr>
-                  <th>SIMADE</th>
-                  <th style="text-align:left;">ESTUDANTE</th>
-                  ${thDatas}
-                  <th>FALTAS</th>
-                  <th>FREQ.</th>
-                </tr>
-              </thead>
-              <tbody>${trs}</tbody>
-            </table>
-          `;
+          cacheFront[cacheKey] = dados;
+          renderizarMatrizRelatorio(dados);
         }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
         .getRelatorioGeralMatriz(state.turmaId, mesSelecionado);
+    }
+
+    function renderizarMatrizRelatorio(dados) {
+      mostrarResultado('tela-relatorio-geral');
+      document.getElementById('matriz-header-display').innerHTML = `
+        <div style="text-align:center; padding: 4px 0;">
+          <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
+          <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
+        </div>
+      `;
+
+      const wrapper = document.getElementById('matriz-tabela-wrapper');
+      let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
+
+      let trs = dados.alunos.map(a => {
+        let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
+        let tdsHist = a.historico.map(v => {
+          let val = String(v || '').toUpperCase().trim();
+          let color = 'inherit';
+          let char = '';
+          if (val === 'F') { color = 'var(--danger-color)'; char = 'F'; }
+          else if (val === '--') { color = 'var(--secondary-text)'; char = '--'; }
+          else if (val !== '') { char = '•'; }
+          return `<td style="font-weight: 700; color: ${color}; text-align: center;">${char}</td>`;
+        }).join('');
+
+        return `
+          <tr>
+            <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
+            <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
+            ${tdsHist}
+            <td style="font-weight:700; color:var(--danger-color); text-align: center;">${a.totalFaltas}</td>
+            <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}; text-align: center;">${a.freqPercent}%</td>
+          </tr>
+        `;
+      }).join('');
+
+      wrapper.innerHTML = `
+        <table class="tabela-matriz">
+          <thead>
+            <tr>
+              <th>SIMADE</th>
+              <th style="text-align:left;">ESTUDANTE</th>
+              ${thDatas}
+              <th>FALTAS</th>
+              <th>FREQ.</th>
+            </tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `;
     }
 
     function exportarRelatorioPDF() {
