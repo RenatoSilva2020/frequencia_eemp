@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Diário de Classe Digital - Sede Manhã</title>
+  <title>Diário de Classe Digital</title>
   <style>
     /* ==========================================================================
        VARIÁVEIS GERAIS
@@ -32,6 +32,9 @@
       --radius-sm: 12px;
     }
     
+    /* ==========================================================================
+       ESTILOS BASE
+       ========================================================================== */
     body { 
       font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; 
       background-color: var(--bg-color); 
@@ -42,7 +45,11 @@
       -webkit-text-size-adjust: 100%;
     }
     
-    .card { max-width: 960px; margin: 0 auto; }
+    .card { 
+      max-width: 960px; 
+      margin: 0 auto; 
+    }
+    
     .tela-branca { 
       background: var(--card-bg); 
       border-radius: var(--radius-lg); 
@@ -52,6 +59,9 @@
       margin-bottom: 24px;
     }
     
+    /* ==========================================================================
+       TELA DE LOGIN & NAVEGAÇÃO
+       ========================================================================== */
     #tela-login { 
       max-width: 420px; 
       margin: 40px auto; 
@@ -80,7 +90,12 @@
       margin-bottom: 6px; 
       letter-spacing: -0.5px; 
     }
-    #tela-login p { color: var(--secondary-text); font-size: 15px; margin-bottom: 32px; }
+    
+    #tela-login p { 
+      color: var(--secondary-text); 
+      font-size: 15px; 
+      margin-bottom: 32px; 
+    }
     
     .profile-tabs { 
       display: flex; 
@@ -158,6 +173,9 @@
       letter-spacing: 0.6px;
     }
     
+    /* ==========================================================================
+       INPUTS & BOTÕES GERAIS
+       ========================================================================== */
     .login-input-group input, input[type="date"], input[type="text"], select { 
       width: 100%; 
       box-sizing: border-box; 
@@ -226,6 +244,9 @@
       box-shadow: var(--shadow-md);
     }
 
+    /* ==========================================================================
+       PAINEL E ELEMENTOS VISUAIS
+       ========================================================================== */
     .header-painel { 
       display: flex; 
       justify-content: space-between; 
@@ -259,6 +280,38 @@
     }
 
     .selection-group { margin-bottom: 28px; }
+    .btn-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+    
+    .btn-choice { 
+      flex: 1 1 calc(33.333% - 12px); 
+      min-width: 130px; 
+      background: white; 
+      border: 2px solid var(--border-color); 
+      box-shadow: var(--shadow-sm); 
+      border-radius: var(--radius-sm); 
+      padding: 14px 12px; 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--secondary-text); 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      text-align: center; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px;
+    }
+    .btn-choice:hover { 
+      border-color: var(--brand-color); 
+      color: var(--brand-color);
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
+    }
+    .btn-choice.selected { 
+      background: var(--brand-light); 
+      border-color: var(--brand-color); 
+      color: var(--brand-color); 
+      box-shadow: 0 0 0 1px var(--brand-color), 0 4px 12px rgba(139, 92, 246, 0.15); 
+    }
+    
     .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
     .card-turma { 
       position: relative; 
@@ -347,6 +400,9 @@
       flex-shrink: 0;
     }
 
+    /* ==========================================================================
+       INDICADORES DE CARREGAMENTO & CABEÇALHOS DE ÁREA
+       ========================================================================== */
     #loading-inline { text-align: center; padding: 40px; display: none; }
     .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top: 4px solid var(--brand-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -365,6 +421,9 @@
     input:checked + .slider { background-color: var(--brand-color); }
     input:checked + .slider:before { transform: translateX(20px); }
     
+    /* ==========================================================================
+       LISTAGEM DE ESTUDANTES
+       ========================================================================== */
     .list-wrapper { list-style: none; padding: 0; margin: 0; }
     .row-item { 
       display: flex; 
@@ -400,6 +459,9 @@
       letter-spacing: 0.5px;
     }
     
+    /* ==========================================================================
+       AÇÕES & RELATÓRIOS (RESUMO DIÁRIO E MATRIZ GERAL)
+       ========================================================================== */
     .header-relatorio-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
     .stat-item-small { background: white; padding: 12px 20px; border-radius: var(--radius-sm); text-align: center; box-shadow: var(--shadow-sm); border: 2px solid var(--border-color); display: flex; flex-direction: column; min-width: 110px; }
     .stat-item-small span { font-size: 22px; font-weight: 700; color: var(--brand-color); line-height: 1;}
@@ -473,6 +535,9 @@
     .icon-present { fill: var(--success-color); }
     .icon-absent { fill: var(--danger-color); }
 
+    /* ==========================================================================
+       MODAIS E SOBREPOSIÇÕES
+       ========================================================================== */
     .modal-overlay { 
       position: fixed; 
       top: 0; left: 0; 
@@ -500,6 +565,9 @@
     .modal-actions { display: flex; gap: 12px; }
     .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
     
+    /* ==========================================================================
+       RESPONSIVIDADE E OTIMIZAÇÃO MOBILE
+       ========================================================================== */
     @media (max-width: 640px) {
       body { padding: 12px 10px; }
       .card { max-width: 100%; }
@@ -514,6 +582,8 @@
       .modo-btn { padding: 14px 10px; font-size: 13px; min-height: 48px; }
       .header-painel { padding: 16px 18px; flex-direction: column; align-items: flex-start; gap: 12px; border-radius: var(--radius-md); }
       .header-painel h2 { font-size: 18px; }
+      .btn-grid { gap: 8px; }
+      .btn-choice { flex: 1 1 100%; padding: 14px 12px; font-size: 14px; min-height: 48px; }
       .grid-cards { grid-template-columns: 1fr; gap: 12px; }
       .card-turma { padding: 16px 18px; }
       .btn-brand, .btn-principal { padding: 16px 18px; font-size: 14px; min-height: 50px; }
@@ -534,6 +604,7 @@
   <svg style="display: none;">
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
     <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
     <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
     <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
     <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
@@ -566,7 +637,7 @@
   <aside id="modal-adicionar-estudante" class="modal-overlay">
     <div class="modal-box">
       <h3>Adicionar Estudante</h3>
-      <p style="margin-bottom: 20px;">Insira os dados do novo estudante para a turma atual.</p>
+      <p style="margin-bottom: 20px;">Insira os dados do novo estudante para a turma atual. Datas e meses anteriores à matrícula serão preenchidos automaticamente com "--".</p>
       <input type="text" id="novo-nome" placeholder="Nome Completo (Obrigatório)" style="width: 100%; margin-bottom: 14px; box-sizing: border-box;">
       <input type="text" id="novo-simade" placeholder="SIMADE (Obrigatório)" style="width: 100%; margin-bottom: 24px; box-sizing: border-box;">
       <div class="modal-actions">
@@ -619,6 +690,24 @@
         <button class="modo-btn" id="modo-relatorio-btn" onclick="alternarModoNavegacao('relatorio_geral')">📊 Relatório Geral (Mês)</button>
       </nav>
 
+      <!-- FILTROS -->
+      <div class="selection-group">
+        <span class="selection-label">Turno</span>
+        <div class="btn-grid" id="grid-turno">
+          <button class="btn-choice" onclick="setSelecao('turno', 'Manhã', this)">MANHÃ</button>
+          <button class="btn-choice" onclick="setSelecao('turno', 'Tarde', this)">TARDE</button>
+          <button class="btn-choice" onclick="setSelecao('turno', 'Noite', this)">NOITE</button>
+        </div>
+      </div>
+
+      <div class="selection-group" id="bloco-unidade" style="display: none;">
+        <span class="selection-label">Unidade</span>
+        <div class="btn-grid" id="grid-unidade">
+          <button class="btn-choice" onclick="setSelecao('unidade', 'Sede', this)">SEDE</button>
+          <button class="btn-choice" onclick="setSelecao('unidade', 'Morada Nova', this)">MORADA NOVA</button>
+        </div>
+      </div>
+
       <div class="selection-group" id="bloco-data" style="display:none;">
         <span class="selection-label">Data de Referência</span>
         <input type="date" id="input-data" onchange="atualizarInterface()">
@@ -642,7 +731,7 @@
         </select>
       </div>
 
-      <div class="selection-group" id="bloco-turma">
+      <div class="selection-group" id="bloco-turma" style="display:none;">
         <span class="selection-label" id="label-turmas-acao">Selecione uma turma para abrir</span>
         <div class="grid-cards" id="grid-turma"></div>
       </div>
@@ -744,7 +833,8 @@
   </main>
 
   <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyfwWdSqSC69tCoUXA1tUhfxG9p_TNJfisMc7s7vT3INf1JvqDGY61m5HbiYRYoz55xFw/exec";
+    // PONTE DE ADAPTAÇÃO HÍBRIDA (GAS E GITHUB PAGES)
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNYn4JNw21S0bWCzR87UTvg3Go2y_UNDrd02YB7By2Mx9D3rXNN8wIiyCxKZca42Bh0w/exec";
 
     if (typeof google === 'undefined') { window.google = {}; }
     if (!google.script) { google.script = {}; }
@@ -783,8 +873,8 @@
       Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
     }
 
-    // ESTADO GLOBAL (SEDE - MANHÃ FIXOS)
-    let state = { perfil: '', unidade: 'Sede', turno: 'Manhã', turmaId: '', turmaNome: '', modo: 'diario' };
+    // ESTADO GLOBAL
+    let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
     let dbTurmas = [];
     let isCarregandoTurmas = true;
     let dadosChamadaGeral = [];
@@ -799,7 +889,7 @@
       google.script.run.withSuccessHandler(res => { 
         dbTurmas = res; 
         isCarregandoTurmas = false;
-        atualizarInterface();
+        if(state.turno) atualizarInterface();
       }).getTurmasDisponiveis();
       
       const hoje = new Date();
@@ -893,13 +983,15 @@
 
     function efetuarLogin(perfil) {
       state.perfil = perfil;
-      state.unidade = 'Sede';
-      state.turno = 'Manhã';
       document.getElementById('tela-login').style.display = 'none';
       document.getElementById('tela-painel').style.display = 'block';
       document.getElementById('perfil-display').innerText = perfil.toUpperCase();
       
-      state.turmaId = '';
+      state.unidade = ''; state.turno = ''; state.turmaId = '';
+      document.querySelectorAll('.btn-choice').forEach(b => b.classList.remove('selected'));
+      
+      document.getElementById('bloco-unidade').style.display = 'none';
+      document.getElementById('bloco-turma').style.display = 'none';
       mostrarResultado(''); 
       aplicarModoNavegacao('diario');
       
@@ -961,6 +1053,36 @@
       document.getElementById('modal-adicionar-estudante').style.display = 'none';
     }
 
+    function setSelecao(tipo, valor, btnElement) {
+      if (alteracoesNaoSalvas) {
+        mostrarConfirm("Você tem uma chamada em andamento. Deseja descartar os dados para mudar os filtros?", () => {
+          alteracoesNaoSalvas = false; mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement);
+        });
+      } else { mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement); }
+    }
+
+    function aplicarSelecao(tipo, valor, btnElement) {
+      state[tipo] = valor;
+      const container = btnElement.parentElement;
+      const botoes = container.getElementsByClassName('btn-choice');
+      for(let b of botoes) b.classList.remove('selected');
+      btnElement.classList.add('selected');
+
+      if (tipo === 'turno') {
+        const blocoUnidade = document.getElementById('bloco-unidade');
+        if (valor === 'Manhã' || valor === 'Tarde') {
+          state.unidade = 'Sede';
+          blocoUnidade.style.display = 'none';
+        } else if (valor === 'Noite') {
+          state.unidade = '';
+          blocoUnidade.style.display = 'block';
+          const botoesUnidade = document.getElementById('grid-unidade').getElementsByClassName('btn-choice');
+          for(let b of botoesUnidade) b.classList.remove('selected');
+        }
+      }
+      atualizarInterface();
+    }
+
     function atualizarInterface() {
       state.turmaId = ""; 
       const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
@@ -977,40 +1099,47 @@
           : "Selecione uma turma para Ver Faltas";
       }
 
-      const gridTurma = document.getElementById('grid-turma');
-      gridTurma.innerHTML = '';
+      if (state.unidade && state.turno) {
+        const gridTurma = document.getElementById('grid-turma');
+        gridTurma.innerHTML = '';
 
-      if (isCarregandoTurmas) {
-        gridTurma.innerHTML = '<span style="color:var(--brand-color); font-size:14px; width:100%; font-weight:600; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span class="mini-spinner"></span> Carregando Turmas...</span>';
-      } else {
-        if(dbTurmas.length > 0) {
-          const frag = document.createDocumentFragment();
-          dbTurmas.forEach(t => {
-            const card = document.createElement('div');
-            card.className = 'card-turma';
-            let tagSerie = t.nome.split('-')[0].trim();
-            card.innerHTML = `
-              <div class="tag-turma">${tagSerie}</div>
-              <div class="titulo-turma">${t.nome}</div>
-              <div class="info-turma">${t.unidade}</div>
-              <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
-              <div id="status-card-${t.id}" class="status-container-card"></div>
-            `;
-            card.onclick = function() {
-              if(alteracoesNaoSalvas && state.turmaId !== t.id) {
-                 mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
-                    alteracoesNaoSalvas = false; executarAcaoCard(t, card, gridTurma);
-                 });
-              } else { executarAcaoCard(t, card, gridTurma); }
-            };
-            frag.appendChild(card);
-          });
-          gridTurma.appendChild(frag);
-          if (state.modo === 'diario') carregarStatusDosCards();
+        if (isCarregandoTurmas) {
+          gridTurma.innerHTML = '<span style="color:var(--brand-color); font-size:14px; width:100%; font-weight:600; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span class="mini-spinner"></span> Carregando Turmas...</span>';
+          document.getElementById('bloco-turma').style.display = 'block';
         } else {
-          gridTurma.innerHTML = '<span style="color:var(--danger-color); font-size:14px; width:100%; font-weight:500; text-transform:uppercase;">Nenhuma turma encontrada.</span>';
+          const turmasFiltradas = dbTurmas.filter(t => t.unidade === state.unidade && t.turno === state.turno);
+          
+          if(turmasFiltradas.length > 0) {
+            const frag = document.createDocumentFragment();
+            turmasFiltradas.forEach(t => {
+              const card = document.createElement('div');
+              card.className = 'card-turma';
+              let tagSerie = t.nome.split('-')[0].trim();
+              card.innerHTML = `
+                <div class="tag-turma">${tagSerie}</div>
+                <div class="titulo-turma">${t.nome}</div>
+                <div class="info-turma">${t.unidade}</div>
+                <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
+                <div id="status-card-${t.id}" class="status-container-card"></div>
+              `;
+              card.onclick = function() {
+                if(alteracoesNaoSalvas && state.turmaId !== t.id) {
+                   mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
+                      alteracoesNaoSalvas = false; executarAcaoCard(t, card, gridTurma);
+                   });
+                } else { executarAcaoCard(t, card, gridTurma); }
+              };
+              frag.appendChild(card);
+            });
+            gridTurma.appendChild(frag);
+            document.getElementById('bloco-turma').style.display = 'block';
+            if (state.modo === 'diario') carregarStatusDosCards();
+          } else {
+            gridTurma.innerHTML = '<span style="color:var(--danger-color); font-size:14px; width:100%; font-weight:500; text-transform:uppercase;">Nenhuma turma encontrada.</span>';
+            document.getElementById('bloco-turma').style.display = 'block';
+          }
         }
-      }
+      } else { document.getElementById('bloco-turma').style.display = 'none'; }
     }
 
     function executarAcaoCard(t, card, gridTurma) {
@@ -1032,6 +1161,8 @@
     }
 
     function carregarStatusDosCards() {
+      if (!state.unidade || !state.turno) return;
+
       let dataUsada = new Date();
       if(state.perfil === 'Supervisao' || state.perfil === 'Secretaria') {
         let inputD = document.getElementById('input-data').value;
@@ -1049,7 +1180,7 @@
         if (turmasStatus && Array.isArray(turmasStatus)) {
           renderizarBadgesStatus(turmasStatus);
         }
-      }).getPainelMonitoramento("Sede", "Manhã", dataFormatadaLocal, mesExtensoLocal);
+      }).getPainelMonitoramento(state.unidade, state.turno, dataFormatadaLocal, mesExtensoLocal);
     }
 
     function renderizarBadgesStatus(turmasStatus) {
@@ -1096,10 +1227,14 @@
          const nav = document.querySelector('.modo-nav');
          if (nav) nav.style.display = 'flex';
 
+         const groups = document.querySelectorAll('.selection-group');
+         if (groups.length > 0) groups[0].style.display = 'block';
+
          const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
+         document.getElementById('bloco-unidade').style.display = state.turno === 'Noite' ? 'block' : 'none';
          document.getElementById('bloco-data').style.display = (state.modo !== 'relatorio_geral' && ehAdmin) ? 'block' : 'none';
          document.getElementById('bloco-mes-geral').style.display = state.modo === 'relatorio_geral' ? 'block' : 'none';
-         document.getElementById('bloco-turma').style.display = 'block';
+         document.getElementById('bloco-turma').style.display = (state.unidade && state.turno) ? 'block' : 'none';
       }
     }
 
@@ -1485,7 +1620,7 @@
           document.getElementById('matriz-header-display').innerHTML = `
             <div style="text-align:center; padding: 4px 0;">
               <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
-              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: SEDE | TURNO: MANHÃ | MÊS DE REFERÊNCIA: ${dados.mes}</div>
+              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
             </div>
           `;
 
@@ -1554,6 +1689,7 @@
         .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
     }
 
+    // Escuta os eventos do botão voltar do dispositivo/navegador
     window.addEventListener('popstate', function(event) {
       if (window._isManualReset) {
         window._isManualReset = false;
