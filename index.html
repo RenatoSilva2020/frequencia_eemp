@@ -278,37 +278,6 @@
     }
 
     .selection-group { margin-bottom: 28px; }
-    .btn-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-    
-    .btn-choice { 
-      flex: 1 1 calc(33.333% - 12px); 
-      min-width: 130px; 
-      background: white; 
-      border: 2px solid var(--border-color); 
-      box-shadow: var(--shadow-sm); 
-      border-radius: var(--radius-sm); 
-      padding: 14px 12px; 
-      font-size: 13px; 
-      font-weight: 600; 
-      color: var(--secondary-text); 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      text-align: center; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .btn-choice:hover { 
-      border-color: var(--brand-color); 
-      color: var(--brand-color);
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
-    }
-    .btn-choice.selected { 
-      background: var(--brand-light); 
-      border-color: var(--brand-color); 
-      color: var(--brand-color); 
-      box-shadow: 0 0 0 1px var(--brand-color), 0 4px 12px rgba(139, 92, 246, 0.15); 
-    }
     
     .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
     .card-turma { 
@@ -533,12 +502,43 @@
     .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
     
     /* ==========================================================================
-       RESPONSIVIDADE
+       RESPONSIVIDADE APRIMORADA PARA CELULARES (ALTERAÇÃO 3)
        ========================================================================== */
-    @media (max-width: 500px) {
+    @media (max-width: 768px) {
+      body { padding: 12px 8px; }
+      .tela-branca { padding: 20px 16px; margin-bottom: 16px; border-radius: var(--radius-md); }
+      
       .profile-tabs { flex-direction: column; }
-      #tela-login { padding: 32px 20px; margin: 20px auto;}
+      #tela-login { padding: 32px 20px; margin: 20px auto; }
       .modo-nav { flex-direction: column; }
+      
+      .header-painel { flex-direction: column; text-align: center; gap: 16px; align-items: stretch; }
+      .header-painel h2 { font-size: 18px; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+      .tag-perfil { margin-left: 0; display: inline-block; }
+      
+      .grid-cards { grid-template-columns: 1fr; gap: 12px; }
+      
+      .header-data { flex-direction: column; text-align: center; gap: 12px; padding-bottom: 16px; }
+      .icon-circle { margin-right: 0; }
+      
+      .chamada-header { flex-direction: column; gap: 12px; text-align: center; }
+      
+      .student-row-header { flex-wrap: wrap; justify-content: space-between; }
+      .simade { width: 100%; margin-bottom: 4px; font-size: 11px; }
+      .student-name { width: 100%; margin-bottom: 8px; font-size: 13px; }
+      .total-faltas { text-align: right; margin-left: auto; margin-right: 12px;}
+      
+      .header-relatorio-actions { flex-direction: column; align-items: stretch; }
+      .botoes-acao-relatorio { justify-content: center; width: 100%; }
+      .btn-ordenar { flex: 1; justify-content: center; }
+      
+      .col-header { padding-right: 10px; }
+      .col-header span { font-size: 10px; }
+      
+      .btn-brand, .btn-principal { padding: 14px 16px; font-size: 13px; }
+      
+      /* Permite rolagem fluida em tabelas largas sem quebrar o layout da página */
+      .matriz-container, .history-panel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
   </style>
 </head>
@@ -640,23 +640,7 @@
         <button class="modo-btn" id="modo-relatorio-btn" onclick="alternarModoNavegacao('relatorio_geral')">📊 Relatório Geral (Mês)</button>
       </nav>
 
-      <!-- FILTROS -->
-      <div class="selection-group">
-        <span class="selection-label">Turno</span>
-        <div class="btn-grid" id="grid-turno">
-          <button class="btn-choice" onclick="setSelecao('turno', 'Manhã', this)">MANHÃ</button>
-          <button class="btn-choice" onclick="setSelecao('turno', 'Tarde', this)">TARDE</button>
-          <button class="btn-choice" onclick="setSelecao('turno', 'Noite', this)">NOITE</button>
-        </div>
-      </div>
-
-      <div class="selection-group" id="bloco-unidade" style="display: none;">
-        <span class="selection-label">Unidade</span>
-        <div class="btn-grid" id="grid-unidade">
-          <button class="btn-choice" onclick="setSelecao('unidade', 'Sede', this)">SEDE</button>
-          <button class="btn-choice" onclick="setSelecao('unidade', 'Morada Nova', this)">MORADA NOVA</button>
-        </div>
-      </div>
+      <!-- SELEÇÕES REMOVIDAS (ALTERAÇÃO 1): O turno e unidade agora são automáticos -->
 
       <div class="selection-group" id="bloco-data" style="display:none;">
         <span class="selection-label">Data de Referência</span>
@@ -718,7 +702,7 @@
           <div class="col-header"><span>Tot. Faltas</span><span>Aula</span></div>
           <ul class="list-wrapper" id="lista-alunos-chamada"></ul>
 
-          <div style="display: flex; gap: 16px; margin-top: 24px;">
+          <div style="display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap;">
             <button class="btn-principal btn-secondary" style="width: 100%; margin-top:12px; font-size:14px;" onclick="voltarInicio()">CANCELAR / VOLTAR</button>
             <button class="btn-principal" id="btn-salvar" onclick="enviarChamada()">SALVAR CHAMADA</button>
           </div>
@@ -833,7 +817,7 @@
     // --------------------------------------------------------------------------
     // ESTADO GLOBAL & INICIALIZAÇÃO
     // --------------------------------------------------------------------------
-    let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
+    let state = { perfil: '', unidade: 'Sede', turno: 'Manhã', turmaId: '', turmaNome: '', modo: 'diario' };
     let dbTurmas = [];
     let dadosChamadaGeral = [];
     let dadosRelatorioGeral = [];
@@ -949,11 +933,11 @@
       document.getElementById('btn-add-estudante-chamada').style.display = (perfil === 'Professor') ? 'none' : '';
       document.getElementById('btn-add-estudante').style.display = (perfil === 'Professor') ? 'none' : '';
 
-      state.unidade = ''; state.turno = ''; state.turmaId = '';
-      document.querySelectorAll('.btn-choice').forEach(b => b.classList.remove('selected'));
+      // ALTERAÇÃO 1: Valores fixos assumidos pela aplicação automaticamente.
+      state.unidade = 'Sede'; 
+      state.turno = 'Manhã'; 
+      state.turmaId = '';
       
-      document.getElementById('bloco-unidade').style.display = 'none';
-      document.getElementById('bloco-turma').style.display = 'none';
       mostrarResultado(''); 
       aplicarModoNavegacao('diario');
     }
@@ -1017,36 +1001,8 @@
     // --------------------------------------------------------------------------
     // SELEÇÃO & INTERFACE GERAL (PAINEL DE FILTROS)
     // --------------------------------------------------------------------------
-    function setSelecao(tipo, valor, btnElement) {
-      if (alteracoesNaoSalvas) {
-        mostrarConfirm("Você tem uma chamada em andamento. Deseja descartar os dados para mudar os filtros?", () => {
-          alteracoesNaoSalvas = false; mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement);
-        });
-      } else { mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement); }
-    }
-
-    function aplicarSelecao(tipo, valor, btnElement) {
-      state[tipo] = valor;
-      const container = btnElement.parentElement;
-      const botoes = container.getElementsByClassName('btn-choice');
-      for(let b of botoes) b.classList.remove('selected');
-      btnElement.classList.add('selected');
-
-      if (tipo === 'turno') {
-        const blocoUnidade = document.getElementById('bloco-unidade');
-        if (valor === 'Manhã' || valor === 'Tarde') {
-          state.unidade = 'Sede';
-          blocoUnidade.style.display = 'none';
-        } else if (valor === 'Noite') {
-          state.unidade = '';
-          blocoUnidade.style.display = 'block';
-          const botoesUnidade = document.getElementById('grid-unidade').getElementsByClassName('btn-choice');
-          for(let b of botoesUnidade) b.classList.remove('selected');
-        }
-      }
-      atualizarInterface();
-    }
-
+    
+    // ALTERAÇÃO 1: Funções de seleção de turno e unidade removidas, pois são fixos.
     function atualizarInterface() {
       state.turmaId = ""; 
       const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
@@ -1063,58 +1019,56 @@
           : "Selecione uma turma para Ver Faltas";
       }
 
-      if (state.unidade && state.turno) {
-        const turmasFiltradas = dbTurmas.filter(t => t.unidade === state.unidade && t.turno === state.turno);
-        const gridTurma = document.getElementById('grid-turma');
-        gridTurma.innerHTML = '';
-        
-        if(turmasFiltradas.length > 0) {
-          turmasFiltradas.forEach(t => {
-            const card = document.createElement('div');
-            card.className = 'card-turma';
-            let tagSerie = t.nome.split('-')[0].trim();
-            card.innerHTML = `
-              <div class="tag-turma">${tagSerie}</div>
-              <div class="titulo-turma">${t.nome}</div>
-              <div class="info-turma">${t.unidade}</div>
-              <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
-              <div id="status-card-${t.id}" class="status-container-card"></div>
-            `;
-            
-            // LÓGICA ATUALIZADA: Verificação de status 'Realizada' no clique do card
-            card.onclick = function() {
-              const acaoPrincipal = () => {
-                const divStatus = document.getElementById(`status-card-${t.id}`);
-                const isRealizada = divStatus && divStatus.innerText.toUpperCase().includes('REALIZADA');
-                
-                if (state.modo === 'diario' && state.perfil === 'Professor' && isRealizada) {
-                  mostrarConfirm("Esta chamada já consta como REALIZADA. Deseja realmente editar/refazer a chamada?", () => {
-                    executarAcaoCard(t, card, gridTurma);
-                  });
-                } else {
+      // Renderiza as 18 turmas diretamente baseadas nos valores fixos assumidos
+      const turmasFiltradas = dbTurmas; // Todas são Sede/Manhã agora
+      const gridTurma = document.getElementById('grid-turma');
+      gridTurma.innerHTML = '';
+      
+      if(turmasFiltradas.length > 0) {
+        turmasFiltradas.forEach(t => {
+          const card = document.createElement('div');
+          card.className = 'card-turma';
+          let tagSerie = t.nome.split('-')[0].trim();
+          card.innerHTML = `
+            <div class="tag-turma">${tagSerie}</div>
+            <div class="titulo-turma">${t.nome}</div>
+            <div class="info-turma">${t.unidade}</div>
+            <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
+            <div id="status-card-${t.id}" class="status-container-card"></div>
+          `;
+          
+          card.onclick = function() {
+            const acaoPrincipal = () => {
+              const divStatus = document.getElementById(`status-card-${t.id}`);
+              const isRealizada = divStatus && divStatus.innerText.toUpperCase().includes('REALIZADA');
+              
+              if (state.modo === 'diario' && state.perfil === 'Professor' && isRealizada) {
+                mostrarConfirm("Esta chamada já consta como REALIZADA. Deseja realmente editar/refazer a chamada?", () => {
                   executarAcaoCard(t, card, gridTurma);
-                }
-              };
-
-              if(alteracoesNaoSalvas && state.turmaId !== t.id) {
-                 mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
-                    alteracoesNaoSalvas = false; 
-                    acaoPrincipal();
-                 });
-              } else { 
-                 acaoPrincipal(); 
+                });
+              } else {
+                executarAcaoCard(t, card, gridTurma);
               }
             };
-            
-            gridTurma.appendChild(card);
-          });
-          document.getElementById('bloco-turma').style.display = 'block';
-          if (state.modo === 'diario') carregarStatusDosCards();
-        } else {
-          gridTurma.innerHTML = '<span style="color:var(--danger-color); font-size:14px; width:100%; font-weight:500; text-transform:uppercase;">Nenhuma turma encontrada.</span>';
-          document.getElementById('bloco-turma').style.display = 'block';
-        }
-      } else { document.getElementById('bloco-turma').style.display = 'none'; }
+
+            if(alteracoesNaoSalvas && state.turmaId !== t.id) {
+               mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
+                  alteracoesNaoSalvas = false; 
+                  acaoPrincipal();
+               });
+            } else { 
+               acaoPrincipal(); 
+            }
+          };
+          
+          gridTurma.appendChild(card);
+        });
+        document.getElementById('bloco-turma').style.display = 'block';
+        if (state.modo === 'diario') carregarStatusDosCards();
+      } else {
+        gridTurma.innerHTML = '<span style="color:var(--danger-color); font-size:14px; width:100%; font-weight:500; text-transform:uppercase;">Nenhuma turma encontrada.</span>';
+        document.getElementById('bloco-turma').style.display = 'block';
+      }
     }
 
     function executarAcaoCard(t, card, gridTurma) {
@@ -1127,9 +1081,9 @@
       card.classList.add('selected');
 
       calcularDatas(); 
-      if (state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz();
+      if (state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz(); // Requer backend se existir
       else if (state.perfil === 'Professor') prepararDiario();
-      else abrirRelatorioTurma(t.id);
+      else abrirRelatorioTurma(t.id); // Requer backend se existir
     }
 
     function carregarStatusDosCards() {
@@ -1261,7 +1215,7 @@
         renderizarListaChamada();
       } else {
         dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-        renderizarListaRelatorio();
+        renderizarListaRelatorio(); // Requer backend/frontend se existir
       }
 
       google.script.run.withFailureHandler(err => {
