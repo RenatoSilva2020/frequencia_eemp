@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Diário de Classe Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     /* ==========================================================================
        VARIÁVEIS GERAIS
@@ -234,6 +235,9 @@
       width: auto; 
       font-size: 12px;
       border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
     }
     .btn-secondary:hover { 
       border-color: var(--accent-color); 
@@ -276,464 +280,566 @@
       text-transform: uppercase;
       box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
     }
+
+    .selection-group { margin-bottom: 28px; }
+    .btn-grid { display: flex; flex-wrap: wrap; gap: 12px; }
     
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-    .card-turma { 
-      position: relative; 
+    .btn-choice { 
+      flex: 1 1 calc(33.333% - 12px); 
+      min-width: 130px; 
       background: white; 
       border: 2px solid var(--border-color); 
-      border-radius: var(--radius-md); 
-      padding: 20px 22px; 
       box-shadow: var(--shadow-sm); 
-      cursor: pointer; 
-      text-align: left; 
-      transition: all 0.25s ease; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 4px; 
-    }
-    .card-turma:hover { 
-      box-shadow: var(--shadow-lg); 
-      transform: translateY(-3px); 
-      border-color: var(--brand-color); 
-    }
-    .card-turma.selected { 
-      border-color: var(--brand-color); 
-      background-color: var(--brand-light); 
-      box-shadow: 0 0 0 1px var(--brand-color), var(--shadow-md);
-    }
-    
-    .tag-turma { font-size: 12px; font-weight: 600; color: var(--brand-color); text-transform: uppercase; letter-spacing: 0.5px; }
-    .titulo-turma { font-size: 16px; font-weight: 700; color: var(--primary-text); margin: 4px 0; text-transform: uppercase; letter-spacing: -0.3px; }
-    .info-turma { font-size: 12px; color: var(--secondary-text); font-weight: 500; text-transform: uppercase; }
-
-    .status-container-card { position: absolute; top: 18px; right: 18px; }
-    .badge-alerta-card { 
-      display: inline-block; 
-      background-color: var(--danger-light); 
-      color: var(--danger-color); 
-      border: 1px solid rgba(239, 68, 68, 0.3); 
-      padding: 4px 10px; 
-      border-radius: 20px; 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .badge-sucesso-card { 
-      display: inline-block; 
-      background-color: var(--success-light); 
-      color: var(--success-color); 
-      border: 1px solid rgba(16, 185, 129, 0.3); 
-      padding: 4px 10px; 
-      border-radius: 20px; 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .badge-loading-card { display: inline-block; color: var(--secondary-text); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* ==========================================================================
-       INDICADORES DE CARREGAMENTO & CABEÇALHOS DE ÁREA
-       ========================================================================== */
-    #loading-inline { text-align: center; padding: 40px; display: none; }
-    .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top: 4px solid var(--brand-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .loading-text { color: var(--secondary-text); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
-
-    .header-data { display: flex; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px; }
-    .icon-circle { background-color: var(--brand-light); color: var(--brand-color); width: 52px; height: 52px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0; }
-    .icon-circle svg { width: 26px; height: 26px; fill: currentColor; }
-    .header-text { font-weight: 600; font-size: 16px; flex-grow: 1; text-transform: uppercase; color: var(--primary-text); }
-    
-    .chamada-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 600; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; margin-left: 10px; vertical-align: middle;}
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2);}
-    input:checked + .slider { background-color: var(--brand-color); }
-    input:checked + .slider:before { transform: translateX(20px); }
-    
-    /* ==========================================================================
-       LISTAGEM DE ESTUDANTES
-       ========================================================================== */
-    .list-wrapper { list-style: none; padding: 0; margin: 0; }
-    .row-item { 
-      display: flex; 
-      align-items: center; 
-      padding: 16px 18px; 
-      border: 1px solid var(--border-color); 
-      border-radius: var(--radius-sm);
-      margin-bottom: 10px;
-      background-color: white;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.2s ease;
-    }
-    .row-item:hover {
-      border-color: rgba(139, 92, 246, 0.4);
-      box-shadow: var(--shadow-md);
-    }
-    .row-item:nth-child(even) { background-color: #fafafa; }
-    
-    .simade { color: var(--secondary-text); font-size: 12px; font-weight: 500; margin-right: 14px; width: 80px; letter-spacing: 0.5px; }
-    .student-name { flex-grow: 1; color: var(--primary-text); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: -0.2px; }
-    .total-faltas { color: var(--danger-color); font-weight: 600; width: 60px; text-align: center; font-size: 16px; }
-    
-    .col-header { 
-      display: flex; 
-      justify-content: flex-end; 
-      font-size: 11px; 
-      color: var(--secondary-text); 
-      padding-right: 18px; 
-      margin-bottom: 8px; 
-      gap: 12px; 
-      font-weight: 600; 
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    /* ==========================================================================
-       AÇÕES & RELATÓRIOS (RESUMO DIÁRIO E MATRIZ GERAL)
-       ========================================================================== */
-    .header-relatorio-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
-    .stat-item-small { background: white; padding: 12px 20px; border-radius: var(--radius-sm); text-align: center; box-shadow: var(--shadow-sm); border: 2px solid var(--border-color); display: flex; flex-direction: column; min-width: 110px; }
-    .stat-item-small span { font-size: 22px; font-weight: 700; color: var(--brand-color); line-height: 1;}
-    .stat-item-small small { font-size: 10px; text-transform: uppercase; color: var(--secondary-text); font-weight: 600; margin-top: 4px; letter-spacing: 0.5px; }
-    
-    .botoes-acao-relatorio { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-    .btn-ordenar { display: flex; align-items: center; gap: 8px; background: var(--brand-light); color: var(--brand-color); border: 2px solid rgba(139, 92, 246, 0.3); padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; transition: all 0.2s; letter-spacing: 0.5px; }
-    .btn-ordenar:hover { background: var(--brand-color); color: white; border-color: var(--brand-color); transform: translateY(-1px); }
-    .btn-ordenar svg { width: 18px; height: 18px; fill: currentColor; }
-
-    .alert-row { 
-      background-color: var(--danger-light) !important; 
-      border: 2px solid var(--danger-color) !important; 
-    }
-    .alert-tag { 
-      background: var(--danger-color); 
-      color: white; 
-      font-size: 10px; 
-      padding: 3px 8px; 
-      border-radius: 12px; 
-      margin-left: 8px; 
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .student-row-header { display: flex; align-items: center; width: 100%; cursor: pointer; padding: 4px 0; }
-    .student-row-header:hover .student-name { color: var(--brand-color); }
-    .history-panel { 
-      display: none; 
-      background: #f8fafc; 
-      border: 1px solid var(--border-color); 
       border-radius: var(--radius-sm); 
-      margin-top: 14px; 
-      padding: 16px; 
-      overflow-x: auto; 
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
-    }
-    .history-table { border-collapse: separate; border-spacing: 2px; width: max-content; }
-    .history-table th, .history-table td { 
-      border: 1px solid var(--border-color); 
-      padding: 8px 10px; 
-      text-align: center; 
+      padding: 14px 12px; 
       font-size: 13px; 
-      min-width: 32px; 
-      border-radius: 6px;
+      font-weight: 600; 
+      color: var(--secondary-text); 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      text-align: center; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px;
+    }
+    .btn-choice:hover { 
+      border-color: var(--brand-color); 
+      color: var(--brand-color);
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
+    }
+    .btn-choice.selected {
+      border-color: var(--brand-color);
+      background-color: var(--brand-light);
+      color: var(--brand-color);
+    }
+
+    /* CARDS DE TURMAS */
+    .grid-turmas {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .card-turma {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+      position: relative;
+    }
+    .card-turma:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--brand-color);
+    }
+    .tag-turma {
+      font-size: 10px;
+      background: #f1f5f9;
+      color: var(--secondary-text);
+      padding: 4px 8px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .titulo-turma { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-bottom: 4px; }
+    .info-turma { font-size: 12px; color: var(--secondary-text); }
+    .status-container-card { margin-top: 12px; }
+    
+    .badge-sucesso-card { background: var(--success-light); color: var(--success-color); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; display: inline-block; }
+    .badge-alerta-card { background: #fffbeb; color: #d97706; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; display: inline-block; }
+    .badge-loading-card { background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; display: inline-block; }
+
+    /* LISTA DE ESTUDANTES / CHAMADA */
+    .lista-alunos-chamada { list-style: none; padding: 0; margin: 0; }
+    .row-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
       background: white;
     }
-    .history-table th { background: #f1f5f9; font-weight: 600; color: var(--secondary-text); font-size: 11px; text-transform: uppercase; }
-    .history-table td { font-weight: 600; font-size: 14px;}
-    .cell-F { color: var(--danger-color); background: var(--danger-light) !important; }
-    .cell-P { color: var(--success-color); background: var(--success-light) !important; }
-    .cell-N { color: var(--secondary-text); font-weight: normal; opacity: 0.5; }
-
-    .matriz-container { 
-      width: 100%; 
-      overflow-x: auto; 
-      margin-top: 20px; 
-      border-radius: var(--radius-md); 
-      border: 1px solid var(--border-color); 
-      box-shadow: var(--shadow-sm);
-    }
-    .tabela-matriz { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 13px; background: white; }
-    .tabela-matriz th, .tabela-matriz td { border: 1px solid var(--border-color); padding: 10px 8px; text-align: center; }
-    .tabela-matriz th { background: #f8fafc; font-weight: 600; color: var(--primary-text); font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 0.5px; }
-    .tabela-matriz td.col-nome { text-align: left; font-weight: 600; white-space: nowrap; text-transform: uppercase; }
-    .tabela-matriz tr:nth-child(even) { background-color: #f8fafc; }
+    .row-item:nth-child(even) { background: var(--row-even); }
+    .row-item:last-child { border-bottom: none; }
+    .simade { font-size: 12px; color: var(--secondary-text); width: 100px; flex-shrink: 0; }
+    .student-name { flex-grow: 1; font-weight: 600; color: var(--primary-text); font-size: 14px; }
+    .total-faltas { width: 60px; text-align: center; font-size: 13px; font-weight: bold; color: var(--secondary-text); flex-shrink: 0; }
     
-    .btn-attendance { background: none; border: none; cursor: pointer; padding: 0; margin-left: 10px; transition: transform 0.1s;}
-    .btn-attendance:active { transform: scale(0.9); }
-    .btn-attendance svg { width: 32px; height: 32px; }
-    .icon-present { fill: var(--success-color); }
-    .icon-absent { fill: var(--danger-color); }
+    .btn-attendance {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-attendance.presente { background: var(--success-light); color: var(--success-color); }
+    .btn-attendance.falta { background: var(--danger-light); color: var(--danger-color); }
+    
+    /* TABELA MATRIZ */
+    .matriz-container {
+      overflow-x: auto;
+      margin-top: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+    .tabela-matriz { width: 100%; border-collapse: collapse; background: white; min-width: 600px; }
+    .tabela-matriz th { background: #f8fafc; padding: 12px; text-align: center; font-size: 12px; color: var(--secondary-text); border-bottom: 2px solid var(--border-color); }
+    .tabela-matriz td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+    
+    /* LOADING OVERLAY */
+    #loading-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.8); display: none;
+      align-items: center; justify-content: center; z-index: 9999;
+      flex-direction: column; font-weight: bold; color: var(--brand-color);
+    }
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--brand-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* ==========================================================================
-       MODAIS E SOBREPOSIÇÕES
+       MEDIA QUERIES - RESPONSIVIDADE PARA CELULARES
        ========================================================================== */
-    .modal-overlay { 
-      position: fixed; 
-      top: 0; left: 0; 
-      width: 100%; height: 100%; 
-      background: rgba(15, 23, 42, 0.6); 
-      backdrop-filter: blur(4px); 
-      display: none; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 1000; 
-    }
-    .modal-box { 
-      background: white; 
-      padding: 36px 30px; 
-      border-radius: var(--radius-lg); 
-      width: 90%; 
-      max-width: 420px; 
-      text-align: center; 
-      box-shadow: var(--shadow-lg); 
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      animation: slideUpFade 0.3s ease forwards;
-    }
-    .modal-box h3 { font-size: 20px; font-weight: 700; margin-top:0; margin-bottom: 12px; text-transform: uppercase; color: var(--accent-color); letter-spacing: -0.3px; }
-    .modal-box p { color: var(--secondary-text); margin-bottom: 24px; font-size: 14px; line-height: 1.6; }
-    .modal-actions { display: flex; gap: 12px; }
-    .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
-    
-    /* ==========================================================================
-       RESPONSIVIDADE MELHORADA (ALTERAÇÃO 3)
-       ========================================================================== */
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       body { padding: 12px 8px; }
-      .tela-branca { padding: 24px 16px; margin-bottom: 16px; border-radius: var(--radius-md); }
-      #tela-login { padding: 32px 20px; margin: 20px auto; width: 100%; box-sizing: border-box; }
+      .tela-branca { padding: 20px 16px; border-radius: var(--radius-md); }
       
-      .profile-tabs { flex-direction: column; gap: 8px; }
-      .modo-nav { flex-direction: column; gap: 8px; }
+      .header-painel { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 16px; 
+        padding: 16px; 
+        text-align: center;
+      }
+      .header-painel h2 { font-size: 18px; }
+      .tag-perfil { display: inline-block; margin-top: 4px; margin-left: 0; }
       
-      .header-painel { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
-      .header-painel button { width: 100%; margin-top: 10px; }
+      .btn-secondary { width: 100%; justify-content: center; padding: 14px; font-size: 14px; }
+      .btn-principal { padding: 16px; font-size: 14px; }
       
-      .grid-cards { grid-template-columns: 1fr; gap: 12px; }
+      .grid-turmas { grid-template-columns: 1fr; gap: 12px; }
       .card-turma { padding: 16px; }
       
-      .header-data { flex-direction: column; text-align: center; align-items: center; }
-      .icon-circle { margin-right: 0; margin-bottom: 12px; }
-      .header-text { margin-bottom: 12px; }
-      .chamada-header { flex-direction: column; gap: 12px; align-items: stretch; }
-      .chamada-header > div { display: flex; justify-content: space-between; align-items: center; }
-
-      .row-item { flex-direction: column; align-items: flex-start; position: relative; padding: 16px; gap: 12px; }
-      .student-row-header { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .simade { margin-right: 0; width: 100%; margin-bottom: 4px; }
-      .col-header { display: none; }
+      .row-item { flex-wrap: wrap; padding: 12px; gap: 8px; }
+      .simade { font-size: 11px; width: 100%; text-align: left; margin-bottom: -4px; }
+      .student-name { font-size: 14px; flex-basis: 60%; line-height: 1.2; }
+      .total-faltas { font-size: 14px; width: 40px; }
+      .btn-attendance { width: 48px; height: 48px; }
       
-      .btn-attendance svg { width: 40px; height: 40px; }
-      .btn-attendance-group { display: flex; width: 100%; justify-content: flex-end; gap: 16px; margin-top: 8px; }
-      .total-faltas { position: absolute; top: 16px; right: 16px; }
+      .modo-nav { flex-direction: column; }
+      .modo-btn { padding: 14px; font-size: 13px; }
       
-      .header-relatorio-actions { flex-direction: column; align-items: stretch; }
-      .botoes-acao-relatorio { justify-content: stretch; flex-direction: column; }
-      .botoes-acao-relatorio button { width: 100%; }
-      .stat-item-small { min-width: auto; flex: 1; }
-      .stats-group { display: flex; gap: 12px; width: 100%; }
+      .tabela-matriz th, .tabela-matriz td { padding: 8px 6px; font-size: 11px; }
+      .matriz-container { margin-top: 12px; border-radius: 8px; }
       
-      .modal-box { padding: 24px 20px; width: 95%; }
-      .modal-actions { flex-direction: column; }
+      .selection-group { margin-bottom: 16px; }
       
-      .tabela-matriz th, .tabela-matriz td { padding: 8px 4px; font-size: 11px; }
+      .login-input-group input, input[type="date"], select { padding: 14px; font-size: 16px; } /* Prevents iOS zoom */
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       ÍCONES SVG
-       ========================================================================== -->
-  <svg style="display: none;">
-    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
-    <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
-    <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
-    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
-    <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
-    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2L15 15l-1.41-1.41L15.17 12H8z"/></symbol>
-  </svg>
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div>Processando...</div>
+  </div>
 
-  <div id="app">
+  <div class="card">
+    
     <!-- TELA DE LOGIN -->
-    <div id="tela-login" class="card tela-branca">
+    <div id="tela-login" class="tela-branca">
       <div class="logo-escola">
-        <svg viewBox="0 0 24 24" style="width:60px; height:60px; fill:var(--brand-color);"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/></svg>
+        <h1 style="color: var(--brand-color); font-size: 28px;">Diário de Classe</h1>
       </div>
-      <h1>Diário de Classe</h1>
-      <p>Controle Digital de Frequência</p>
-      
-      <div class="login-input-group">
-        <label>Data de Referência</label>
-        <input type="date" id="data-login">
-      </div>
+      <p>Selecione seu perfil de acesso</p>
       
       <div class="profile-tabs">
-        <div class="profile-tab selected" onclick="setPerfil('Professor')">Professor</div>
-        <div class="profile-tab" onclick="setPerfil('Secretaria')">Secretaria</div>
-        <div class="profile-tab" onclick="setPerfil('Supervisao')">Supervisão</div>
+        <div class="profile-tab" onclick="selecionarPerfil('Professor')">Professor</div>
+        <div class="profile-tab" onclick="selecionarPerfil('Secretaria')">Secretaria</div>
+        <div class="profile-tab" onclick="selecionarPerfil('Supervisao')">Supervisão</div>
       </div>
-      
-      <button class="btn-principal" onclick="efetuarLogin()">Acessar Painel</button>
     </div>
 
-    <!-- TELA PRINCIPAL (PAINEL DE TURMAS) -->
-    <div id="tela-painel" class="card tela-branca" style="display: none;">
+    <!-- TELA PAINEL PRINCIPAL -->
+    <div id="tela-painel" style="display: none;">
+      
       <div class="header-painel">
         <div>
-          <h2>Painel <span id="lbl-perfil" class="tag-perfil">Professor</span></h2>
-          <div style="font-size: 13px; color: var(--secondary-text); margin-top: 4px; font-weight: 500;" id="lbl-data-painel"></div>
+          <h2>Painel Principal <span id="perfil-display" class="tag-perfil"></span></h2>
         </div>
-        <button class="btn-secondary" onclick="voltarParaLogin()">
-          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;vertical-align:middle;margin-right:6px;"><use href="#icon-logout"></use></svg>
-          Sair
-        </button>
+        <button class="btn-secondary" onclick="fazerLogout()">Sair</button>
       </div>
 
-      <!-- SEÇÃO DE TURMAS (ALTERAÇÃO 1 - SEM SELEÇÃO DE TURNO/UNIDADE) -->
-      <div id="bloco-turma">
-        <div class="selection-label" style="margin-bottom: 16px;">Turmas Disponíveis (Sede - Manhã)</div>
-        <div id="grid-turmas" class="grid-cards"></div>
-      </div>
-      
-      <div id="loading-inline">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loading-message">Carregando informações...</div>
+      <div class="tela-branca">
+        <div class="modo-nav">
+          <button id="modo-diario-btn" class="modo-btn selected" onclick="alternarModo(this, 'diario')">Diário de Chamada</button>
+          <button id="modo-relatorio-btn" class="modo-btn" onclick="alternarModo(this, 'relatorio')">Relatório Geral</button>
+        </div>
+
+        <div id="bloco-data" class="selection-group">
+          <label class="selection-label">Data da Chamada</label>
+          <input type="date" id="input-data" onchange="carregarCards()">
+        </div>
+
+        <div id="bloco-mes" class="selection-group" style="display: none;">
+          <label class="selection-label">Mês de Referência</label>
+          <select id="select-mes" onchange="carregarCards()">
+            <option value="FEVEREIRO">FEVEREIRO</option>
+            <option value="MARÇO">MARÇO</option>
+            <option value="ABRIL">ABRIL</option>
+            <option value="MAIO">MAIO</option>
+            <option value="JUNHO">JUNHO</option>
+            <option value="JULHO">JULHO</option>
+            <option value="AGOSTO">AGOSTO</option>
+            <option value="SETEMBRO">SETEMBRO</option>
+            <option value="OUTUBRO">OUTUBRO</option>
+            <option value="NOVEMBRO">NOVEMBRO</option>
+            <option value="DEZEMBRO">DEZEMBRO</option>
+          </select>
+        </div>
+
+        <div id="bloco-turmas" class="selection-group">
+          <label class="selection-label">Selecione a Turma</label>
+          <div id="grid-turmas" class="grid-turmas"></div>
+        </div>
       </div>
     </div>
+
+    <!-- TELA DE CHAMADA -->
+    <div id="tela-chamada" style="display: none;">
+      <div class="header-painel">
+        <div>
+          <h2>Realizar Chamada</h2>
+          <p id="info-chamada" style="color: var(--secondary-text); margin: 4px 0 0; font-size: 14px;"></p>
+        </div>
+        <button class="btn-secondary" onclick="voltarParaPainel()">Voltar</button>
+      </div>
+      
+      <div class="tela-branca">
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button class="btn-secondary" onclick="marcarTodos('•')" style="flex: 1;">Todos Presentes</button>
+          <button class="btn-secondary" onclick="marcarTodos('F')" style="flex: 1; color: var(--danger-color);">Todos Faltaram</button>
+        </div>
+        
+        <div class="row-item" style="background: var(--brand-light); border-radius: 8px 8px 0 0; border-bottom: 2px solid var(--brand-color);">
+          <div class="simade" style="font-weight:bold;">SIMADE</div>
+          <div class="student-name" style="font-weight:bold;">NOME DO ESTUDANTE</div>
+          <div class="total-faltas" style="font-weight:bold;">FALTAS</div>
+          <div style="width: 44px; text-align: center; font-weight:bold; font-size: 12px; color:var(--secondary-text);">AÇÃO</div>
+        </div>
+        
+        <ul id="lista-alunos" class="lista-alunos-chamada"></ul>
+        
+        <button class="btn-principal" onclick="salvarChamada()" style="margin-top: 24px;">Salvar Chamada</button>
+      </div>
+    </div>
+
+    <!-- TELA RELATÓRIO GERAL -->
+    <div id="tela-relatorio" style="display: none;">
+      <div class="header-painel">
+        <div>
+          <h2>Relatório Geral</h2>
+          <p id="info-relatorio" style="color: var(--secondary-text); margin: 4px 0 0; font-size: 14px;"></p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="exportarPDF()">Exportar PDF</button>
+          <button class="btn-secondary" onclick="voltarParaPainel()">Voltar</button>
+        </div>
+      </div>
+
+      <div class="tela-branca" style="padding: 16px;">
+        <div class="matriz-container">
+          <table class="tabela-matriz" id="tabela-relatorio">
+            <thead id="matriz-thead"></thead>
+            <tbody id="matriz-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    let estado = {
-      perfil: 'Professor',
-      dataRef: '',
-      turmas: []
+    // ==========================================================================
+    // ESTADO E VARIÁVEIS GLOBAIS
+    // ==========================================================================
+    let state = {
+      perfil: '',
+      modo: 'diario',
+      turmaId: '',
+      turmaNome: '',
+      // Alteração 1: Turno e Unidade fixos internamente
+      turno: 'Manhã',
+      unidade: 'Sede'
     };
+    
+    let dbTurmas = [];
+    let dadosAlunosChamada = [];
+    let alteracoesNaoSalvas = false;
+    
+    const MESES = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
 
-    function init() {
-      document.getElementById('data-login').valueAsDate = new Date();
-    }
-
-    function setPerfil(perfil) {
-      estado.perfil = perfil;
-      document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-    }
-
-    function efetuarLogin() {
-      const dataInput = document.getElementById('data-login').value;
-      if (!dataInput) {
-        alert("Selecione uma data de referência válida.");
-        return;
-      }
+    // ==========================================================================
+    // INICIALIZAÇÃO
+    // ==========================================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('input-data').valueAsDate = new Date();
+      document.getElementById('select-mes').value = MESES[new Date().getMonth()] || "FEVEREIRO";
       
-      estado.dataRef = dataInput;
-      document.getElementById('lbl-perfil').textContent = estado.perfil;
-      
-      const [ano, mes, dia] = dataInput.split('-');
-      document.getElementById('lbl-data-painel').textContent = `Data: ${dia}/${mes}/${ano}`;
+      google.script.run.withSuccessHandler(turmas => {
+        dbTurmas = turmas;
+      }).getTurmasDisponiveis();
+    });
 
+    // ==========================================================================
+    // NAVEGAÇÃO E PERFIS
+    // ==========================================================================
+    function selecionarPerfil(perfil) {
+      state.perfil = perfil;
+      document.getElementById('perfil-display').innerText = perfil;
       document.getElementById('tela-login').style.display = 'none';
       document.getElementById('tela-painel').style.display = 'block';
-
-      // ALTERAÇÃO 1 - Buscar diretamente as turmas sem depender de unidade e turno
-      carregarTurmas();
+      carregarCards();
     }
 
-    function carregarTurmas() {
-      mostrarLoading("Buscando turmas e status...");
-      document.getElementById('grid-turmas').innerHTML = '';
+    function fazerLogout() {
+      if (alteracoesNaoSalvas && !confirm("Existem alterações não salvas. Deseja sair?")) return;
+      state.perfil = '';
+      document.getElementById('tela-painel').style.display = 'none';
+      document.getElementById('tela-chamada').style.display = 'none';
+      document.getElementById('tela-relatorio').style.display = 'none';
+      document.getElementById('tela-login').style.display = 'block';
+      alteracoesNaoSalvas = false;
+    }
+
+    function alternarModo(btn, modo) {
+      document.querySelectorAll('.modo-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.modo = modo;
       
-      google.script.run
-        .withSuccessHandler(function(turmasRetornadas) {
-          estado.turmas = turmasRetornadas;
-          renderizarCardsTurmas();
-          atualizarStatusCards();
-        })
-        .withFailureHandler(function(erro) {
-          esconderLoading();
-          alert("Erro ao buscar turmas: " + erro);
-        })
-        .getTurmasDisponiveis(); // Agora retorna diretamente as 18 turmas
+      document.getElementById('bloco-data').style.display = modo === 'diario' ? 'block' : 'none';
+      document.getElementById('bloco-mes').style.display = modo === 'relatorio' ? 'block' : 'none';
+      
+      carregarCards();
     }
 
-    function renderizarCardsTurmas() {
+    function voltarParaPainel() {
+      if (alteracoesNaoSalvas && !confirm("Existem alterações não salvas. Deseja voltar?")) return;
+      alteracoesNaoSalvas = false;
+      document.getElementById('tela-chamada').style.display = 'none';
+      document.getElementById('tela-relatorio').style.display = 'none';
+      document.getElementById('tela-painel').style.display = 'block';
+      carregarCards();
+    }
+
+    // ==========================================================================
+    // CARREGAMENTO DOS CARDS
+    // ==========================================================================
+    function carregarCards() {
       const grid = document.getElementById('grid-turmas');
       grid.innerHTML = '';
       
-      if (estado.turmas.length === 0) {
-        grid.innerHTML = '<div style="color: var(--secondary-text); padding: 20px;">Nenhuma turma encontrada.</div>';
-        esconderLoading();
-        return;
-      }
-
-      estado.turmas.forEach(turma => {
-        const card = document.createElement('div');
-        card.className = 'card-turma';
-        card.id = 'card-' + turma.id;
-        card.onclick = () => abrirTurma(turma.id);
+      if (!dbTurmas.length) return;
+      
+      const ehDiario = state.modo === 'diario';
+      const dataStr = document.getElementById('input-data').value;
+      const mesStr = document.getElementById('select-mes').value;
+      
+      let mesExtenso = ehDiario ? getMesNomeDaData(dataStr) : mesStr;
+      
+      // As 18 turmas (já filtradas no backend/state interno) são renderizadas diretamente
+      dbTurmas.forEach(turma => {
+        const div = document.createElement('div');
+        div.className = 'card-turma';
+        div.onclick = () => abrirTurma(turma.id, turma.nome);
         
-        card.innerHTML = `
-          <div class="tag-turma">${turma.nome.split(' - ')[0]}</div>
+        div.innerHTML = `
+          <div class="tag-turma">${turma.turno}</div>
           <div class="titulo-turma">${turma.nome}</div>
-          <div class="info-turma">Sede • Manhã</div>
-          <div class="status-container-card" id="status-${turma.id}">
-            <span class="badge-loading-card">Carregando...</span>
-          </div>
+          <div class="info-turma">${turma.unidade}</div>
+          ${ehDiario ? `<div class="status-container-card"><span class="badge-loading-card" id="status-${turma.id}">Carregando...</span></div>` : ''}
         `;
-        grid.appendChild(card);
+        grid.appendChild(div);
       });
-    }
 
-    function atualizarStatusCards() {
-      google.script.run
-        .withSuccessHandler(function(statusRetornado) {
-          estado.turmas.forEach(turma => {
-            const statusContainer = document.getElementById('status-' + turma.id);
-            if (statusContainer) {
-              const status = statusRetornado[turma.id];
-              if (status === 'REALIZADA') {
-                statusContainer.innerHTML = '<span class="badge-sucesso-card">Realizada</span>';
+      if (ehDiario && dataStr) {
+        google.script.run.withSuccessHandler(statusLista => {
+          statusLista.forEach(st => {
+            const el = document.getElementById('status-' + st.id);
+            if (el) {
+              if (st.status === 'Realizada') {
+                el.className = 'badge-sucesso-card'; el.innerText = 'Realizada';
+              } else if (st.status === 'Pendente') {
+                el.className = 'badge-alerta-card'; el.innerText = 'Pendente';
               } else {
-                statusContainer.innerHTML = '<span class="badge-alerta-card">Pendente</span>';
+                el.className = 'badge-loading-card'; el.innerText = st.status;
               }
             }
           });
-          esconderLoading();
-        })
-        .withFailureHandler(function(erro) {
-          esconderLoading();
-          console.error("Erro ao buscar status:", erro);
-        })
-        .getPainelMonitoramento(estado.dataRef);
+        }).getPainelMonitoramento(state.unidade, state.turno, dataStr, mesExtenso);
+      }
     }
 
-    function abrirTurma(idTurma) {
-      alert("Integração de abertura de turma simulada com sucesso para: " + idTurma + "\n(Função nativa do sistema original preservada estruturalmente)");
-      // No código original, isso abriria a tela de listagem de alunos e controle de faltas
+    function abrirTurma(id, nome) {
+      state.turmaId = id;
+      state.turmaNome = nome;
+      mostrarLoading(true);
+      
+      if (state.modo === 'diario') {
+        const dataStr = document.getElementById('input-data').value;
+        const mes = getMesNomeDaData(dataStr);
+        document.getElementById('info-chamada').innerText = `${nome} - ${formatarDataBR(dataStr)}`;
+        
+        google.script.run.withSuccessHandler(res => {
+          dadosAlunosChamada = res.alunos;
+          renderizarListaChamada();
+          document.getElementById('tela-painel').style.display = 'none';
+          document.getElementById('tela-chamada').style.display = 'block';
+          mostrarLoading(false);
+        }).withFailureHandler(err => {
+          mostrarLoading(false); alert(err.message);
+        }).getDadosChamada(id, mes, dataStr);
+        
+      } else {
+        const mes = document.getElementById('select-mes').value;
+        document.getElementById('info-relatorio').innerText = `${nome} - Relatório Geral ${mes}`;
+        
+        google.script.run.withSuccessHandler(res => {
+          renderizarMatrizGeral(res);
+          document.getElementById('tela-painel').style.display = 'none';
+          document.getElementById('tela-relatorio').style.display = 'block';
+          mostrarLoading(false);
+        }).withFailureHandler(err => {
+          mostrarLoading(false); alert(err.message);
+        }).getRelatorioGeralMatriz(id, mes);
+      }
     }
 
-    function voltarParaLogin() {
-      document.getElementById('tela-painel').style.display = 'none';
-      document.getElementById('tela-login').style.display = 'block';
+    // ==========================================================================
+    // LÓGICA DA CHAMADA
+    // ==========================================================================
+    function renderizarListaChamada() {
+      const lista = document.getElementById('lista-alunos');
+      lista.innerHTML = '';
+      
+      dadosAlunosChamada.forEach((aluno, index) => {
+        if (aluno.inativo) return;
+        
+        aluno.status = aluno.status || '•'; 
+        const isFalta = aluno.status === 'F';
+        
+        const li = document.createElement('li');
+        li.className = 'row-item';
+        li.innerHTML = `
+          <div class="simade">${aluno.simade}</div>
+          <div class="student-name">${aluno.nome}</div>
+          <div class="total-faltas">${aluno.faltas}</div>
+          <button class="btn-attendance ${isFalta ? 'falta' : 'presente'}" onclick="alternarPresenca(${index})">
+            ${isFalta ? 'F' : 'P'}
+          </button>
+        `;
+        lista.appendChild(li);
+      });
     }
 
-    function mostrarLoading(mensagem) {
-      document.getElementById('loading-inline').style.display = 'block';
-      document.getElementById('loading-message').textContent = mensagem || 'Carregando...';
-      document.getElementById('grid-turmas').style.display = 'none';
+    function alternarPresenca(index) {
+      const aluno = dadosAlunosChamada[index];
+      aluno.status = aluno.status === '•' ? 'F' : '•';
+      alteracoesNaoSalvas = true;
+      renderizarListaChamada();
     }
 
-    function esconderLoading() {
-      document.getElementById('loading-inline').style.display = 'none';
-      document.getElementById('grid-turmas').style.display = 'grid';
+    function marcarTodos(status) {
+      dadosAlunosChamada.forEach(a => { if (!a.inativo) a.status = status; });
+      alteracoesNaoSalvas = true;
+      renderizarListaChamada();
     }
 
-    window.onload = init;
+    function salvarChamada() {
+      const dataStr = document.getElementById('input-data').value;
+      const mes = getMesNomeDaData(dataStr);
+      
+      mostrarLoading(true);
+      google.script.run.withSuccessHandler(msg => {
+        mostrarLoading(false);
+        alteracoesNaoSalvas = false;
+        alert(msg);
+        voltarParaPainel();
+      }).withFailureHandler(err => {
+        mostrarLoading(false);
+        alert(err.message);
+      }).salvarRegistroChamada(state.turmaId, mes, dataStr, dadosAlunosChamada);
+    }
+
+    // ==========================================================================
+    // LÓGICA DO RELATÓRIO GERAL
+    // ==========================================================================
+    function renderizarMatrizGeral(res) {
+      const thead = document.getElementById('matriz-thead');
+      const tbody = document.getElementById('matriz-tbody');
+      
+      let htmlHead = `<tr><th>SIMADE</th><th style="text-align:left; min-width:200px;">Estudante</th>`;
+      res.datas.forEach(d => htmlHead += `<th>${d}</th>`);
+      htmlHead += `<th>Faltas</th><th>Freq.</th></tr>`;
+      thead.innerHTML = htmlHead;
+      
+      let htmlBody = '';
+      res.alunos.forEach(aluno => {
+        htmlBody += `<tr ${aluno.inativo ? 'style="text-decoration:line-through; opacity:0.6;"' : ''}>
+          <td>${aluno.simade}</td>
+          <td style="text-align:left; font-weight:600;">${aluno.nome}</td>`;
+          
+        aluno.historico.forEach(val => {
+          let color = val === 'F' ? 'color: var(--danger-color); font-weight: bold;' : 'color: var(--success-color);';
+          htmlBody += `<td style="${color}">${val || ''}</td>`;
+        });
+        
+        htmlBody += `
+          <td style="font-weight:bold;">${aluno.totalFaltas}</td>
+          <td><span style="background:${aluno.freqPercent >= 75 ? 'var(--success-light)' : 'var(--danger-light)'}; color:${aluno.freqPercent >= 75 ? 'var(--success-color)' : 'var(--danger-color)'}; padding: 4px 8px; border-radius: 8px; font-weight: bold; font-size:11px;">${aluno.freqPercent}%</span></td>
+        </tr>`;
+      });
+      tbody.innerHTML = htmlBody;
+    }
+
+    function exportarPDF() {
+      const mes = document.getElementById('select-mes').value;
+      mostrarLoading(true);
+      google.script.run.withSuccessHandler(base64 => {
+        mostrarLoading(false);
+        const link = document.createElement('a');
+        link.href = base64;
+        link.download = `Relatorio_${state.turmaNome}_${mes}.pdf`;
+        link.click();
+      }).withFailureHandler(err => {
+        mostrarLoading(false);
+        alert(err.message);
+      }).exportarRelatorioGeralPDF(state.turmaId, mes);
+    }
+
+    // ==========================================================================
+    // UTILITÁRIOS
+    // ==========================================================================
+    function mostrarLoading(show) { document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none'; }
+    function getMesNomeDaData(dataStr) {
+      if(!dataStr) return "";
+      return MESES[new Date(dataStr + 'T12:00:00').getMonth()];
+    }
+    function formatarDataBR(dataStr) {
+      if(!dataStr) return "";
+      const d = new Date(dataStr + 'T12:00:00');
+      return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+    }
   </script>
 </body>
 </html>
