@@ -551,7 +551,7 @@
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
     <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
     <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
-    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
     <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
     <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
     <symbol id="icon-teacher" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></symbol>
@@ -946,6 +946,9 @@
       document.getElementById('tela-painel').style.display = 'block';
       document.getElementById('perfil-display').innerText = perfil.toUpperCase();
       
+      document.getElementById('btn-add-estudante-chamada').style.display = (perfil === 'Professor') ? 'none' : '';
+      document.getElementById('btn-add-estudante').style.display = (perfil === 'Professor') ? 'none' : '';
+
       state.unidade = ''; state.turno = ''; state.turmaId = '';
       document.querySelectorAll('.btn-choice').forEach(b => b.classList.remove('selected'));
       
@@ -1209,7 +1212,7 @@
                 else if(state.perfil === 'Professor') mostrarResultado('tela-chamada');
                 else mostrarResultado('tela-relatorio'); 
            });
-        }).adicionarEstudante(state.turmaId, nome, simade);
+        }).adicionarEstudante(state.turmaId, nome, simade, state.perfil);
     }
 
     function confirmarAlteracaoStatus(index, contexto, event) {
@@ -1252,7 +1255,7 @@
             renderizarListaRelatorio();
           }
           mostrarModal("ERRO", "Falha ao sincronizar status: " + err.message);
-      }).alternarStatusEstudante(state.turmaId, nomeEstudante, novoStatusInativo);
+      }).alternarStatusEstudante(state.turmaId, nomeEstudante, novoStatusInativo, state.perfil);
     }
 
     function prepararDiario() {
@@ -1314,7 +1317,7 @@
         let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
         let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
         
-        let btnStatus = `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
 
         li.innerHTML = `
           <div class="student-row-header" style="padding:0;">
@@ -1379,220 +1382,19 @@
           
           const btn = document.getElementById(`btn-att-${i}`);
           const divFaltas = document.getElementById(`div-faltas-${i}`);
-          if(btn && divFaltas) {
-            if(todosPresentes) {
-              btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
-              divFaltas.style.color = '';
-              divFaltas.style.fontSize = '';
-            } else {
-              btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
-              divFaltas.style.color = 'var(--danger-color)';
-              divFaltas.style.fontSize = '18px';
-            }
-            divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
+          
+          if (todosPresentes) {
+            btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
+            divFaltas.style.color = ''; 
+            divFaltas.style.fontSize = '';
+          } else {
+            btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
+            divFaltas.style.color = 'var(--danger-color)'; 
+            divFaltas.style.fontSize = '18px';
           }
+          divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
         }
       });
-    }
-
-    function enviarChamada() {
-      document.getElementById('btn-salvar').disabled = true;
-      mostrarResultado('loading-inline');
-      google.script.run
-        .withSuccessHandler(res => {
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarModal("SUCESSO!", res, () => { resetarUI(); carregarStatusDosCards(); }); 
-        })
-        .withFailureHandler(err => {
-          mostrarModal("ERRO", err.message);
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarResultado('tela-chamada');
-        }).salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
-    }
-
-    // --------------------------------------------------------------------------
-    // RELATÓRIOS & MATRIZ MENSAL
-    // --------------------------------------------------------------------------
-    function abrirRelatorioTurma(turmaId) {
-      mostrarResultado('loading-inline');
-      google.script.run.withSuccessHandler(dados => {
-           mostrarResultado('tela-relatorio');
-           document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
-           document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
-           
-           window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
-           document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
-           
-           window.datasRelatorioGeral = dados.datas || []; 
-           dadosRelatorioGeral = dados.alunos;
-           dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           renderizarListaRelatorio();
-        }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
-        .getRelatorioTurma(turmaId, mesExtenso);
-    }
-
-    function renderizarListaRelatorio() {
-      const ul = document.getElementById('lista-relatorio-alunos');
-      ul.innerHTML = '';
-      
-      dadosRelatorioGeral.forEach((aluno, index) => {
-        const li = document.createElement('li');
-        li.className = 'row-item';
-        li.style.flexDirection = 'column'; 
-        li.style.alignItems = 'stretch';
-        
-        let dias = window.datasRelatorioGeral || [];
-        let historicoAluno = aluno.historico || []; 
-        let calcTotal = historicoAluno.filter(v => String(v).toUpperCase() === 'F').length;
-        
-        let calcConsec = 0;
-        for (let v of historicoAluno) {
-            let val = String(v).toUpperCase();
-            if (val === 'F') calcConsec++; 
-            else if (val === '•' || val === 'P' || val === '--') calcConsec = 0; 
-        }
-        
-        aluno.faltasTotais = calcTotal; 
-        aluno.faltasConsecutivas = calcConsec;
-
-        let aulasMatriculado = historicoAluno.filter(v => v !== '--' && v !== '' && v !== null && v !== undefined).length;
-        let aulasPrevistas = aulasMatriculado > 0 ? aulasMatriculado : (window.aulasPrevistasGeral > 0 ? window.aulasPrevistasGeral : historicoAluno.length);
-        let presencas = Math.max(0, aulasPrevistas - calcTotal);
-        let freqPercent = aulasPrevistas > 0 ? Math.round((presencas / aulasPrevistas) * 100) : 100;
-        let corFrequencia = freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)';
-
-        let alerta = calcConsec >= 4 ? `<span class="alert-tag">ALERTA</span>` : '';
-        if (calcConsec >= 4) li.classList.add('alert-row');
-                             
-        let historyHeaders = dias.map(d => `<th>${d}</th>`).join('');
-        let historyCells = historicoAluno.map(s => {
-           let cClass = s === 'F' ? 'cell-F' : ((s === '•' || s === 'P') ? 'cell-P' : (s === '--' ? 'cell-N' : ''));
-           return `<td class="${cClass}">${s}</td>`;
-        }).join('');
-
-        let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-        let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
-        let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
-        let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-        
-        let btnStatus = `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
-
-        li.innerHTML = `
-          <div class="student-row-header" onclick="toggleHistorico(${index})" title="Clique para ver o histórico">
-            <div class="simade" style="user-select:none; ${estiloNome}">${aluno.simade}</div>
-            <div class="student-name" style="user-select:none; ${estiloNome}">${aluno.nome} ${alerta} ${btnStatus}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:14px; color: ${corFrequencia}">${freqPercent}%</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px; color: ${calcConsec >= 4 ? 'var(--danger-color)' : 'inherit'}">${calcConsec}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px;">${calcTotal}</div>
-          </div>
-          <div class="history-panel" id="history-panel-${index}">
-             <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
-             <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
-          </div>
-        `;
-        ul.appendChild(li);
-      });
-    }
-
-    function toggleHistorico(index) {
-      const panel = document.getElementById(`history-panel-${index}`);
-      if (panel.style.display === 'block') panel.style.display = 'none';
-      else {
-        document.querySelectorAll('.history-panel').forEach(p => p.style.display = 'none');
-        panel.style.display = 'block';
-      }
-    }
-
-    function ordenarRelatorio() {
-      relatorioOrdemCrescente = !relatorioOrdemCrescente;
-      dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemCrescente) return a.faltasTotais - b.faltasTotais;
-        return b.faltasTotais - a.faltasTotais;
-      });
-      renderizarListaRelatorio();
-    }
-
-    function ordenarPorOrdemAlfabetica() {
-      dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemAZ) return (a.nome || '').localeCompare(b.nome || '');
-        return (b.nome || '').localeCompare(a.nome || '');
-      });
-      relatorioOrdemAZ = !relatorioOrdemAZ;
-      renderizarListaRelatorio();
-    }
-
-    function carregarRelatorioGeralMatriz() {
-      const mesSelecionado = document.getElementById('select-mes-geral').value;
-      mostrarResultado('loading-inline');
-
-      google.script.run.withSuccessHandler(dados => {
-          mostrarResultado('tela-relatorio-geral');
-          document.getElementById('matriz-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">RELATÓRIO GERAL - MÊS DE ${dados.mes}</span>`;
-
-          const wrapper = document.getElementById('matriz-tabela-wrapper');
-          let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
-
-          let trs = dados.alunos.map(a => {
-            let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-            let tdsHist = a.historico.map(v => {
-              let val = String(v).toUpperCase();
-              let color = 'inherit';
-              if (val === 'F') color = 'var(--danger-color)';
-              else if (val === '•' || val === 'P') color = 'var(--success-color)';
-              else if (val === '--') color = 'var(--secondary-text)';
-              return `<td style="font-weight: 600; color: ${color};">${val}</td>`;
-            }).join('');
-
-            return `
-              <tr>
-                <td style="color:var(--secondary-text); font-size:11px;">${a.simade || ''}</td>
-                <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
-                ${tdsHist}
-                <td style="font-weight:600; color:var(--danger-color);">${a.totalFaltas}</td>
-                <td style="font-weight:600; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'};">${a.freqPercent}%</td>
-              </tr>
-            `;
-          }).join('');
-
-          wrapper.innerHTML = `
-            <table class="tabela-matriz">
-              <thead>
-                <tr>
-                  <th>SIMADE</th>
-                  <th style="text-align:left;">Estudante</th>
-                  ${thDatas}
-                  <th>Faltas</th>
-                  <th>Freq.</th>
-                </tr>
-              </thead>
-              <tbody>${trs}</tbody>
-            </table>
-          `;
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
-        .getRelatorioGeralMatriz(state.turmaId, mesSelecionado);
-    }
-
-    function exportarRelatorioPDF() {
-      const mesSelecionado = document.getElementById('select-mes-geral').value;
-      mostrarResultado('loading-inline');
-
-      google.script.run.withSuccessHandler(base64Data => {
-          mostrarResultado('tela-relatorio-geral');
-          try {
-            const blob = base64ToBlob(base64Data, 'application/pdf');
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Relatorio_Frequencia_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          } catch(e) { mostrarModal("ERRO", "Falha ao gerar o PDF localmente."); }
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
-        .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
     }
   </script>
 </body>
