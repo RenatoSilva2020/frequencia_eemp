@@ -57,7 +57,6 @@
       box-shadow: var(--shadow-md); 
       border: 1px solid rgba(226, 232, 240, 0.8);
       margin-bottom: 24px;
-      contain: content;
     }
     
     /* ==========================================================================
@@ -116,7 +115,7 @@
       color: var(--secondary-text); 
       cursor: pointer; 
       border-radius: var(--radius-sm); 
-      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; 
+      transition: all 0.2s ease; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -147,7 +146,7 @@
       color: var(--secondary-text); 
       cursor: pointer; 
       border-radius: var(--radius-sm); 
-      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; 
+      transition: all 0.2s ease; 
       text-transform: uppercase; 
       letter-spacing: 0.5px; 
       border: none; 
@@ -184,7 +183,7 @@
       padding: 15px 18px; 
       border: 2px solid var(--border-color); 
       background: white; 
-      transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+      transition: all 0.2s ease; 
       border-radius: var(--radius-sm); 
       outline: none; 
       color: var(--primary-text);
@@ -206,7 +205,7 @@
       border: none; 
       cursor: pointer; 
       font-size: 14px; 
-      transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease; 
+      transition: all 0.2s ease; 
       box-shadow: 0 4px 14px rgba(139, 92, 246, 0.28); 
       display: flex; 
       align-items: center; 
@@ -214,7 +213,6 @@
       gap: 8px; 
       text-transform: uppercase; 
       letter-spacing: 0.6px;
-      will-change: transform;
     }
     .btn-brand:hover, .btn-principal:hover { 
       background: var(--brand-hover); 
@@ -296,11 +294,10 @@
       font-weight: 600; 
       color: var(--secondary-text); 
       cursor: pointer; 
-      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; 
+      transition: all 0.2s ease; 
       text-align: center; 
       text-transform: uppercase; 
       letter-spacing: 0.5px;
-      will-change: transform;
     }
     .btn-choice:hover { 
       border-color: var(--brand-color); 
@@ -325,12 +322,10 @@
       box-shadow: var(--shadow-sm); 
       cursor: pointer; 
       text-align: left; 
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; 
+      transition: all 0.25s ease; 
       display: flex; 
       flex-direction: column; 
       gap: 4px; 
-      contain: content;
-      will-change: transform;
     }
     .card-turma:hover { 
       box-shadow: var(--shadow-lg); 
@@ -439,8 +434,7 @@
       margin-bottom: 10px;
       background-color: white;
       box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      contain: content;
+      transition: all 0.2s ease;
     }
     .row-item:hover {
       border-color: rgba(139, 92, 246, 0.4);
@@ -474,7 +468,7 @@
     .stat-item-small small { font-size: 10px; text-transform: uppercase; color: var(--secondary-text); font-weight: 600; margin-top: 4px; letter-spacing: 0.5px; }
     
     .botoes-acao-relatorio { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-    .btn-ordenar { display: flex; align-items: center; gap: 8px; background: var(--brand-light); color: var(--brand-color); border: 2px solid rgba(139, 92, 246, 0.3); padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease; letter-spacing: 0.5px; }
+    .btn-ordenar { display: flex; align-items: center; gap: 8px; background: var(--brand-light); color: var(--brand-color); border: 2px solid rgba(139, 92, 246, 0.3); padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; transition: all 0.2s; letter-spacing: 0.5px; }
     .btn-ordenar:hover { background: var(--brand-color); color: white; border-color: var(--brand-color); transform: translateY(-1px); }
     .btn-ordenar svg { width: 18px; height: 18px; fill: currentColor; }
 
@@ -1384,8 +1378,6 @@
       ul.innerHTML = '';
       const frag = document.createDocumentFragment();
 
-      const historyHeaders = (window.diasChamada || []).map(d => `<th>${d}</th>`).join('');
-
       dadosChamadaGeral.forEach((aluno, i) => {
         const li = document.createElement('li');
         li.className = 'row-item';
@@ -1393,15 +1385,13 @@
         li.style.alignItems = 'stretch';
         li.style.padding = '14px 16px'; 
         
-        let historyCells = '';
-        if (aluno.historico) {
-          for (let j = 0; j < aluno.historico.length; j++) {
-            let val = String(aluno.historico[j] || '').toUpperCase().trim();
-            let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
-            let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
-            historyCells += `<td class="${cClass}">${displayChar}</td>`;
-          }
-        }
+        let historyHeaders = window.diasChamada.map(d => `<th>${d}</th>`).join('');
+        let historyCells = aluno.historico.map(s => {
+           let val = String(s || '').toUpperCase().trim();
+           let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
+           let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
+           return `<td class="${cClass}">${displayChar}</td>`;
+        }).join('');
 
         let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
         let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
@@ -1467,21 +1457,23 @@
 
     function alternarTodos() {
       const todosPresentes = document.getElementById('toggle-todos').checked;
-      const statusChar = todosPresentes ? '•' : 'F';
-      const iconClass = todosPresentes ? 'icon-present' : 'icon-absent';
-      const iconHref = todosPresentes ? '#icon-check' : '#icon-cross';
-
       dadosChamadaGeral.forEach((aluno, i) => { 
         if(!aluno.inativo) { 
-          aluno.status = statusChar;
+          aluno.status = todosPresentes ? '•' : 'F';
           aluno.faltasAtuais = todosPresentes ? aluno.faltasIniciais : aluno.faltasIniciais + 1;
           
           const btn = document.getElementById(`btn-att-${i}`);
           const divFaltas = document.getElementById(`div-faltas-${i}`);
           if(btn && divFaltas) {
-            btn.innerHTML = `<svg class="${iconClass}"><use href="${iconHref}"></use></svg>`;
-            divFaltas.style.color = todosPresentes ? '' : 'var(--danger-color)';
-            divFaltas.style.fontSize = todosPresentes ? '' : '18px';
+            if(todosPresentes) {
+              btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
+              divFaltas.style.color = '';
+              divFaltas.style.fontSize = '';
+            } else {
+              btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
+              divFaltas.style.color = 'var(--danger-color)';
+              divFaltas.style.fontSize = '18px';
+            }
             divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
           }
         }
@@ -1527,44 +1519,28 @@
       const ul = document.getElementById('lista-relatorio-alunos');
       ul.innerHTML = '';
       const frag = document.createDocumentFragment();
-      const dias = window.datasRelatorioGeral || [];
-      const historyHeaders = dias.map(d => `<th>${d}</th>`).join('');
-
+      
       dadosRelatorioGeral.forEach((aluno, index) => {
         const li = document.createElement('li');
         li.className = 'row-item';
         li.style.flexDirection = 'column'; 
         li.style.alignItems = 'stretch';
         
-        const historicoAluno = aluno.historico || [];
-        let calcTotal = 0;
+        let dias = window.datasRelatorioGeral || [];
+        let historicoAluno = aluno.historico || []; 
+        let calcTotal = historicoAluno.filter(v => String(v).toUpperCase() === 'F').length;
+        
         let calcConsec = 0;
-        let aulasMatriculado = 0;
-        let historyCells = '';
-
-        for (let j = 0; j < historicoAluno.length; j++) {
-          let raw = historicoAluno[j];
-          let val = String(raw || '').toUpperCase().trim();
-          
-          if (val === 'F') {
-            calcTotal++;
-            calcConsec++;
-          } else if (val === '•' || val === 'P' || val === '--') {
-            calcConsec = 0;
-          }
-
-          if (raw !== '--' && raw !== '' && raw !== null && raw !== undefined) {
-            aulasMatriculado++;
-          }
-
-          let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
-          let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
-          historyCells += `<td class="${cClass}">${displayChar}</td>`;
+        for (let v of historicoAluno) {
+            let val = String(v).toUpperCase();
+            if (val === 'F') calcConsec++; 
+            else if (val === '•' || val === 'P' || val === '--') calcConsec = 0; 
         }
         
         aluno.faltasTotais = calcTotal; 
         aluno.faltasConsecutivas = calcConsec;
 
+        let aulasMatriculado = historicoAluno.filter(v => v !== '--' && v !== '' && v !== null && v !== undefined).length;
         let aulasPrevistas = aulasMatriculado > 0 ? aulasMatriculado : (window.aulasPrevistasGeral > 0 ? window.aulasPrevistasGeral : historicoAluno.length);
         let presencas = Math.max(0, aulasPrevistas - calcTotal);
         let freqPercent = aulasPrevistas > 0 ? Math.round((presencas / aulasPrevistas) * 100) : 100;
@@ -1572,6 +1548,14 @@
 
         let alerta = calcConsec >= 4 ? `<span class="alert-tag">ALERTA</span>` : '';
         if (calcConsec >= 4) li.classList.add('alert-row');
+                             
+        let historyHeaders = dias.map(d => `<th>${d}</th>`).join('');
+        let historyCells = historicoAluno.map(s => {
+           let val = String(s || '').toUpperCase().trim();
+           let cClass = val === 'F' ? 'cell-F' : ((val === '•' || val === 'P' || val !== '') ? 'cell-P' : (val === '--' ? 'cell-N' : ''));
+           let displayChar = val === 'F' ? 'F' : (val === '--' ? '--' : (val !== '' ? '•' : ''));
+           return `<td class="${cClass}">${displayChar}</td>`;
+        }).join('');
 
         let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
         let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
@@ -1728,5 +1712,3 @@
   </script>
 </body>
 </html>
-
-
