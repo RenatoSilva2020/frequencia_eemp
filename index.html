@@ -1002,6 +1002,7 @@
     }
 
     function abrirModalAdicionar() {
+      if (state.perfil === 'Professor') return;
       document.getElementById('novo-nome').value = '';
       document.getElementById('novo-simade').value = '';
       document.getElementById('modal-adicionar-estudante').style.display = 'flex';
@@ -1178,6 +1179,7 @@
     // LÓGICA DE CHAMADA (DIÁRIO E RELATÓRIOS)
     // --------------------------------------------------------------------------
     function confirmarAdicionarEstudante() {
+      if (state.perfil === 'Professor') return;
       const nome = document.getElementById('novo-nome').value;
       const simade = document.getElementById('novo-simade').value;
       
@@ -1214,6 +1216,7 @@
 
     function confirmarAlteracaoStatus(index, contexto, event) {
       event.stopPropagation();
+      if (state.perfil === 'Professor') return;
       let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
       let acao = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
       
@@ -1224,6 +1227,7 @@
 
     function alterarStatusRapido(index, contexto, event) {
       if (event) event.stopPropagation();
+      if (state.perfil === 'Professor') return;
       let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
       const novoStatusInativo = !aluno.inativo;
       const nomeEstudante = aluno.nome;
@@ -1258,6 +1262,8 @@
     function prepararDiario() {
       const dataHeader = calcularDatas();
       document.getElementById('data-chamada-display').innerHTML = `<strong>${state.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">${dataHeader}</span>`;
+      
+      document.getElementById('btn-add-estudante-chamada').style.display = state.perfil === 'Professor' ? 'none' : 'block';
       
       mostrarResultado('loading-inline');
       google.script.run.withSuccessHandler(payload => {
@@ -1314,7 +1320,7 @@
         let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
         let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
         
-        let btnStatus = `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
 
         li.innerHTML = `
           <div class="student-row-header" style="padding:0;">
@@ -1420,6 +1426,8 @@
            document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
            document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
            
+           document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
+           
            window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
            document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
            
@@ -1475,7 +1483,7 @@
         let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
         let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
         
-        let btnStatus = `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
+        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
 
         li.innerHTML = `
           <div class="student-row-header" onclick="toggleHistorico(${index})" title="Clique para ver o histórico">
