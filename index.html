@@ -1396,6 +1396,26 @@
         }
       });
     }
+
+    function enviarChamada() {
+      document.getElementById('btn-salvar').disabled = true;
+      document.getElementById('btn-salvar').innerText = 'SALVANDO...';
+      mostrarResultado('loading-inline');
+
+      google.script.run
+        .withSuccessHandler(mensagem => {
+          alteracoesNaoSalvas = false;
+          mostrarModal("SUCESSO", mensagem, voltarInicio);
+        })
+        .withFailureHandler(err => {
+          document.getElementById('btn-salvar').disabled = false;
+          document.getElementById('btn-salvar').innerText = 'SALVAR CHAMADA';
+          mostrarModal("ERRO", err.message, () => {
+            mostrarResultado('tela-chamada');
+          });
+        })
+        .salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
+    }
   </script>
 </body>
 </html>
