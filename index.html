@@ -2,1794 +2,1014 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Diário de Classe Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Escolar Integrado</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
-    /* ==========================================================================
-       VARIÁVEIS GERAIS
-       ========================================================================== */
-    :root {
-      --bg-color: #f1f5f9; 
-      --card-bg: #ffffff;
-      --primary-text: #0f172a; 
-      --secondary-text: #64748b;
-      --accent-color: #0f172a; 
-      --link-color: #2563eb; 
-      --brand-color: #8b5cf6;
-      --brand-hover: #7c3aed;
-      --brand-light: #f5f3ff;
-      --danger-color: #ef4444; 
-      --danger-light: #fef2f2;
-      --success-color: #10b981; 
-      --success-light: #ecfdf5;
-      --row-even: #f8fafc; 
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-    }
-    
-    /* ==========================================================================
-       ESTILOS BASE
-       ========================================================================== */
+    /* Estilos Base e Identidade Visual */
     body { 
-      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; 
-      background-color: var(--bg-color); 
-      margin: 0; 
-      padding: 24px 16px; 
-      color: var(--primary-text); 
-      line-height: 1.5;
-      -webkit-text-size-adjust: 100%;
+      background-color: #f4f6fa; 
+      font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+      color: #1e293b;
     }
     
-    .card { 
-      max-width: 960px; 
-      margin: 0 auto; 
+    /* Cartões Modernizados (Bordas e Sombras Suaves) */
+    .card {
+      border-radius: 20px !important;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03) !important;
+      border: 1px solid #e2e8f0 !important;
+      background-color: #ffffff;
+      overflow: hidden;
     }
     
-    .tela-branca { 
-      background: var(--card-bg); 
-      border-radius: var(--radius-lg); 
-      padding: 32px 28px; 
-      box-shadow: var(--shadow-md); 
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      margin-bottom: 24px;
+    .card-login { 
+      max-width: 460px; 
+      padding: 40px 32px !important;
     }
     
-    /* ==========================================================================
-       TELA DE LOGIN & NAVEGAÇÃO
-       ========================================================================== */
-    #tela-login { 
-      max-width: 420px; 
-      margin: 40px auto; 
-      text-align: center; 
-      padding: 48px 32px; 
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-    
-    .logo-escola { 
-      width: 100%; 
-      height: 90px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      margin: 0 auto 20px; 
-    }
-    .logo-escola img { height: 100%; object-fit: contain; }
-    
-    #tela-login h1 { 
-      margin-top: 0; 
-      font-size: 26px; 
-      font-weight: 700; 
-      color: var(--accent-color); 
-      margin-bottom: 6px; 
-      letter-spacing: -0.5px; 
-    }
-    
-    #tela-login p { 
-      color: var(--secondary-text); 
-      font-size: 15px; 
-      margin-bottom: 32px; 
-    }
-    
-    .profile-tabs { 
-      display: flex; 
-      background: #f8fafc; 
-      border-radius: var(--radius-md); 
-      padding: 6px; 
-      margin-bottom: 32px; 
-      gap: 6px; 
-      border: 1px solid var(--border-color);
-    }
-    .profile-tab { 
-      flex: 1; 
-      padding: 12px 8px; 
-      text-align: center; 
-      font-size: 14px; 
-      font-weight: 600; 
-      color: var(--secondary-text); 
-      cursor: pointer; 
-      border-radius: var(--radius-sm); 
-      transition: all 0.2s ease; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 8px; 
-    }
-    .profile-tab:hover { color: var(--primary-text); background: rgba(255, 255, 255, 0.6); }
-    .profile-tab.selected { 
-      background: var(--brand-color); 
-      color: white; 
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); 
-    }
-
-
-    .modo-nav { 
-      display: flex; 
-      background: #f8fafc; 
-      border-radius: var(--radius-md); 
-      padding: 6px; 
-      margin-bottom: 28px; 
-      border: 1px solid var(--border-color); 
-      gap: 6px; 
-    }
-    .modo-btn { 
-      flex: 1; 
-      padding: 14px 10px; 
-      text-align: center; 
-      font-weight: 600; 
-      font-size: 13px; 
-      color: var(--secondary-text); 
-      cursor: pointer; 
-      border-radius: var(--radius-sm); 
-      transition: all 0.2s ease; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px; 
-      border: none; 
-      background: transparent; 
-    }
-    .modo-btn:hover { color: var(--primary-text); }
-    .modo-btn.selected { 
-      background: var(--accent-color); 
-      color: white; 
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2); 
-    }
-    
-    #login-actions-dynamic { animation: slideUpFade 0.4s ease forwards; }
-    @keyframes slideUpFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-
-    .login-input-group { text-align: left; margin-bottom: 24px; }
-    .login-input-group label, .selection-label { 
-      display: block; 
-      font-size: 12px; 
-      font-weight: 600; 
-      color: var(--secondary-text); 
-      text-transform: uppercase; 
-      margin-bottom: 10px; 
-      letter-spacing: 0.6px;
-    }
-    
-    /* ==========================================================================
-       INPUTS & BOTÕES GERAIS
-       ========================================================================== */
-    .login-input-group input, input[type="date"], input[type="text"], select { 
-      width: 100%; 
-      box-sizing: border-box; 
-      font-size: 15px; 
-      padding: 15px 18px; 
-      border: 2px solid var(--border-color); 
-      background: white; 
-      transition: all 0.2s ease; 
-      border-radius: var(--radius-sm); 
-      outline: none; 
-      color: var(--primary-text);
-      font-weight: 500;
-      margin-bottom: 0;
-    }
-    .login-input-group input:focus, input[type="date"]:focus, input[type="text"]:focus, select:focus { 
-      border-color: var(--brand-color); 
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12); 
-    }
-
-
-    .btn-brand, .btn-principal { 
-      background: var(--brand-color); 
-      color: white; 
-      border-radius: var(--radius-sm); 
-      width: 100%; 
-      padding: 16px 24px; 
-      font-weight: 600; 
-      border: none; 
-      cursor: pointer; 
-      font-size: 14px; 
-      transition: all 0.2s ease; 
-      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.28); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 8px; 
-      text-transform: uppercase; 
-      letter-spacing: 0.6px;
-    }
-    .btn-brand:hover, .btn-principal:hover { 
-      background: var(--brand-hover); 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.38); 
-    }
-    .btn-principal:disabled { 
-      background-color: #cbd5e1; 
-      color: #94a3b8;
-      cursor: not-allowed; 
-      box-shadow: none; 
-      transform: none; 
-    }
-    .btn-secondary { 
-      background-color: white; 
-      color: var(--accent-color); 
-      border: 2px solid var(--border-color); 
-      box-shadow: var(--shadow-sm); 
-      padding: 12px 20px; 
-      margin-top: 0; 
-      width: auto; 
-      font-size: 12px;
-      border-radius: var(--radius-sm);
-    }
-    .btn-secondary:hover { 
-      border-color: var(--accent-color); 
-      background-color: #f8fafc; 
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-
-    /* ==========================================================================
-       PAINEL E ELEMENTOS VISUAIS
-       ========================================================================== */
-    .header-painel { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      margin-bottom: 24px; 
-      background: var(--card-bg); 
-      padding: 20px 28px; 
-      border-radius: var(--radius-lg); 
-      box-shadow: var(--shadow-md); 
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-    .header-painel h2 { 
-      margin: 0; 
-      font-size: 22px; 
-      font-weight: 700; 
-      color: var(--accent-color);
+    h3, h5, .fw-bold { 
+      color: #0f172a !important; 
+      font-weight: 700 !important;
       letter-spacing: -0.5px;
     }
-    .tag-perfil { 
-      font-size: 11px; 
-      background: var(--brand-color); 
-      color: white; 
-      padding: 5px 12px; 
-      border-radius: 20px; 
-      vertical-align: middle; 
-      margin-left: 10px; 
-      font-weight: 600; 
-      letter-spacing: 0.8px; 
+    
+    .text-muted {
+      color: #64748b !important;
+      font-size: 0.95rem;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      color: #64748b;
       text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
-    }
-
-
-    .selection-group { margin-bottom: 28px; }
-    .btn-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-    
-    .btn-choice { 
-      flex: 1 1 calc(33.333% - 12px); 
-      min-width: 130px; 
-      background: white; 
-      border: 2px solid var(--border-color); 
-      box-shadow: var(--shadow-sm); 
-      border-radius: var(--radius-sm); 
-      padding: 14px 12px; 
-      font-size: 13px; 
-      font-weight: 600; 
-      color: var(--secondary-text); 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      text-align: center; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .btn-choice:hover { 
-      border-color: var(--brand-color); 
-      color: var(--brand-color);
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
-    }
-    .btn-choice.selected { 
-      background: var(--brand-light); 
-      border-color: var(--brand-color); 
-      color: var(--brand-color); 
-      box-shadow: 0 0 0 1px var(--brand-color), 0 4px 12px rgba(139, 92, 246, 0.15); 
+      margin-bottom: 8px;
     }
     
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-    .card-turma { 
-      position: relative; 
-      background: white; 
-      border: 2px solid var(--border-color); 
-      border-radius: var(--radius-md); 
-      padding: 20px 22px; 
-      box-shadow: var(--shadow-sm); 
-      cursor: pointer; 
-      text-align: left; 
-      transition: all 0.25s ease; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 4px; 
-    }
-    .card-turma:hover { 
-      box-shadow: var(--shadow-lg); 
-      transform: translateY(-3px); 
-      border-color: var(--brand-color); 
-    }
-    .card-turma.selected { 
-      border-color: var(--brand-color); 
-      background-color: var(--brand-light); 
-      box-shadow: 0 0 0 1px var(--brand-color), var(--shadow-md);
-    }
-    
-    .tag-turma { font-size: 12px; font-weight: 600; color: var(--brand-color); text-transform: uppercase; letter-spacing: 0.5px; }
-    .titulo-turma { font-size: 16px; font-weight: 700; color: var(--primary-text); margin: 4px 0; text-transform: uppercase; letter-spacing: -0.3px; }
-    .info-turma { font-size: 12px; color: var(--secondary-text); font-weight: 500; text-transform: uppercase; }
-
-
-    .status-container-card { position: absolute; top: 18px; right: 18px; }
-    .badge-alerta-card { 
-      display: inline-block; 
-      background-color: var(--danger-light); 
-      color: var(--danger-color); 
-      border: 1px solid rgba(239, 68, 68, 0.3); 
-      padding: 4px 10px; 
-      border-radius: 20px; 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .badge-sucesso-card { 
-      display: inline-block; 
-      background-color: var(--success-light); 
-      color: var(--success-color); 
-      border: 1px solid rgba(16, 185, 129, 0.3); 
-      padding: 4px 10px; 
-      border-radius: 20px; 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .badge-loading-card { 
-      display: inline-flex; 
-      align-items: center; 
-      gap: 5px; 
-      background-color: #f1f5f9; 
-      color: var(--brand-color); 
-      border: 1px solid rgba(139, 92, 246, 0.25); 
-      padding: 3px 8px; 
-      border-radius: 20px; 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px; 
-    }
-    .badge-sem-aula-card { 
-      display: inline-block; 
-      color: var(--secondary-text); 
-      font-size: 10px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px; 
-    }
-    .mini-spinner { 
-      width: 10px; 
-      height: 10px; 
-      border: 2px solid #cbd5e1; 
-      border-top: 2px solid var(--brand-color); 
-      border-radius: 50%; 
-      animation: spin 0.7s linear infinite; 
-      display: inline-block; 
-      flex-shrink: 0;
-    }
-
-
-    /* ==========================================================================
-       INDICADORES DE CARREGAMENTO & CABEÇALHOS DE ÁREA
-       ========================================================================== */
-    #loading-inline { text-align: center; padding: 40px; display: none; }
-    .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top: 4px solid var(--brand-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .loading-text { color: var(--secondary-text); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
-
-
-    .header-data { display: flex; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px; }
-    .icon-circle { background-color: var(--brand-light); color: var(--brand-color); width: 52px; height: 52px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0; }
-    .icon-circle svg { width: 26px; height: 26px; fill: currentColor; }
-    .header-text { font-weight: 600; font-size: 16px; flex-grow: 1; text-transform: uppercase; color: var(--primary-text); }
-    
-    .chamada-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 600; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; margin-left: 10px; vertical-align: middle;}
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2);}
-    input:checked + .slider { background-color: var(--brand-color); }
-    input:checked + .slider:before { transform: translateX(20px); }
-    
-    /* ==========================================================================
-       LISTAGEM DE ESTUDANTES
-       ========================================================================== */
-    .list-wrapper { list-style: none; padding: 0; margin: 0; }
-    .row-item { 
-      display: flex; 
-      align-items: center; 
-      padding: 16px 18px; 
-      border: 1px solid var(--border-color); 
-      border-radius: var(--radius-sm);
-      margin-bottom: 10px;
-      background-color: white;
-      box-shadow: var(--shadow-sm);
+    /* Inputs Estilizados */
+    .form-control, .form-select, .input-group-text { 
+      border-radius: 14px !important; 
+      border: 1px solid #e2e8f0 !important; 
+      background-color: #ffffff;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      color: #0f172a;
+      box-shadow: none !important;
       transition: all 0.2s ease;
     }
-    .row-item:hover {
-      border-color: rgba(139, 92, 246, 0.4);
-      box-shadow: var(--shadow-md);
+    
+    .form-control:focus, .form-select:focus { 
+      border-color: #583ef2 !important; 
+      box-shadow: 0 0 0 4px rgba(88, 62, 242, 0.08) !important; 
     }
-    .row-item:nth-child(even) { background-color: #fafafa; }
     
-    .simade { color: var(--secondary-text); font-size: 12px; font-weight: 500; margin-right: 14px; width: 80px; letter-spacing: 0.5px; }
-    .student-name { flex-grow: 1; color: var(--primary-text); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: -0.2px; }
-    .total-faltas { color: var(--danger-color); font-weight: 600; width: 60px; text-align: center; font-size: 16px; }
+    .input-group .form-control {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+    }
+    .input-group .input-group-text {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      background-color: #ffffff;
+      color: #94a3b8;
+    }
     
-    .col-header { 
-      display: flex; 
-      justify-content: flex-end; 
-      font-size: 11px; 
-      color: var(--secondary-text); 
-      padding-right: 18px; 
-      margin-bottom: 8px; 
-      gap: 12px; 
+    /* Botões Baseados no Print Principal */
+    .btn { 
+      border-radius: 14px !important; 
       font-weight: 600; 
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      padding: 12px 24px;
+      transition: all 0.2s ease; 
+    }
+    .btn:hover { transform: translateY(-1px); }
+    
+    .btn-primary { 
+      background: linear-gradient(90deg, #583ef2 0%, #a124f1 100%) !important;
+      border: none !important;
+      box-shadow: 0 8px 20px rgba(88, 62, 242, 0.2) !important;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 12px 24px rgba(88, 62, 242, 0.3) !important;
+      opacity: 0.95;
     }
     
-    /* ==========================================================================
-       AÇÕES & RELATÓRIOS (RESUMO DIÁRIO E MATRIZ GERAL)
-       ========================================================================== */
-    .header-relatorio-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
-    .stat-item-small { background: white; padding: 12px 20px; border-radius: var(--radius-sm); text-align: center; box-shadow: var(--shadow-sm); border: 2px solid var(--border-color); display: flex; flex-direction: column; min-width: 110px; }
-    .stat-item-small span { font-size: 22px; font-weight: 700; color: var(--brand-color); line-height: 1;}
-    .stat-item-small small { font-size: 10px; text-transform: uppercase; color: var(--secondary-text); font-weight: 600; margin-top: 4px; letter-spacing: 0.5px; }
+    .btn-dark { background-color: #0f172a !important; border: none !important; }
+    .btn-success { background-color: #10b981 !important; border: none !important; }
+    .btn-secondary { background-color: #64748b !important; border: none !important; }
     
-    .botoes-acao-relatorio { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-    .btn-ordenar { display: flex; align-items: center; gap: 8px; background: var(--brand-light); color: var(--brand-color); border: 2px solid rgba(139, 92, 246, 0.3); padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; transition: all 0.2s; letter-spacing: 0.5px; }
-    .btn-ordenar:hover { background: var(--brand-color); color: white; border-color: var(--brand-color); transform: translateY(-1px); }
-    .btn-ordenar svg { width: 18px; height: 18px; fill: currentColor; }
-
-
-    .alert-row { 
-      background-color: var(--danger-light) !important; 
-      border: 2px solid var(--danger-color) !important; 
-    }
-    .alert-tag { 
-      background: var(--danger-color); 
-      color: white; 
-      font-size: 10px; 
-      padding: 3px 8px; 
-      border-radius: 12px; 
-      margin-left: 8px; 
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    /* Tabelas Limpas e Idênticas ao Novo Print */
+    .table-container-modern {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #ffffff;
     }
 
-
-    .student-row-header { display: flex; align-items: center; width: 100%; cursor: pointer; padding: 4px 0; }
-    .student-row-header:hover .student-name { color: var(--brand-color); }
-    .history-panel { 
-      display: none; 
-      background: #f8fafc; 
-      border: 1px solid var(--border-color); 
-      border-radius: var(--radius-sm); 
-      margin-top: 14px; 
-      padding: 16px; 
-      overflow-x: auto; 
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
+    .table {
+      margin-bottom: 0 !important;
     }
-    .history-table { border-collapse: separate; border-spacing: 2px; width: max-content; }
-    .history-table th, .history-table td { 
-      border: 1px solid var(--border-color); 
-      padding: 8px 10px; 
-      text-align: center; 
-      font-size: 13px; 
-      min-width: 32px; 
-      border-radius: 6px;
-      background: white;
-    }
-    .history-table th { background: #f1f5f9; font-weight: 600; color: var(--secondary-text); font-size: 11px; text-transform: uppercase; }
-    .history-table td { font-weight: 600; font-size: 14px;}
-    .cell-F { color: var(--danger-color); background: var(--danger-light) !important; }
-    .cell-P { color: var(--success-color); background: var(--success-light) !important; }
-    .cell-N { color: var(--secondary-text); font-weight: normal; opacity: 0.5; }
-
-
-    .matriz-container { 
-      width: 100%; 
-      overflow-x: auto; 
-      margin-top: 20px; 
-      border-radius: var(--radius-md); 
-      border: 1px solid var(--border-color); 
-      box-shadow: var(--shadow-sm);
-    }
-    .tabela-matriz { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 13px; background: white; }
-    .tabela-matriz th, .tabela-matriz td { border: 1px solid var(--border-color); padding: 10px 8px; text-align: center; }
-    .tabela-matriz th { background: #f8fafc; font-weight: 600; color: var(--primary-text); font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 0.5px; }
-    .tabela-matriz td.col-nome { text-align: left; font-weight: 600; white-space: nowrap; text-transform: uppercase; }
-    .tabela-matriz tr:nth-child(even) { background-color: #f8fafc; }
     
-    .btn-attendance { background: none; border: none; cursor: pointer; padding: 0; margin-left: 10px; transition: transform 0.1s;}
-    .btn-attendance:active { transform: scale(0.9); }
-    .btn-attendance svg { width: 32px; height: 32px; }
-    .icon-present { fill: var(--success-color); }
-    .icon-absent { fill: var(--danger-color); }
-
-
-    /* ==========================================================================
-       MODAIS E SOBREPOSIÇÕES
-       ========================================================================== */
-    .modal-overlay { 
-      position: fixed; 
-      top: 0; left: 0; 
-      width: 100%; height: 100%; 
-      background: rgba(15, 23, 42, 0.6); 
-      backdrop-filter: blur(4px); 
-      display: none; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 1000; 
+    .table th {
+      background-color: #f8fafc !important;
+      color: #64748b !important;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      padding: 16px 20px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      text-transform: none !important;
     }
-    .modal-box { 
-      background: white; 
-      padding: 36px 30px; 
-      border-radius: var(--radius-lg); 
-      width: 90%; 
-      max-width: 420px; 
-      text-align: center; 
-      box-shadow: var(--shadow-lg); 
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      animation: slideUpFade 0.3s ease forwards;
-    }
-    .modal-box h3 { font-size: 20px; font-weight: 700; margin-top:0; margin-bottom: 12px; text-transform: uppercase; color: var(--accent-color); letter-spacing: -0.3px; }
-    .modal-box p { color: var(--secondary-text); margin-bottom: 24px; font-size: 14px; line-height: 1.6; }
-    .modal-actions { display: flex; gap: 12px; }
-    .modal-actions button { margin-top: 0; flex: 1; padding: 14px; width: 100%;}
     
-    /* ==========================================================================
-       RESPONSIVIDADE E OTIMIZAÇÃO MOBILE
-       ========================================================================== */
-    @media (max-width: 640px) {
-      body { padding: 12px 10px; }
-      .card { max-width: 100%; }
-      .tela-branca { padding: 20px 16px; border-radius: var(--radius-md); margin-bottom: 16px; }
-      #tela-login { padding: 28px 18px; margin: 16px auto; border-radius: var(--radius-md); }
-      #tela-login h1 { font-size: 22px; }
-      #tela-login p { font-size: 13px; margin-bottom: 20px; }
-      .logo-escola { height: 75px; }
-      .profile-tabs { flex-direction: column; gap: 8px; }
-      .profile-tab { padding: 14px 10px; font-size: 14px; min-height: 48px; }
-      .modo-nav { flex-direction: column; gap: 8px; }
-      .modo-btn { padding: 14px 10px; font-size: 13px; min-height: 48px; }
-      .header-painel { padding: 16px 18px; flex-direction: column; align-items: flex-start; gap: 12px; border-radius: var(--radius-md); }
-      .header-painel h2 { font-size: 18px; }
-      .btn-grid { gap: 8px; }
-      .btn-choice { flex: 1 1 100%; padding: 14px 12px; font-size: 14px; min-height: 48px; }
-      .grid-cards { grid-template-columns: 1fr; gap: 12px; }
-      .card-turma { padding: 16px 18px; }
-      .btn-brand, .btn-principal { padding: 16px 18px; font-size: 14px; min-height: 50px; }
-      .row-item { padding: 14px 12px; }
-      .simade { font-size: 11px; width: 65px; margin-right: 8px; }
-      .student-name { font-size: 13px; }
-      .total-faltas { font-size: 15px; width: 45px; }
-      .header-relatorio-actions { flex-direction: column; align-items: stretch; }
-      .botoes-acao-relatorio { justify-content: space-between; }
-      .btn-ordenar { flex: 1; justify-content: center; padding: 12px 10px; }
-      .modal-box { padding: 24px 20px; border-radius: var(--radius-md); }
+    .table td {
+      padding: 16px 20px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      color: #0f172a;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+    
+    .table tbody tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    .table-auditavel tbody tr { 
+      cursor: pointer; 
+      transition: background-color 0.15s ease; 
+    }
+    .table-auditavel tbody tr:hover { 
+      background-color: #f8fafc !important; 
+    }
+    
+    /* Pílulas de Status Baseadas no Segundo Print */
+    .badge {
+      font-size: 0.8rem !important;
+      font-weight: 600 !important;
+      padding: 6px 16px !important;
+      border-radius: 50px !important;
+      display: inline-block;
+      min-width: 100px;
+      text-align: center;
+      letter-spacing: 0.1px;
+      box-shadow: none !important;
+    }
+    
+    /* Cores suavizadas para Concluído, Pendente e Parcial */
+    .bg-success { 
+      background-color: #ecfdf5 !important; 
+      color: #10b981 !important; 
+      border: 1px solid #a7f3d0 !important;
+    }
+    .bg-danger { 
+      background-color: #fef2f2 !important; 
+      color: #ef4444 !important; 
+      border: 1px solid #fecaca !important;
+    }
+    .bg-warning { 
+      background-color: #fffbeb !important; 
+      color: #f59e0b !important; 
+      border: 1px solid #fde68a !important;
+    }
+
+    /* Ícone de Lupa Customizado do Print */
+    .icon-lupa-print {
+      color: #7c3aed !important;
+      font-size: 0.85rem;
+      margin-right: 8px;
+    }
+    
+    /* Abas de Navegação (Pills) */
+    .nav-pills {
+      background-color: #f1f5f9 !important;
+      border-radius: 14px;
+      padding: 4px !important;
+    }
+    
+    .nav-pills .nav-link { 
+      border-radius: 10px !important; 
+      font-weight: 600; 
+      color: #64748b !important;
+      padding: 10px 16px;
+    }
+    
+    .nav-pills .nav-link.active { 
+      background: linear-gradient(90deg, #583ef2 0%, #a124f1 100%) !important;
+      color: #ffffff !important; 
+    }
+    
+    .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+    .text-taxado { text-decoration: line-through; color: #94a3b8 !important; opacity: 0.65; }
+    .text-taxado input { background-color: #e2e8f0 !important; pointer-events: none; }
+
+    /* Loader */
+    #loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(244, 246, 250, 0.7); 
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1050; 
+      display: flex; justify-content: center; align-items: center;
+    }
+    .modern-loader { display: flex; gap: 8px; justify-content: center; }
+    .modern-loader div {
+      width: 12px; height: 12px; background-color: #583ef2; border-radius: 50%;
+      animation: bounce 0.5s alternate infinite cubic-bezier(0.6, 0.05, 0.15, 0.95);
+    }
+    .modern-loader div:nth-child(2) { animation-delay: 0.15s; background-color: #7c3aed;}
+    .modern-loader div:nth-child(3) { animation-delay: 0.3s; background-color: #a124f1;}
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
     }
   </style>
 </head>
 <body>
 
-
-  <!-- ÍCONES SVG -->
-  <svg style="display: none;">
-    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
-    <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></symbol>
-    <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
-    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></symbol>
-    <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
-    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
-    <symbol id="icon-teacher" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></symbol>
-    <symbol id="icon-secretary" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></symbol>
-    <symbol id="icon-supervisor" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></symbol>
-    <symbol id="icon-pdf" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm12 6V9c0-.55-.45-1-1-1h-3v8h1.5v-2.5h1.5c.55 0 1-.45 1-1zm-2.5-1.5h-1v-1.5h1v1.5z"/></symbol>
-  </svg>
-
-
-  <!-- MODAIS DE SISTEMA -->
-  <aside id="custom-modal" class="modal-overlay">
-    <div class="modal-box">
-      <h3 id="modal-titulo">Aviso</h3>
-      <p id="modal-mensagem">Mensagem</p>
-      <button class="btn-principal" onclick="fecharModal()">OK</button>
+  <div id="loader" class="d-none">
+    <div class="text-center d-flex flex-column align-items-center bg-white p-4 rounded-4 shadow-sm border">
+      <div class="modern-loader mb-3">
+        <div></div><div></div><div></div>
+      </div>
+      <p class="mt-2 mb-0 fw-bold text-primary" style="letter-spacing: 1px; color: #583ef2 !important;">SINCRONIZANDO</p>
     </div>
-  </aside>
+  </div>
 
+  <div id="telaLogin" class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="card card-login w-100 bg-white">
+      <div class="text-center mb-4">
+        <img src="https://i.ibb.co/TqLqqTbS/logo-eemp.png" alt="Logo EEMP" class="mb-3" style="max-height: 90px; object-fit: contain;">
+        <h3 class="fw-bold m-0">Atividades Complementares</h3>
+        <p class="text-muted small mt-2">Selecione seu perfil de acesso para continuar</p>
+      </div>
 
-  <aside id="confirm-modal" class="modal-overlay">
-    <div class="modal-box">
-      <h3 id="confirm-titulo">Atenção</h3>
-      <p id="confirm-mensagem">Deseja descartar as alterações?</p>
-      <div class="modal-actions">
-        <button class="btn-principal btn-secondary" style="width: 100%; margin-top:0;" onclick="fecharConfirm(false)">Cancelar</button>
-        <button class="btn-principal" style="background-color: var(--danger-color); color: white; border:none; margin-top:0;" onclick="fecharConfirm(true)">Confirmar</button>
+      <ul class="nav nav-pills nav-justified mb-4" id="loginTabs" role="tablist">
+        <li class="nav-item">
+          <button class="nav-link active" id="tab-prof-btn" data-bs-toggle="pill" data-bs-target="#loginProf" type="button">
+            <i class="fa-solid fa-chalkboard-user me-2"></i>Professor
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="tab-coord-btn" data-bs-toggle="pill" data-bs-target="#loginCoord" type="button">
+            <i class="fa-solid fa-user-gear me-2"></i>Coordenação
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="loginTabsContent">
+        <div class="tab-pane fade show active" id="loginProf">
+          <div class="mb-4">
+            <label class="form-label">Número de MASP</label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0"><i class="fa-solid fa-id-card"></i></span>
+              <input type="text" id="maspInput" class="form-control border-start-0 ps-0" placeholder="Apenas números">
+            </div>
+          </div>
+          <button onclick="efetuarLogin('professor')" class="btn btn-primary w-100">Acessar Portal <i class="fa-solid fa-arrow-right ms-1"></i></button>
+        </div>
+
+        <div class="tab-pane fade" id="loginCoord">
+          <div class="mb-4">
+            <label class="form-label">Senha de Acesso</label>
+            <input type="password" id="adminPass" class="form-control" placeholder=" Digite a senha de acesso">
+          </div>
+          <button onclick="efetuarLogin('coordenador')" class="btn btn-primary w-100">Entrar como Coordenador <i class="fa-solid fa-arrow-right ms-1"></i></button>
+        </div>
       </div>
     </div>
-  </aside>
+  </div>
 
-
-  <aside id="modal-adicionar-estudante" class="modal-overlay">
-    <div class="modal-box">
-      <h3>Adicionar Estudante</h3>
-      <p style="margin-bottom: 20px;">Insira os dados do novo estudante para a turma atual. Datas e meses anteriores à matrícula serão preenchidos automaticamente com "--".</p>
-      <input type="text" id="novo-nome" placeholder="Nome Completo (Obrigatório)" style="width: 100%; margin-bottom: 14px; box-sizing: border-box;">
-      <input type="text" id="novo-simade" placeholder="SIMADE (Obrigatório)" style="width: 100%; margin-bottom: 24px; box-sizing: border-box;">
-      <div class="modal-actions">
-        <button class="btn-principal btn-secondary" onclick="fecharModalAdicionar()">Cancelar</button>
-        <button class="btn-principal" onclick="confirmarAdicionarEstudante()">Salvar Cadastro</button>
+  <div id="painelSistema" class="d-none">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+      <div class="container py-2">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+          <img src="https://i.ibb.co/TqLqqTbS/logo-eemp.png" alt="Logo EEMP" style="max-height: 35px; object-fit: contain;">
+          DIÁRIO - ATIVIDADES COMPLEMENTARES
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <span id="nomeUsuarioLogado" class="text-white small fw-medium opacity-75"></span>
+          <button onclick="logout()" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 fs-7"><i class="fa-solid fa-right-from-bracket me-1"></i> Sair</button>
+        </div>
       </div>
-    </div>
-  </aside>
+    </nav>
 
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="card">
-    
-    <!-- TELA 0: LOGIN -->
-    <section id="tela-login" class="tela-branca">
-      <div class="logo-escola">
-         <img src="https://i.ibb.co/TqLqqTbS/logo-eemp.png" alt="Portal Escolar">
-      </div>
+    <div class="container my-4">
       
-      <h1>Controle de Frequência</h1>
-      <p>Selecione seu perfil de acesso para continuar</p>
-      
-      <div class="profile-tabs">
-        <div class="profile-tab" id="tab-Professor" onclick="selecionarPerfil('Professor')">
-          <svg style="width:18px;height:18px;fill:currentColor;"><use href="#icon-teacher"></use></svg> Professor
-        </div>
-        <div class="profile-tab" id="tab-Secretaria" onclick="selecionarPerfil('Secretaria')">
-          <svg style="width:18px;height:18px;fill:currentColor;"><use href="#icon-secretary"></use></svg> Secretaria
-        </div>
-        <div class="profile-tab" id="tab-Supervisao" onclick="selecionarPerfil('Supervisao')">
-          <svg style="width:18px;height:18px;fill:currentColor;"><use href="#icon-supervisor"></use></svg> Supervisão
-        </div>
-      </div>
-
-
-      <div id="login-actions-dynamic"></div>
-    </section>
-
-
-    <!-- TELA 1: PAINEL GERAL DE NAVEGAÇÃO -->
-    <section id="tela-painel" style="display: none;">
-      
-      <header class="header-painel">
-        <h2>Painel <span id="perfil-display" class="tag-perfil">PROFESSOR</span></h2>
-        <button class="btn-secondary" style="display: flex; align-items: center; gap: 6px; font-weight: 600;" onclick="fazerLogout()">
-          <svg style="width: 16px; height: 16px; fill: currentColor;"><use href="#icon-logout"></use></svg> SAIR
-        </button>
-      </header>
-
-
-      <!-- SELETOR DE MODO -->
-      <nav class="modo-nav">
-        <button class="modo-btn selected" id="modo-diario-btn" onclick="alternarModoNavegacao('diario')">📝 Chamada / Diário</button>
-        <button class="modo-btn" id="modo-relatorio-btn" onclick="alternarModoNavegacao('relatorio_geral')">📊 Relatório Geral (Mês)</button>
-      </nav>
-
-
-      <!-- FILTROS -->
-      <div class="selection-group">
-        <span class="selection-label">Turno</span>
-        <div class="btn-grid" id="grid-turno">
-          <button class="btn-choice" onclick="setSelecao('turno', 'Manhã', this)">MANHÃ</button>
-          <button class="btn-choice" onclick="setSelecao('turno', 'Tarde', this)">TARDE</button>
-          <button class="btn-choice" onclick="setSelecao('turno', 'Noite', this)">NOITE</button>
-        </div>
-      </div>
-
-
-      <div class="selection-group" id="bloco-unidade" style="display: none;">
-        <span class="selection-label">Unidade</span>
-        <div class="btn-grid" id="grid-unidade">
-          <button class="btn-choice" onclick="setSelecao('unidade', 'Sede', this)">SEDE</button>
-          <button class="btn-choice" onclick="setSelecao('unidade', 'Morada Nova', this)">MORADA NOVA</button>
-        </div>
-      </div>
-
-
-      <div class="selection-group" id="bloco-data" style="display:none;">
-        <span class="selection-label">Data de Referência</span>
-        <input type="date" id="input-data" onchange="atualizarInterface()">
-      </div>
-
-
-      <div class="selection-group" id="bloco-mes-geral" style="display:none;">
-        <span class="selection-label">Mês de Referência</span>
-        <select id="select-mes-geral" onchange="atualizarInterface()">
-          <option value="JANEIRO">JANEIRO</option>
-          <option value="FEVEREIRO">FEVEREIRO</option>
-          <option value="MARÇO">MARÇO</option>
-          <option value="ABRIL">ABRIL</option>
-          <option value="MAIO">MAIO</option>
-          <option value="JUNHO">JUNHO</option>
-          <option value="JULHO">JULHO</option>
-          <option value="AGOSTO">AGOSTO</option>
-          <option value="SETEMBRO">SETEMBRO</option>
-          <option value="OUTUBRO">OUTUBRO</option>
-          <option value="NOVEMBRO">NOVEMBRO</option>
-          <option value="DEZEMBRO">DEZEMBRO</option>
-        </select>
-      </div>
-
-
-      <div class="selection-group" id="bloco-turma" style="display:none;">
-        <span class="selection-label" id="label-turmas-acao">Selecione uma turma para abrir</span>
-        <div class="grid-cards" id="grid-turma"></div>
-      </div>
-      
-      <!-- ÁREA DE RESULTADOS DINÂMICOS -->
-      <section id="area-resultados" style="margin-top: 24px;">
-        
-        <div id="loading-inline">
-          <div class="spinner"></div>
-          <div class="loading-text">Buscando Informações...</div>
-        </div>
-
-
-        <!-- TELA 2: LISTA DE CHAMADA -->
-        <article id="tela-chamada" class="resultado-section tela-branca" style="display:none;">
-          <header class="header-data">
-            <div class="icon-circle"><svg><use href="#icon-calendar"></use></svg></div>
-            <div class="header-text" id="data-chamada-display"></div>
-          </header>
-
-
-          <button id="btn-add-estudante-chamada" class="btn-principal btn-secondary" style="margin-bottom: 24px; width: 100%; border: 2px dashed var(--brand-color); color: var(--brand-color);" onclick="abrirModalAdicionar()">
-            ➕ ADICIONAR ESTUDANTE NESTA TURMA
-          </button>
-          
-          <div class="chamada-header">
-            <div id="contador-alunos" style="color: var(--secondary-text); text-transform: uppercase;">Alunos: 0</div>
-            <div style="text-transform: uppercase;">
-              Todos Presentes: 
-              <label class="switch"><input type="checkbox" id="toggle-todos" checked onchange="alternarTodos()"><span class="slider"></span></label>
+      <div id="interfaceProfessor" class="d-none">
+        <div class="card p-4 mb-4 bg-white">
+          <h5 class="fw-bold mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-filter text-primary" style="color: #583ef2 !important;"></i> Selecione o Diário de Classe</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Turma</label>
+              <select id="profTurma" onchange="atualizarDisciplinasProfessor()" class="form-select"></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Disciplina / Aba</label>
+              <select id="profDisciplina" onchange="carregarListaAlunos()" class="form-select">
+                <option value="">Selecione a turma primeiro...</option>
+              </select>
             </div>
           </div>
-          
-          <div class="col-header"><span>Tot. Faltas</span><span>Aula</span></div>
-          <ul class="list-wrapper" id="lista-alunos-chamada"></ul>
+        </div>
 
-
-          <div style="display: flex; gap: 16px; margin-top: 24px;">
-            <button class="btn-principal btn-secondary" style="width: 100%; margin-top:12px; font-size:14px;" onclick="voltarInicio()">CANCELAR / VOLTAR</button>
-            <button class="btn-principal" id="btn-salvar" onclick="enviarChamada()">SALVAR CHAMADA</button>
-          </div>
-        </article>
-
-
-        <!-- TELA 3: RELATÓRIO DA TURMA (RESUMO DIÁRIO) -->
-        <article id="tela-relatorio" class="resultado-section tela-branca" style="display:none;">
-          <header class="header-data">
-            <div class="icon-circle"><svg><use href="#icon-sort"></use></svg></div>
-            <div class="header-text" id="relatorio-header-display"></div>
-          </header>
-          
-          <button id="btn-retroativa" class="btn-principal" style="margin-bottom: 12px; background-color: var(--success-color); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);" onclick="prepararDiario()">
-            📝 REGISTRAR / EDITAR CHAMADA NESTA DATA
-          </button>
-          
-          <button id="btn-add-estudante" class="btn-principal btn-secondary" style="margin-bottom: 24px; width: 100%; border: 2px dashed var(--brand-color); color: var(--brand-color);" onclick="abrirModalAdicionar()">
-            ➕ ADICIONAR ESTUDANTE NESTA TURMA
-          </button>
-
-
-          <div class="header-relatorio-actions">
-            <div class="stat-item-small">
-              <span id="stat-aulas">0</span>
-              <small>Aulas Previstas</small>
-            </div>
-            <div class="botoes-acao-relatorio">
-              <button class="btn-ordenar" onclick="ordenarPorOrdemAlfabetica()">
-                <svg><use href="#icon-sort"></use></svg> ORDENAR A-Z
-              </button>
-              <button class="btn-ordenar" onclick="ordenarRelatorio()">
-                <svg><use href="#icon-sort"></use></svg> Ordenar Faltas
-              </button>
-            </div>
+        <div id="cardDiario" class="card d-none bg-white">
+          <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+            <h5 id="tituloDiario" class="m-0 fw-bold text-dark"></h5>
           </div>
 
-
-          <div class="col-header" style="margin-top: 10px;">
-            <span style="width: 60px; text-align:center;">Freq.</span>
-            <span style="width: 60px; text-align:center;">Consec.</span>
-            <span style="width: 60px; text-align:center;">Total</span>
-          </div>
-          
-          <ul class="list-wrapper" id="lista-relatorio-alunos"></ul>
-
-
-          <button class="btn-principal btn-secondary" style="margin-top: 24px; width: 100%; font-size: 14px;" onclick="voltarInicio()">VOLTAR PARA AS TURMAS</button>
-        </article>
-
-
-        <!-- TELA 4: RELATÓRIO GERAL DE FREQUÊNCIA (MATRIZ DO MÊS) -->
-        <article id="tela-relatorio-geral" class="resultado-section tela-branca" style="display:none;">
-          <header class="header-data">
-            <div class="icon-circle"><svg><use href="#icon-sort"></use></svg></div>
-            <div class="header-text" id="matriz-header-display"></div>
-            <button class="btn-principal" style="width: auto; margin:0; padding: 10px 16px; background-color: var(--brand-color); display: flex; align-items: center; gap: 6px;" onclick="exportarRelatorioPDF()">
-              <svg style="width:18px; height:18px; fill:currentColor;"><use href="#icon-pdf"></use></svg> EXPORTAR PDF
-            </button>
-          </header>
-
-
-          <div class="matriz-container" id="matriz-tabela-wrapper"></div>
-
-
-          <button class="btn-principal btn-secondary" style="margin-top: 24px; width: 100%; font-size: 14px;" onclick="voltarInicio()">VOLTAR PARA AS TURMAS</button>
-        </article>
-
-
-      </section>
-    </section> 
-  </main>
-
-
-  <script>
-    // PONTE DE ADAPTAÇÃO HÍBRIDA (GAS E GITHUB PAGES)
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyfwWdSqSC69tCoUXA1tUhfxG9p_TNJfisMc7s7vT3INf1JvqDGY61m5HbiYRYoz55xFw/exec";
-
-
-    if (typeof google === 'undefined') { window.google = {}; }
-    if (!google.script) { google.script = {}; }
-
-
-    if (!google.script.run) {
-      function criarGasRunner() {
-        let successCb = () => {};
-        let failureCb = () => {};
-
-
-        const proxy = new Proxy({}, {
-          get(target, prop) {
-            if (prop === 'withSuccessHandler') {
-              return function(fn) { successCb = fn; return proxy; };
-            }
-            if (prop === 'withFailureHandler') {
-              return function(fn) { failureCb = fn; return proxy; };
-            }
-            return function(...args) {
-              fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: prop, args: args })
-              })
-              .then(res => res.json())
-              .then(data => {
-                if (data.status === 'error') failureCb(new Error(data.message));
-                else successCb(data.result);
-              })
-              .catch(err => failureCb(err));
-            };
-          }
-        });
-
-
-        return proxy;
-      }
-      Object.defineProperty(google.script, 'run', { get: function() { return criarGasRunner(); } });
-    }
-
-
-    // ESTADO GLOBAL
-    let state = { perfil: '', unidade: '', turno: '', turmaId: '', turmaNome: '', modo: 'diario' };
-    let dbTurmas = [];
-    let isCarregandoTurmas = true;
-    let dadosChamadaGeral = [];
-    let dadosRelatorioGeral = [];
-    let relatorioOrdemCrescente = false;
-    let relatorioOrdemAZ = true;
-    let mesExtenso = "";
-    let dataFormatada = "";
-    let alteracoesNaoSalvas = false;
-
-
-    window.onload = () => {
-      google.script.run.withSuccessHandler(res => { 
-        dbTurmas = res; 
-        isCarregandoTurmas = false;
-        if(state.turno) atualizarInterface();
-      }).getTurmasDisponiveis();
-      
-      const hoje = new Date();
-      const tzOffset = hoje.getTimezoneOffset() * 60000;
-      const localISOTime = (new Date(hoje - tzOffset)).toISOString().slice(0, 10);
-      
-      const inputData = document.getElementById('input-data');
-      inputData.value = localISOTime;
-      inputData.max = localISOTime;
-
-
-      const MESES_LISTA = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-      document.getElementById('select-mes-geral').value = MESES_LISTA[hoje.getMonth()];
-      
-      selecionarPerfil('Professor');
-    };
-
-
-    window.addEventListener('beforeunload', function (e) {
-      if (alteracoesNaoSalvas) { e.preventDefault(); e.returnValue = ''; }
-    });
-
-
-    function formatarDataBR(dateObj) {
-      const dia = String(dateObj.getDate()).padStart(2, '0');
-      const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const ano = dateObj.getFullYear();
-      return `${dia}/${mes}/${ano}`;
-    }
-
-
-    function base64ToBlob(base64, mimeType = 'application/pdf') {
-      const parts = base64.split(',');
-      const byteCharacters = atob(parts.length > 1 ? parts[1] : parts[0]);
-      const byteArrays = [];
-      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-        const slice = byteCharacters.slice(offset, offset + 512);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
-        byteArrays.push(new Uint8Array(byteNumbers));
-      }
-      return new Blob(byteArrays, { type: mimeType });
-    }
-
-
-    let perfilSelecionado = '';
-
-
-    function alternarModoNavegacao(novoModo) {
-      if (alteracoesNaoSalvas) {
-        mostrarConfirm("Você tem uma chamada em andamento. Deseja descartar os dados para alternar de modo?", () => {
-          alteracoesNaoSalvas = false;
-          aplicarModoNavegacao(novoModo);
-        });
-      } else { aplicarModoNavegacao(novoModo); }
-    }
-
-
-    function aplicarModoNavegacao(novoModo) {
-      state.modo = novoModo;
-      document.getElementById('modo-diario-btn').classList.toggle('selected', novoModo === 'diario');
-      document.getElementById('modo-relatorio-btn').classList.toggle('selected', novoModo === 'relatorio_geral');
-      mostrarResultado('');
-      atualizarInterface();
-    }
-
-
-    function selecionarPerfil(perfil) {
-      perfilSelecionado = perfil;
-      document.querySelectorAll('.profile-tab').forEach(c => c.classList.remove('selected'));
-      document.getElementById(`tab-${perfil}`).classList.add('selected');
-      
-      const actionsDiv = document.getElementById('login-actions-dynamic');
-      if(perfil === 'Professor') {
-        actionsDiv.innerHTML = `<button class="btn-brand" onclick="processarLogin()">Acessar Portal ➔</button>`;
-      } else {
-        actionsDiv.innerHTML = `
-          <div class="login-input-group">
-            <label>SENHA DE ACESSO</label>
-            <input type="password" id="input-senha-inline" placeholder="Digite sua senha" onkeypress="if(event.key === 'Enter') processarLogin()">
-          </div>
-          <button class="btn-brand" onclick="processarLogin()">Acessar Portal ➔</button>
-        `;
-        setTimeout(() => document.getElementById('input-senha-inline').focus(), 50);
-      }
-    }
-
-
-    function processarLogin() {
-      if (perfilSelecionado === 'Secretaria' || perfilSelecionado === 'Supervisao') {
-        const senhaInput = document.getElementById('input-senha-inline');
-        if (senhaInput.value === 'portomario26') efetuarLogin(perfilSelecionado);
-        else mostrarModal('Acesso Negado', 'A senha informada está incorreta. Verifique e tente novamente.', () => {
-          senhaInput.value = '';
-          setTimeout(() => senhaInput.focus(), 100);
-        });
-      } else { efetuarLogin(perfilSelecionado); }
-    }
-
-
-    function efetuarLogin(perfil) {
-      state.perfil = perfil;
-      document.getElementById('tela-login').style.display = 'none';
-      document.getElementById('tela-painel').style.display = 'block';
-      document.getElementById('perfil-display').innerText = perfil.toUpperCase();
-      
-      state.unidade = ''; state.turno = ''; state.turmaId = '';
-      document.querySelectorAll('.btn-choice').forEach(b => b.classList.remove('selected'));
-      
-      document.getElementById('bloco-unidade').style.display = 'none';
-      document.getElementById('bloco-turma').style.display = 'none';
-      mostrarResultado(''); 
-      aplicarModoNavegacao('diario');
-    }
-
-
-    function fazerLogout() {
-      if (alteracoesNaoSalvas) {
-        mostrarConfirm("Você tem uma chamada em andamento. Deseja sair e perder as alterações?", () => {
-          alteracoesNaoSalvas = false; sairDeFato();
-        });
-      } else { sairDeFato(); }
-    }
-
-
-    function sairDeFato() {
-      state.perfil = '';
-      document.getElementById('tela-painel').style.display = 'none';
-      mostrarResultado(''); 
-      selecionarPerfil('Professor');
-      document.getElementById('tela-login').style.display = 'block';
-    }
-
-
-    let callbackFechamentoModal = null;
-    let callbackConfirmacao = null;
-
-
-    function mostrarModal(titulo, msg, callback = null) {
-      document.getElementById('modal-titulo').innerText = titulo;
-      document.getElementById('modal-mensagem').innerText = msg;
-      document.getElementById('custom-modal').style.display = 'flex';
-      callbackFechamentoModal = callback;
-    }
-    
-    function fecharModal() {
-      document.getElementById('custom-modal').style.display = 'none';
-      if(callbackFechamentoModal) { callbackFechamentoModal(); callbackFechamentoModal = null; }
-    }
-
-
-    function mostrarConfirm(msg, callback) {
-      document.getElementById('confirm-mensagem').innerText = msg;
-      document.getElementById('confirm-modal').style.display = 'flex';
-      callbackConfirmacao = callback;
-    }
-
-
-    function fecharConfirm(resultado) {
-      document.getElementById('confirm-modal').style.display = 'none';
-      if(resultado && callbackConfirmacao) callbackConfirmacao();
-      callbackConfirmacao = null;
-    }
-
-
-    function abrirModalAdicionar() {
-      document.getElementById('novo-nome').value = '';
-      document.getElementById('novo-simade').value = '';
-      document.getElementById('modal-adicionar-estudante').style.display = 'flex';
-    }
-
-
-    function fecharModalAdicionar() {
-      document.getElementById('modal-adicionar-estudante').style.display = 'none';
-    }
-
-
-    function setSelecao(tipo, valor, btnElement) {
-      if (alteracoesNaoSalvas) {
-        mostrarConfirm("Você tem uma chamada em andamento. Deseja descartar os dados para mudar os filtros?", () => {
-          alteracoesNaoSalvas = false; mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement);
-        });
-      } else { mostrarResultado(''); aplicarSelecao(tipo, valor, btnElement); }
-    }
-
-
-    function aplicarSelecao(tipo, valor, btnElement) {
-      state[tipo] = valor;
-      const container = btnElement.parentElement;
-      const botoes = container.getElementsByClassName('btn-choice');
-      for(let b of botoes) b.classList.remove('selected');
-      btnElement.classList.add('selected');
-
-
-      if (tipo === 'turno') {
-        const blocoUnidade = document.getElementById('bloco-unidade');
-        if (valor === 'Manhã' || valor === 'Tarde') {
-          state.unidade = 'Sede';
-          blocoUnidade.style.display = 'none';
-        } else if (valor === 'Noite') {
-          state.unidade = '';
-          blocoUnidade.style.display = 'block';
-          const botoesUnidade = document.getElementById('grid-unidade').getElementsByClassName('btn-choice');
-          for(let b of botoesUnidade) b.classList.remove('selected');
-        }
-      }
-      atualizarInterface();
-    }
-
-
-    function atualizarInterface() {
-      state.turmaId = ""; 
-      const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
-      
-      if (state.modo === 'relatorio_geral') {
-        document.getElementById('bloco-data').style.display = 'none';
-        document.getElementById('bloco-mes-geral').style.display = 'block';
-        document.getElementById('label-turmas-acao').innerText = "Selecione uma turma para ver o Relatório Geral";
-      } else {
-        document.getElementById('bloco-mes-geral').style.display = 'none';
-        document.getElementById('bloco-data').style.display = ehAdmin ? 'block' : 'none';
-        document.getElementById('label-turmas-acao').innerText = state.perfil === 'Professor' 
-          ? "Selecione uma turma para abrir o Diário" 
-          : "Selecione uma turma para Ver Faltas";
-      }
-
-
-      if (state.unidade && state.turno) {
-        const gridTurma = document.getElementById('grid-turma');
-        gridTurma.innerHTML = '';
-
-
-        if (isCarregandoTurmas) {
-          gridTurma.innerHTML = '<span style="color:var(--brand-color); font-size:14px; width:100%; font-weight:600; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span class="mini-spinner"></span> Carregando Turmas...</span>';
-          document.getElementById('bloco-turma').style.display = 'block';
-        } else {
-          const turmasFiltradas = dbTurmas.filter(t => t.unidade === state.unidade && t.turno === state.turno);
-          
-          if(turmasFiltradas.length > 0) {
-            const frag = document.createDocumentFragment();
-            turmasFiltradas.forEach(t => {
-              const card = document.createElement('div');
-              card.className = 'card-turma';
-              let tagSerie = t.nome.split('-')[0].trim();
-              card.innerHTML = `
-                <div class="tag-turma">${tagSerie}</div>
-                <div class="titulo-turma">${t.nome}</div>
-                <div class="info-turma">${t.unidade}</div>
-                <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
-                <div id="status-card-${t.id}" class="status-container-card"></div>
-              `;
-              card.onclick = function() {
-                if(alteracoesNaoSalvas && state.turmaId !== t.id) {
-                   mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
-                      alteracoesNaoSalvas = false; executarAcaoCard(t, card, gridTurma);
-                   });
-                } else { executarAcaoCard(t, card, gridTurma); }
-              };
-              frag.appendChild(card);
-            });
-            gridTurma.appendChild(frag);
-            document.getElementById('bloco-turma').style.display = 'block';
-            if (state.modo === 'diario') carregarStatusDosCards();
-          } else {
-            gridTurma.innerHTML = '<span style="color:var(--danger-color); font-size:14px; width:100%; font-weight:500; text-transform:uppercase;">Nenhuma turma encontrada.</span>';
-            document.getElementById('bloco-turma').style.display = 'block';
-          }
-        }
-      } else { document.getElementById('bloco-turma').style.display = 'none'; }
-    }
-
-
-    function executarAcaoCard(t, card, gridTurma) {
-      mostrarResultado(''); 
-      state.turmaId = t.id;
-      state.turmaNome = t.nome;
-      
-      let todosC = gridTurma.getElementsByClassName('card-turma');
-      for(let c of todosC) c.classList.remove('selected');
-      card.classList.add('selected');
-
-
-      calcularDatas(); 
-      if (state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz();
-      else if (state.perfil === 'Professor') prepararDiario();
-      else abrirRelatorioTurma(t.id);
-    }
-
-
-    function carregarStatusDosCards() {
-      if (!state.unidade || !state.turno) return;
-
-
-      let dataUsada = new Date();
-      if(state.perfil === 'Supervisao' || state.perfil === 'Secretaria') {
-        let inputD = document.getElementById('input-data').value;
-        if(inputD) dataUsada = new Date(inputD + 'T12:00:00');
-      }
-
-
-      let dataFormatadaLocal = formatarDataBR(dataUsada);
-      let meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-      let mesExtensoLocal = meses[dataUsada.getMonth()];
-
-
-      const todosBadges = document.querySelectorAll('.status-container-card');
-      todosBadges.forEach(b => b.innerHTML = `<span class="badge-loading-card"><span class="mini-spinner"></span> Lendo</span>`);
-
-
-      google.script.run.withSuccessHandler(turmasStatus => {
-        if (turmasStatus && Array.isArray(turmasStatus)) {
-          renderizarBadgesStatus(turmasStatus);
-        }
-      }).getPainelMonitoramento(state.unidade, state.turno, dataFormatadaLocal, mesExtensoLocal);
-    }
-
-
-    function renderizarBadgesStatus(turmasStatus) {
-      turmasStatus.forEach(t => {
-        const divStatus = document.getElementById(`status-card-${t.id}`);
-        if(divStatus) {
-          if(t.status === 'Pendente') divStatus.innerHTML = `<span class="badge-alerta-card">Pendente</span>`;
-          else if (t.status === 'Realizada') divStatus.innerHTML = `<span class="badge-sucesso-card">Realizada</span>`;
-          else if (t.status === 'SEM AULA' || t.status === 'Sem Aula') divStatus.innerHTML = `<span class="badge-sem-aula-card">SEM AULA</span>`;
-          else divStatus.innerHTML = ``;
-        }
-      });
-    }
-
-
-    function calcularDatas() {
-      let dataUsada = new Date();
-      if(state.perfil === 'Supervisao' || state.perfil === 'Secretaria') {
-        let inputD = document.getElementById('input-data').value;
-        if(inputD) dataUsada = new Date(inputD + 'T12:00:00');
-      }
-      const dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-      const meses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-      
-      dataFormatada = formatarDataBR(dataUsada);
-      mesExtenso = meses[dataUsada.getMonth()];
-      return `${dias[dataUsada.getDay()]} - ${dataFormatada}`;
-    }
-
-
-    function mostrarResultado(idBloco) {
-      document.querySelectorAll('.resultado-section').forEach(el => el.style.display = 'none');
-      document.getElementById('loading-inline').style.display = 'none';
-      
-      if (idBloco) {
-        // Ao mostrar um resultado ativo, ocultamos os menus superiores e o container de turmas, 
-        // mantendo o relatório ou a chamada na parte superior da tela sem necessitar descer (scroll).
-        document.querySelectorAll('.selection-group').forEach(el => el.style.display = 'none');
-        const nav = document.querySelector('.modo-nav');
-        if (nav) nav.style.display = 'none';
-
-        const bloco = document.getElementById(idBloco);
-        if(bloco) {
-            bloco.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      } else {
-         // Ao retornar (cancelar/salvar), os botões de navegação e as categorias retornam 
-         // aos seus estados de exibição esperados sem limpar a seleção.
-         const nav = document.querySelector('.modo-nav');
-         if (nav) nav.style.display = 'flex';
-
-         const groups = document.querySelectorAll('.selection-group');
-         if (groups.length > 0) groups[0].style.display = 'block';
-
-         const ehAdmin = state.perfil === 'Supervisao' || state.perfil === 'Secretaria';
-         document.getElementById('bloco-unidade').style.display = state.turno === 'Noite' ? 'block' : 'none';
-         document.getElementById('bloco-data').style.display = (state.modo !== 'relatorio_geral' && ehAdmin) ? 'block' : 'none';
-         document.getElementById('bloco-mes-geral').style.display = state.modo === 'relatorio_geral' ? 'block' : 'none';
-         document.getElementById('bloco-turma').style.display = (state.unidade && state.turno) ? 'block' : 'none';
-      }
-    }
-
-
-    function resetarUI() {
-      state.turmaId = ""; state.turmaNome = ""; alteracoesNaoSalvas = false;
-      mostrarResultado(''); 
-      let todosC = document.getElementById('grid-turma').getElementsByClassName('card-turma');
-      for(let c of todosC) c.classList.remove('selected');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); 
-    }
-
-
-    function voltarInicio() {
-      if (alteracoesNaoSalvas) mostrarConfirm("Deseja cancelar? Os dados não salvos serão perdidos.", resetarUI);
-      else resetarUI();
-    }
-
-
-    function confirmarAdicionarEstudante() {
-      const nome = document.getElementById('novo-nome').value;
-      const simade = document.getElementById('novo-simade').value;
-      
-      if (!nome.trim()) return mostrarModal("AVISO", "O nome do estudante é obrigatório.");
-      if (!simade.trim()) return mostrarModal("AVISO", "O SIMADE do estudante é obrigatório.");
-      
-      fecharModalAdicionar();
-      mostrarResultado('loading-inline');
-      
-      google.script.run
-        .withSuccessHandler(res => {
-           if(res.sucesso) {
-             mostrarModal("SUCESSO", res.mensagem, () => { 
-                if(state.modo === 'relatorio_geral') carregarRelatorioGeralMatriz();
-                else if(state.perfil === 'Professor') prepararDiario();
-                else abrirRelatorioTurma(state.turmaId); 
-             });
-           } else {
-             mostrarModal("ERRO", res.mensagem, () => { 
-                if(state.modo === 'relatorio_geral') mostrarResultado('tela-relatorio-geral');
-                else if(state.perfil === 'Professor') mostrarResultado('tela-chamada');
-                else mostrarResultado('tela-relatorio'); 
-             });
-           }
-        })
-        .withFailureHandler(err => {
-           mostrarModal("ERRO", err.message, () => { 
-                if(state.modo === 'relatorio_geral') mostrarResultado('tela-relatorio-geral');
-                else if(state.perfil === 'Professor') mostrarResultado('tela-chamada');
-                else mostrarResultado('tela-relatorio'); 
-           });
-        }).adicionarEstudante(state.turmaId, nome, simade);
-    }
-
-
-    function confirmarAlteracaoStatus(index, contexto, event) {
-      event.stopPropagation();
-      let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
-      let acao = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-      
-      mostrarConfirm(`Tem certeza que deseja ${acao} o estudante ${aluno.nome}?`, () => {
-         alterarStatusRapido(index, contexto, null);
-      });
-    }
-
-
-    function alterarStatusRapido(index, contexto, event) {
-      if (event) event.stopPropagation();
-      let aluno = contexto === 'chamada' ? dadosChamadaGeral[index] : dadosRelatorioGeral[index];
-      const novoStatusInativo = !aluno.inativo;
-      const nomeEstudante = aluno.nome;
-      aluno.inativo = novoStatusInativo;
-      
-      if (contexto === 'chamada' && novoStatusInativo && aluno.status === 'F') {
-        aluno.status = '•'; 
-        aluno.faltasAtuais = aluno.faltasIniciais;
-      }
-      
-      if (contexto === 'chamada') {
-        dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-        renderizarListaChamada();
-      } else {
-        dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-        renderizarListaRelatorio();
-      }
-
-
-      google.script.run.withFailureHandler(err => {
-          aluno.inativo = !novoStatusInativo;
-          if (contexto === 'chamada') {
-            dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-            renderizarListaChamada();
-          } else {
-            dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-            renderizarListaRelatorio();
-          }
-          mostrarModal("ERRO", "Falha ao sincronizar status: " + err.message);
-      }).alternarStatusEstudante(state.turmaId, nomeEstudante, novoStatusInativo);
-    }
-
-
-    function prepararDiario() {
-      const dataHeader = calcularDatas();
-      document.getElementById('data-chamada-display').innerHTML = `<strong>${state.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">${dataHeader}</span>`;
-      
-      document.getElementById('btn-add-estudante-chamada').style.display = state.perfil === 'Professor' ? 'none' : 'block';
-
-
-      mostrarResultado('loading-inline');
-      google.script.run.withSuccessHandler(payload => {
-           window.diasChamada = payload.datas || [];
-           const dataCurtaLocal = payload.dataCurta || dataFormatada.substring(0, 5).trim();
-           const colIdx = window.diasChamada.indexOf(dataCurtaLocal);
-
-
-           dadosChamadaGeral = payload.alunos.map(a => {
-             let statusExistente = (colIdx !== -1 && a.historico && a.historico[colIdx]) ? String(a.historico[colIdx]).trim().toUpperCase() : '';
-             let statusInicial = (statusExistente === 'F') ? 'F' : '•';
-             let faltasIniciais = a.faltas;
-             if (statusExistente === 'F') faltasIniciais = a.faltas - 1;
-             return { ...a, status: statusInicial, faltasIniciais: faltasIniciais, faltasAtuais: a.faltas };
-           });
-
-
-           dadosChamadaGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           mostrarResultado('tela-chamada');
-           alteracoesNaoSalvas = true;
-
-
-           const btnSalvar = document.getElementById('btn-salvar');
-           if (payload.dataValida === false) {
-             btnSalvar.disabled = true;
-             mostrarModal("DATA NÃO PREVISTA", `A data ${payload.dataCurta || dataFormatada.substring(0,5)} não consta no calendário da planilha para o mês de ${mesExtenso}. Não é possível realizar chamada nesta data.`);
-           } else { btnSalvar.disabled = false; }
-
-
-           renderizarListaChamada();
-
-
-           const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
-           document.getElementById('toggle-todos').checked = alunosAtivos.length > 0 && alunosAtivos.every(a => a.status === '•');
-        }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
-        .getDadosChamada(state.turmaId, mesExtenso, dataFormatada);
-    }
-
-
-    function renderizarListaChamada() {
-      document.getElementById('contador-alunos').innerText = `Alunos: ${dadosChamadaGeral.length}`;
-      const ul = document.getElementById('lista-alunos-chamada');
-      ul.innerHTML = '';
-      const frag = document.createDocumentFragment();
-
-
-      dadosChamadaGeral.forEach((aluno, i) => {
-        const li = document.createElement('li');
-        li.className = 'row-item';
-        li.style.flexDirection = 'column'; 
-        li.style.alignItems = 'stretch';
-        li.style.padding = '14px 16px'; 
-        
-        let historyHeaders = window.diasChamada.map(d => `<th>${d}</th>`).join('');
-        let historyCells = aluno.historico.map(s => {
-           let cClass = s === 'F' ? 'cell-F' : ((s === '•' || s === 'P') ? 'cell-P' : (s === '--' ? 'cell-N' : ''));
-           return `<td class="${cClass}">${s}</td>`;
-        }).join('');
-
-
-        let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-        let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
-        let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
-        let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-        
-        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${i}, 'chamada', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
-
-
-        li.innerHTML = `
-          <div class="student-row-header" style="padding:0;">
-            <div class="simade" onclick="toggleHistoricoChamada(${i})" style="cursor:pointer; user-select:none; ${estiloNome}" title="Ver histórico">${aluno.simade}</div>
-            <div class="student-name" onclick="toggleHistoricoChamada(${i})" style="cursor:pointer; user-select:none; ${estiloNome}" title="Ver histórico">
-                ${aluno.nome} ${btnStatus}
-            </div>
-            <div class="total-faltas" id="div-faltas-${i}">${aluno.faltasAtuais < 10 ? '0'+aluno.faltasAtuais : aluno.faltasAtuais}</div>
-            <button class="btn-attendance" id="btn-att-${i}" onclick="togglePresenca(${i})" ${aluno.inativo ? 'style="opacity:0.2; cursor:not-allowed;"' : ''}>
-              <svg class="${aluno.inativo || aluno.status !== '•' ? 'icon-absent' : 'icon-present'}">
-                 <use href="${aluno.inativo ? '#icon-cross' : (aluno.status === '•' ? '#icon-check' : '#icon-cross')}"></use>
-              </svg>
-            </button>
-          </div>
-
-
-          <div class="history-panel" id="history-panel-chamada-${i}">
-             <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
-             <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
-          </div>
-        `;
-        frag.appendChild(li);
-      });
-      ul.appendChild(frag);
-    }
-
-
-    function toggleHistoricoChamada(index) {
-      const panel = document.getElementById(`history-panel-chamada-${index}`);
-      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    }
-
-
-    function togglePresenca(i) {
-      const aluno = dadosChamadaGeral[i];
-      if (aluno.inativo) return;
-      
-      const btn = document.getElementById(`btn-att-${i}`);
-      const divFaltas = document.getElementById(`div-faltas-${i}`);
-      
-      if (aluno.status === '•') {
-        aluno.status = 'F'; 
-        aluno.faltasAtuais = aluno.faltasIniciais + 1;
-        btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
-        divFaltas.style.color = 'var(--danger-color)'; 
-        divFaltas.style.fontSize = '18px';
-      } else {
-        aluno.status = '•'; 
-        aluno.faltasAtuais = aluno.faltasIniciais;
-        btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
-        divFaltas.style.color = ''; 
-        divFaltas.style.fontSize = '';
-      }
-      divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
-      
-      const alunosAtivos = dadosChamadaGeral.filter(a => !a.inativo);
-      document.getElementById('toggle-todos').checked = alunosAtivos.length > 0 && alunosAtivos.every(a => a.status === '•');
-    }
-
-
-    function alternarTodos() {
-      const todosPresentes = document.getElementById('toggle-todos').checked;
-      dadosChamadaGeral.forEach((aluno, i) => { 
-        if(!aluno.inativo) { 
-          aluno.status = todosPresentes ? '•' : 'F';
-          aluno.faltasAtuais = todosPresentes ? aluno.faltasIniciais : aluno.faltasIniciais + 1;
-          
-          const btn = document.getElementById(`btn-att-${i}`);
-          const divFaltas = document.getElementById(`div-faltas-${i}`);
-          if(btn && divFaltas) {
-            if(todosPresentes) {
-              btn.innerHTML = `<svg class="icon-present"><use href="#icon-check"></use></svg>`;
-              divFaltas.style.color = '';
-              divFaltas.style.fontSize = '';
-            } else {
-              btn.innerHTML = `<svg class="icon-absent"><use href="#icon-cross"></use></svg>`;
-              divFaltas.style.color = 'var(--danger-color)';
-              divFaltas.style.fontSize = '18px';
-            }
-            divFaltas.innerText = aluno.faltasAtuais < 10 ? '0' + aluno.faltasAtuais : aluno.faltasAtuais;
-          }
-        }
-      });
-    }
-
-
-    function enviarChamada() {
-      document.getElementById('btn-salvar').disabled = true;
-      mostrarResultado('loading-inline');
-      google.script.run
-        .withSuccessHandler(res => {
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarModal("SUCESSO!", res, () => { resetarUI(); carregarStatusDosCards(); }); 
-        })
-        .withFailureHandler(err => {
-          mostrarModal("ERRO", err.message);
-          document.getElementById('btn-salvar').disabled = false;
-          mostrarResultado('tela-chamada');
-        }).salvarRegistroChamada(state.turmaId, mesExtenso, dataFormatada, dadosChamadaGeral);
-    }
-
-
-    function abrirRelatorioTurma(turmaId) {
-      mostrarResultado('loading-inline');
-      google.script.run.withSuccessHandler(dados => {
-           mostrarResultado('tela-relatorio');
-           document.getElementById('relatorio-header-display').innerHTML = `<strong>${dados.turmaNome}</strong><br><span style="font-size:14px; font-weight:500; color:var(--secondary-text);">MÊS: ${mesExtenso}</span>`;
-           document.getElementById('btn-retroativa').style.display = state.perfil === 'Supervisao' ? 'block' : 'none';
-           
-           document.getElementById('btn-add-estudante').style.display = state.perfil === 'Professor' ? 'none' : 'block';
-           
-           window.aulasPrevistasGeral = dados.aulasPrevistas || 0; 
-           document.getElementById('stat-aulas').innerText = window.aulasPrevistasGeral;
-           
-           window.datasRelatorioGeral = dados.datas || []; 
-           dadosRelatorioGeral = dados.alunos;
-           dadosRelatorioGeral.sort((a, b) => Number(a.inativo) - Number(b.inativo) || (a.nome || '').localeCompare(b.nome || ''));
-           renderizarListaRelatorio();
-        }).withFailureHandler(err => { mostrarModal("Erro", err.message); mostrarResultado(''); })
-        .getRelatorioTurma(turmaId, mesExtenso);
-    }
-
-
-    function renderizarListaRelatorio() {
-      const ul = document.getElementById('lista-relatorio-alunos');
-      ul.innerHTML = '';
-      const frag = document.createDocumentFragment();
-      
-      dadosRelatorioGeral.forEach((aluno, index) => {
-        const li = document.createElement('li');
-        li.className = 'row-item';
-        li.style.flexDirection = 'column'; 
-        li.style.alignItems = 'stretch';
-        
-        let dias = window.datasRelatorioGeral || [];
-        let historicoAluno = aluno.historico || []; 
-        let calcTotal = historicoAluno.filter(v => String(v).toUpperCase() === 'F').length;
-        
-        let calcConsec = 0;
-        for (let v of historicoAluno) {
-            let val = String(v).toUpperCase();
-            if (val === 'F') calcConsec++; 
-            else if (val === '•' || val === 'P' || val === '--') calcConsec = 0; 
-        }
-        
-        aluno.faltasTotais = calcTotal; 
-        aluno.faltasConsecutivas = calcConsec;
-
-
-        let aulasMatriculado = historicoAluno.filter(v => v !== '--' && v !== '' && v !== null && v !== undefined).length;
-        let aulasPrevistas = aulasMatriculado > 0 ? aulasMatriculado : (window.aulasPrevistasGeral > 0 ? window.aulasPrevistasGeral : historicoAluno.length);
-        let presencas = Math.max(0, aulasPrevistas - calcTotal);
-        let freqPercent = aulasPrevistas > 0 ? Math.round((presencas / aulasPrevistas) * 100) : 100;
-        let corFrequencia = freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)';
-
-
-        let alerta = calcConsec >= 4 ? `<span class="alert-tag">ALERTA</span>` : '';
-        if (calcConsec >= 4) li.classList.add('alert-row');
-                             
-        let historyHeaders = dias.map(d => `<th>${d}</th>`).join('');
-        let historyCells = historicoAluno.map(s => {
-           let cClass = s === 'F' ? 'cell-F' : ((s === '•' || s === 'P') ? 'cell-P' : (s === '--' ? 'cell-N' : ''));
-           return `<td class="${cClass}">${s}</td>`;
-        }).join('');
-
-
-        let estiloNome = aluno.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-        let corInativo = aluno.inativo ? 'var(--success-color)' : 'var(--danger-color)';
-        let bgInativo = aluno.inativo ? 'var(--success-light)' : 'var(--danger-light)';
-        let textInativo = aluno.inativo ? 'ATIVAR' : 'DESATIVAR';
-        
-        let btnStatus = state.perfil === 'Professor' ? '' : `<button onclick="confirmarAlteracaoStatus(${index}, 'relatorio', event)" style="margin-left:8px; padding:3px 8px; font-size:10px; font-weight:600; border-radius:6px; border:1px solid ${corInativo}; background:${bgInativo}; color:${corInativo}; cursor:pointer; height:max-content;">${textInativo}</button>`;
-
-
-        li.innerHTML = `
-          <div class="student-row-header" onclick="toggleHistorico(${index})" title="Clique para ver o histórico">
-            <div class="simade" style="user-select:none; ${estiloNome}">${aluno.simade}</div>
-            <div class="student-name" style="user-select:none; ${estiloNome}">${aluno.nome} ${alerta} ${btnStatus}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:14px; color: ${corFrequencia}">${freqPercent}%</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px; color: ${calcConsec >= 4 ? 'var(--danger-color)' : 'inherit'}">${calcConsec}</div>
-            <div style="width: 60px; text-align:center; font-weight:600; font-size:15px;">${calcTotal}</div>
-          </div>
-          <div class="history-panel" id="history-panel-${index}">
-             <div style="font-size:11px; text-transform:uppercase; color:var(--secondary-text); margin-bottom:8px; font-weight:600;">Histórico do Mês</div>
-             <table class="history-table"><tr>${historyHeaders}</tr><tr>${historyCells}</tr></table>
-          </div>
-        `;
-        frag.appendChild(li);
-      });
-      ul.appendChild(frag);
-    }
-
-
-    function toggleHistorico(index) {
-      const panel = document.getElementById(`history-panel-${index}`);
-      if (panel.style.display === 'block') panel.style.display = 'none';
-      else {
-        document.querySelectorAll('.history-panel').forEach(p => p.style.display = 'none');
-        panel.style.display = 'block';
-      }
-    }
-
-
-    function ordenarRelatorio() {
-      relatorioOrdemCrescente = !relatorioOrdemCrescente;
-      dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemCrescente) return a.faltasTotais - b.faltasTotais;
-        return b.faltasTotais - a.faltasTotais;
-      });
-      renderizarListaRelatorio();
-    }
-
-
-    function ordenarPorOrdemAlfabetica() {
-      dadosRelatorioGeral.sort((a, b) => {
-        if (a.inativo !== b.inativo) return Number(a.inativo) - Number(b.inativo);
-        if (relatorioOrdemAZ) return (a.nome || '').localeCompare(b.nome || '');
-        return (b.nome || '').localeCompare(a.nome || '');
-      });
-      relatorioOrdemAZ = !relatorioOrdemAZ;
-      renderizarListaRelatorio();
-    }
-
-
-    function carregarRelatorioGeralMatriz() {
-      const mesSelecionado = document.getElementById('select-mes-geral').value;
-      mostrarResultado('loading-inline');
-
-
-      google.script.run.withSuccessHandler(dados => {
-          mostrarResultado('tela-relatorio-geral');
-          document.getElementById('matriz-header-display').innerHTML = `
-            <div style="text-align:center; padding: 4px 0;">
-              <h2 style="font-size:18px; font-weight:800; margin:0 0 4px 0; text-transform:uppercase; letter-spacing: 0.5px;">RELATÓRIO GERAL DE FREQUÊNCIA MENSAL</h2>
-              <div style="font-size:13px; font-weight:700; color:var(--primary-text); text-transform:uppercase;">TURMA: ${dados.turmaNome} | UNIDADE: ${dados.unidade || state.unidade || 'Sede'} | TURNO: ${dados.turno || state.turno || 'Manhã'} | MÊS DE REFERÊNCIA: ${dados.mes}</div>
-            </div>
-          `;
-
-
-          const wrapper = document.getElementById('matriz-tabela-wrapper');
-          let thDatas = dados.datas.map(d => `<th>${d}</th>`).join('');
-
-
-          let trs = dados.alunos.map(a => {
-            let estiloInativo = a.inativo ? 'text-decoration: line-through; opacity: 0.6;' : '';
-            let tdsHist = a.historico.map(v => {
-              let val = String(v || '').toUpperCase().trim();
-              let color = 'inherit';
-              let char = '';
-              if (val === 'F') { color = 'var(--danger-color)'; char = 'F'; }
-              else if (val === '--') { color = 'var(--secondary-text)'; char = '--'; }
-              return `<td style="font-weight: 700; color: ${color}; text-align: center;">${char}</td>`;
-            }).join('');
-
-
-            return `
-              <tr>
-                <td style="color:var(--secondary-text); font-size:11px; text-align: center;">${a.simade || ''}</td>
-                <td class="col-nome" style="${estiloInativo}">${a.nome}</td>
-                ${tdsHist}
-                <td style="font-weight:700; color:var(--danger-color); text-align: center;">${a.totalFaltas}</td>
-                <td style="font-weight:700; color:${a.freqPercent < 75 ? 'var(--danger-color)' : 'var(--success-color)'}; text-align: center;">${a.freqPercent}%</td>
-              </tr>
-            `;
-          }).join('');
-
-
-          wrapper.innerHTML = `
-            <table class="tabela-matriz">
-              <thead>
+          <div class="table-responsive p-0">
+            <table class="table table-hover align-middle m-0 text-nowrap">
+              <thead class="align-middle text-center">
                 <tr>
-                  <th>SIMADE</th>
-                  <th style="text-align:left;">ESTUDANTE</th>
-                  ${thDatas}
-                  <th>FALTAS</th>
-                  <th>FREQ.</th>
+                  <th rowspan="2" width="5%" class="pb-3">Nº</th>
+                  <th rowspan="2" width="45%" class="text-start pb-3">Nome Completo do Estudante</th>
+                  <th colspan="3" class="pb-1 pt-3 text-center"><i class="fa-solid fa-star-half-stroke me-1"></i> NOTAS</th>
+                  <th colspan="3" class="pb-1 pt-3 text-center"><i class="fa-solid fa-clock me-1"></i> CARGA HORÁRIA</th>
+                </tr>
+                <tr>
+                  <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">1° TRIM</th>
+                  <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">2° TRIM</th>
+                  <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">3° TRIM</th>
+                  <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">1° TRIM</th>
+                  <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">2° TRIM</th>
+                  <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">3° TRIM</th>
                 </tr>
               </thead>
-              <tbody>${trs}</tbody>
+              <tbody id="tabelaAlunosCorpo"></tbody>
             </table>
-          `;
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
-        .getRelatorioGeralMatriz(state.turmaId, mesSelecionado);
+          </div>
+          
+          <div class="card-footer bg-light text-end p-4 border-top">
+            <button onclick="salvarDiario()" class="btn btn-success px-4 py-2"><i class="fa-solid fa-floppy-disk me-2"></i>Salvar Alterações</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="interfaceCoordenador" class="d-none">
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="list-group shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
+              <button onclick="mudarAbaCoord('relatorios')" id="btn-menu-rela" class="list-group-item list-group-item-action active border-0 py-3"><i class="fa-solid fa-chart-pie me-2 w-20px text-center"></i>Status Preenchimento</button>
+              <button onclick="mudarAbaCoord('auto')" id="btn-menu-auto" class="list-group-item list-group-item-action border-0 py-3 text-dark"><i class="fa-solid fa-wand-magic-sparkles me-2 w-20px text-center"></i>Preenchimento Auto</button>
+              <button onclick="mudarAbaCoord('aluno')" id="btn-menu-alun" class="list-group-item list-group-item-action border-0 py-3 text-dark"><i class="fa-solid fa-users me-2 w-20px text-center"></i>Cadastro de Estudante</button>
+              <button onclick="mudarAbaCoord('professor')" id="btn-menu-prof" class="list-group-item list-group-item-action border-0 py-3 text-dark"><i class="fa-solid fa-user-tie me-2 w-20px text-center"></i>Vincular Professor</button>
+            </div>
+          </div>
+
+          <div class="col-md-9">
+            
+            <div id="coordAbaRelatorios" class="card p-4 bg-white">
+              <h5 class="fw-bold mb-2 d-flex align-items-center gap-2"><i class="fa-solid fa-eye text-primary" style="color: #583ef2 !important;"></i> Monitoramento de Preenchimento</h5>
+              <p class="text-muted small mb-4">Clique sobre qualquer linha de componente curricular para auditar e preencher os dados.</p>
+              
+              <div class="mb-4">
+                <label class="form-label">Selecione a Turma</label>
+                <select id="coordSelectTurma" onchange="carregarRelatorioPreenchimento()" class="form-select" style="max-width: 300px;"></select>
+              </div>
+              
+              <div class="table-container-modern">
+                <table class="table align-middle text-center table-auditavel">
+                  <thead>
+                    <tr>
+                      <th class="text-start py-3">Componente Curricular</th>
+                      <th class="py-3">1º Trimestre</th>
+                      <th class="py-3">2º Trimestre</th>
+                      <th class="py-3">3º Trimestre</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabelaRelatorioCorpo">
+                    <tr><td colspan="4" class="text-muted py-4">Selecione uma turma para carregar o mapa.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="cardDiarioCoord" class="card mt-4 bg-white overflow-hidden d-none border-primary border-top border-3" style="border-top-color: #583ef2 !important;">
+                <div class="card-header bg-light p-4 d-flex justify-content-between align-items-center">
+                  <div>
+                    <span class="badge bg-primary text-uppercase mb-1" style="background: linear-gradient(90deg, #583ef2 0%, #a124f1 100%) !important; min-width: auto;">Modo Supervisor</span>
+                    <h5 id="tituloDiarioCoord" class="m-0 fw-bold text-dark"></h5>
+                  </div>
+                  <button onclick="document.getElementById('cardDiarioCoord').classList.add('d-none')" class="btn btn-sm btn-secondary rounded-circle" style="padding: 5px 10px !important;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="table-responsive p-0">
+                  <table class="table table-hover align-middle m-0 text-nowrap">
+                    <thead class="align-middle text-center">
+                      <tr>
+                        <th rowspan="2" width="5%" class="pb-3">Nº</th>
+                        <th rowspan="2" width="45%" class="text-start pb-3">Nome Completo do Estudante</th>
+                        <th colspan="3" class="pb-1 pt-3 text-center"><i class="fa-solid fa-star-half-stroke me-1"></i> NOTAS</th>
+                        <th colspan="3" class="pb-1 pt-3 text-center"><i class="fa-solid fa-clock me-1"></i> CARGA HORÁRIA</th>
+                      </tr>
+                      <tr>
+                        <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">1° TRIM</th>
+                        <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">2° TRIM</th>
+                        <th width="10%" class="pt-0 pb-2 text-center text-muted small fw-semibold">3° TRIM</th>
+                        <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">1° TRIM</th>
+                        <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">2° TRIM</th>
+                        <th width="7%" class="pt-0 pb-2 text-center text-muted small fw-semibold">3° TRIM</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabelaAlunosCorpoCoord"></tbody>
+                  </table>
+                </div>
+                <div class="card-footer bg-light text-end p-4 border-top">
+                  <button onclick="salvarDiarioCoord()" class="btn btn-primary px-4 py-2 shadow-sm"><i class="fa-solid fa-floppy-disk me-2"></i>Salvar como Coordenador</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ABA PREENCHIMENTO AUTOMÁTICO -->
+            <div id="coordAbaAuto" class="card p-4 d-none bg-white">
+              <h5 class="fw-bold mb-2 d-flex align-items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-warning"></i> Preenchimento Automático em Lote</h5>
+              <p class="text-muted small mb-4">Gere notas aleatórias entre valores específicos e preencha a carga horária para todos os estudantes de uma turma simultaneamente.</p>
+              
+              <div class="row g-3 mb-4 p-3 bg-light rounded-4 border">
+                <div class="col-md-3">
+                  <label class="form-label">1. Turma</label>
+                  <select id="coordSelectTurmaAuto" class="form-select"></select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">2. Trimestre</label>
+                  <select id="coordSelectTrimestreAuto" class="form-select">
+                    <option value="">Escolha...</option>
+                    <option value="1">1º Trimestre</option>
+                    <option value="2">2º Trimestre</option>
+                    <option value="3">3º Trimestre</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Nota Mín.</label>
+                  <input type="number" id="coordNotaMinAuto" class="form-control" step="0.5" min="0" max="100" value="18.0">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Nota Máx.</label>
+                  <input type="number" id="coordNotaMaxAuto" class="form-control" step="0.5" min="0" max="100" value="21.0">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button onclick="executarPreenchimentoAutomatico()" class="btn btn-warning text-dark w-100 py-2 fw-bold" style="border-radius:14px !important;" title="Preenchimento rápido em lote"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- NOVA ABA CADASTRO DE ESTUDANTE -->
+            <div id="coordAbaAluno" class="card p-4 d-none bg-white">
+              <h5 class="fw-bold mb-4 d-flex align-items-center gap-2"><i class="fa-solid fa-users text-success"></i> Cadastro de Estudante</h5>
+              
+              <div class="mb-4">
+                <label class="form-label">Selecione a Turma</label>
+                <select id="cadAlunoTurma" class="form-select" onchange="carregarListaAlunosCoordBasico()"></select>
+              </div>
+
+              <!-- Formulário de Novo Cadastro -->
+              <div class="card bg-light border-0 mb-4 p-4 rounded-4">
+                <h6 class="fw-bold mb-3"><i class="fa-solid fa-plus me-2"></i>Cadastrar Novo Aluno na Matriz</h6>
+                <div class="row g-3 align-items-end">
+                  <div class="col-md-9">
+                    <label class="form-label">Nome Completo do Estudante</label>
+                    <input type="text" id="cadAlunoNome" class="form-control text-uppercase" placeholder="Ex: JOÃO DA SILVA SAURO">
+                  </div>
+                  <div class="col-md-3">
+                    <button onclick="executarCadastroEstudante()" class="btn btn-success w-100 py-2"><i class="fa-solid fa-check me-2"></i>Inserir</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tabela de Alunos e Ativação/Inativação -->
+              <h6 class="fw-bold mb-3"><i class="fa-solid fa-list me-2"></i>Lista de Alunos Cadastrados</h6>
+              <div class="table-container-modern">
+                <table class="table align-middle m-0 table-hover">
+                  <thead class="text-center">
+                    <tr>
+                      <th width="10%">Nº</th>
+                      <th class="text-start">Nome do Estudante</th>
+                      <th width="15%">Status</th>
+                      <th width="15%">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="listaAlunosCoordCorpo">
+                    <tr><td colspan="4" class="text-muted text-center py-4">Selecione uma turma para carregar a lista.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="coordAbaProfessor" class="card p-4 d-none bg-white">
+              <h5 class="fw-bold mb-4 d-flex align-items-center gap-2"><i class="fa-solid fa-link text-dark"></i> Vincular Professor ao Diário</h5>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nome do Docente</label>
+                  <input type="text" id="cadProfNome" class="form-control" placeholder="Nome Completo">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">MASP</label>
+                  <input type="text" id="cadProfMasp" class="form-control" placeholder=" Apenas números">
+                </div>
+              </div>
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label">Turma Vinculada</label>
+                  <select id="cadProfTurma" onchange="carregarDisciplinasCadastroProf(this.value)" class="form-select"></select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Atividade Complementar</label>
+                  <select id="cadProfDisciplina" class="form-select">
+                    <option value="">Selecione a turma...</option>
+                  </select>
+                </div>
+              </div>
+              <button onclick="executarCadastroProfessor()" class="btn btn-primary py-2"><i class="fa-solid fa-floppy-disk me-2"></i>Salvar Vínculo</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxN4htiF3u1GbrVY7CJyr6YLTFkpsxsLfsSVSx5BOH7MCN11GnNxiIvH4SMAu2vT9m1/exec"; 
+
+    function notificar(mensagem, sucesso = false, tituloAlternativo = null) {
+      Swal.fire({
+        title: tituloAlternativo ? tituloAlternativo : (sucesso ? 'Tudo certo!' : 'Atenção'),
+        text: message = mensagem,
+        icon: sucesso ? 'success' : 'warning',
+        confirmButtonColor: '#583ef2',
+        confirmButtonText: 'OK',
+        customClass: { popup: 'rounded-4' }
+      });
     }
 
+    async function chamarServidor(acao, parametros = {}) {
+      try {
+        const resposta = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ acao: acao, parametros: parametros }),
+          headers: { "Content-Type": "text/plain;charset=utf-8" } 
+        });
+        
+        if (!resposta.ok) throw new Error("Resposta com status inválido.");
+        return await resposta.json();
+      } catch (erro) {
+        console.error("Falha na API:", erro);
+        return { sucesso: false, message: "Erro de comunicação com o servidor.", mensagem: "Erro de comunicação com o servidor." };
+      }
+    }
 
-    function exportarRelatorioPDF() {
-      const mesSelecionado = document.getElementById('select-mes-geral').value;
-      mostrarResultado('loading-inline');
+    let dadosUsuarioLogado = {};
+    let cacheAlunosAtuais = [];
+    let cacheAlunosCoord = [];
+    let cacheAlunosCadastroCoord = [];
+    let disciplinaAuditadaAtual = "";
 
+    async function efetuarLogin(perfil) {
+      let usuario = perfil === 'professor' ? document.getElementById("maspInput").value : null;
+      let senha = perfil === 'coordenador' ? document.getElementById("adminPass").value : null;
 
-      google.script.run.withSuccessHandler(base64Data => {
-          mostrarResultado('tela-relatorio-geral');
-          try {
-            const blob = base64ToBlob(base64Data, 'application/pdf');
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Relatorio_Frequencia_${state.turmaNome.replace(/\s+/g, '_')}_${mesSelecionado}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          } catch(e) { mostrarModal("ERRO", "Falha ao gerar o PDF localmente."); }
-        }).withFailureHandler(err => { mostrarModal("ERRO", err.message); mostrarResultado(''); })
-        .exportarRelatorioGeralPDF(state.turmaId, mesSelecionado);
+      if(perfil === 'professor' && !usuario) { notificar("Por favor, preencha seu MASP.", false); return; }
+      if(perfil === 'coordenador' && !senha) { notificar("Por favor, preencha a senha de acesso.", false); return; }
+
+      exibirLoader(true);
+      let res = await chamarServidor("autenticarLogin", { perfil: perfil, usuario: usuario, senha: senha });
+      exibirLoader(false);
+
+      if (res && res.sucesso) {
+        dadosUsuarioLogado = { papel: perfil, nome: res.nome, turmas: res.turmasVinculadas || {} };
+        
+        document.getElementById("telaLogin").classList.add("d-none");
+        document.getElementById("painelSistema").classList.remove("d-none");
+        document.getElementById("nomeUsuarioLogado").innerText = `Olá, ${res.nome} (${perfil.toUpperCase()})`;
+
+        if (perfil === 'professor') {
+          document.getElementById("interfaceProfessor").classList.remove("d-none");
+          document.getElementById("interfaceCoordenador").classList.add("d-none");
+          popularSelectTurmasProfessor();
+        } else {
+          document.getElementById("interfaceCoordenador").classList.remove("d-none");
+          document.getElementById("interfaceProfessor").classList.add("d-none");
+          exibirLoader(true);
+          let listaTurmas = await chamarServidor("getTurmas");
+          exibirLoader(false);
+          if(listaTurmas && Array.isArray(listaTurmas)) popularSelectsCoordenador(listaTurmas);
+        }
+      } else {
+        notificar(res ? res.mensagem : "Credenciais inválidas.", false, "Falha no Login");
+      }
+    }
+
+    function popularSelectTurmasProfessor() {
+      let select = document.getElementById("profTurma");
+      select.innerHTML = '<option value="">Selecione...</option>';
+      Object.keys(dadosUsuarioLogado.turmas).forEach(turma => {
+        select.innerHTML += `<option value="${turma}">${turma}</option>`;
+      });
+    }
+
+    function atualizarDisciplinasProfessor() {
+      let turmaSel = document.getElementById("profTurma").value;
+      let selectDisc = document.getElementById("profDisciplina");
+      selectDisc.innerHTML = '<option value="">Selecione...</option>';
+      
+      if (!turmaSel) return;
+      let disciplinas = dadosUsuarioLogado.turmas[turmaSel] || [];
+      disciplinas.forEach(d => {
+        selectDisc.innerHTML += `<option value="${d}">${d}</option>`;
+      });
+      document.getElementById("cardDiario").classList.add("d-none");
+    }
+
+    async function carregarListaAlunos() {
+      let turma = document.getElementById("profTurma").value;
+      let disciplina = document.getElementById("profDisciplina").value;
+      if (!turma || !disciplina) return;
+
+      exibirLoader(true);
+      let lista = await chamarServidor("getDadosDisciplina", { turma: turma, disciplina: disciplina });
+      exibirLoader(false);
+
+      if (lista && Array.isArray(lista)) {
+        lista.sort((a, b) => {
+          if (a.taxado === b.taxado) return a.nome.localeCompare(b.nome, 'pt-BR'); 
+          return a.taxado ? 1 : -1; 
+        });
+        
+        cacheAlunosAtuais = lista;
+        desenharTabelaDiario();
+        document.getElementById("tituloDiario").innerText = `Alunos Matriculados - ${disciplina}`;
+        document.getElementById("cardDiario").classList.remove("d-none");
+      }
+    }
+
+    function formatarNotaEAtualizarCache(input, index, trimestre, isCoord) {
+      let val = input.value.replace(',', '.');
+      if (val === '') {
+        if (isCoord) atualizarCacheNotaCoord(index, trimestre, '');
+        else atualizarCacheNota(index, trimestre, '');
+      } else {
+        let num = Number(val);
+        if (!isNaN(num)) {
+          input.value = num.toFixed(1).replace('.', ',');
+          if (isCoord) atualizarCacheNotaCoord(index, trimestre, num.toFixed(1));
+          else atualizarCacheNota(index, trimestre, num.toFixed(1));
+        }
+      }
+    }
+
+    function desenharTabelaDiario() {
+      let tbody = document.getElementById("tabelaAlunosCorpo");
+      tbody.innerHTML = "";
+
+      if(cacheAlunosAtuais.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Nenhum estudante cadastrado nesta disciplina.</td></tr>';
+        return;
+      }
+
+      cacheAlunosAtuais.forEach((aluno, i) => {
+        let classeLinha = aluno.taxado ? 'class="text-taxado"' : '';
+        let disabledInput = aluno.taxado ? 'disabled' : '';
+        
+        let val1 = aluno.nota1 !== '' ? Number(String(aluno.nota1).replace(',','.')).toFixed(1).replace('.', ',') : '';
+        let val2 = aluno.nota2 !== '' ? Number(String(aluno.nota2).replace(',','.')).toFixed(1).replace('.', ',') : '';
+        let val3 = aluno.nota3 !== '' ? Number(String(aluno.nota3).replace(',','.')).toFixed(1).replace('.', ',') : '';
+
+        tbody.innerHTML += `
+          <tr ${classeLinha}>
+            <td class="text-center fw-bold text-secondary">${i + 1}</td>
+            <td class="fw-bold text-dark">${aluno.nome}</td>
+            <td><input type="text" inputmode="decimal" value="${val1}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 1, false)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td><input type="text" inputmode="decimal" value="${val2}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 2, false)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td><input type="text" inputmode="decimal" value="${val3}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 3, false)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch1 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCH(${i}, 1, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch2 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCH(${i}, 2, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch3 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCH(${i}, 3, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+          </tr>
+        `;
+      });
+    }
+
+    function atualizarCacheNota(index, trimestre, valor) { cacheAlunosAtuais[index]['nota' + trimestre] = valor; }
+    function atualizarCacheCH(index, trimestre, checked) { cacheAlunosAtuais[index]['ch' + trimestre] = checked; }
+
+    async function salvarDiario() {
+      let turma = document.getElementById("profTurma").value;
+      let disciplina = document.getElementById("profDisciplina").value;
+      
+      exibirLoader(true);
+      let res = await chamarServidor("salvarDados", { turma: turma, disciplina: disciplina, dados: cacheAlunosAtuais });
+      exibirLoader(false);
+      if(res) notificar(res.mensagem, res.sucesso);
+    }
+
+    function popularSelectsCoordenador(turmas) {
+      ['coordSelectTurma', 'coordSelectTurmaAuto', 'cadAlunoTurma', 'cadProfTurma'].forEach(id => {
+        let el = document.getElementById(id);
+        if(el) {
+          el.innerHTML = '<option value="">Selecione...</option>';
+          turmas.forEach(t => el.innerHTML += `<option value="${t}">${t}</option>`);
+        }
+      });
+    }
+
+    async function carregarRelatorioPreenchimento() {
+      let turma = document.getElementById("coordSelectTurma").value;
+      let tbody = document.getElementById("tabelaRelatorioCorpo");
+      document.getElementById("cardDiarioCoord").classList.add("d-none"); 
+      
+      if(!turma) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Selecione uma turma.</td></tr>'; return; }
+
+      exibirLoader(true);
+      let dados = await chamarServidor("getStatusPreenchimento", { turma: turma });
+      exibirLoader(false);
+
+      if(dados && Array.isArray(dados)) {
+        tbody.innerHTML = "";
+        dados.forEach(linha => {
+          let badgeColor = (st) => st === "Concluído" ? "bg-success" : (st === "Parcial" ? "bg-warning" : "bg-danger");
+          tbody.innerHTML += `
+            <tr onclick="auditarDisciplina('${linha.disciplina}')">
+              <td class="fw-bold text-start text-dark py-3">
+                <i class="fa-solid fa-magnifying-glass icon-lupa-print"></i>${linha.disciplina.toUpperCase()}
+              </td>
+              <td><span class="badge ${badgeColor(linha.t1)}">${linha.t1}</span></td>
+              <td><span class="badge ${badgeColor(linha.t2)}">${linha.t2}</span></td>
+              <td><span class="badge ${badgeColor(linha.t3)}">${linha.t3}</span></td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    async function executarPreenchimentoAutomatico() {
+      let turma = document.getElementById("coordSelectTurmaAuto").value;
+      let trimestre = document.getElementById("coordSelectTrimestreAuto").value;
+      let notaMin = parseFloat(document.getElementById("coordNotaMinAuto").value);
+      let notaMax = parseFloat(document.getElementById("coordNotaMaxAuto").value);
+
+      if (!turma) { notificar("Por favor, selecione uma turma primeiro.", false); return; }
+      if (!trimestre) { notificar("Por favor, selecione o trimestre para o preenchimento.", false); return; }
+      if (isNaN(notaMin) || isNaN(notaMax)) { notificar("Por favor, preencha as notas mínima e máxima.", false); return; }
+      if (notaMin > notaMax) { notificar("A nota mínima não pode ser maior que a nota máxima.", false); return; }
+
+      Swal.fire({
+        title: 'Confirmar Preenchimento Dinâmico?',
+        text: `Esta ação vai preencher a carga horária e gerar notas aleatórias (de ${notaMin.toFixed(1)} a ${notaMax.toFixed(1)}) para TODOS os alunos ativos da turma ${turma} no ${trimestre}º trimestre. Deseja continuar?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#583ef2',
+        cancelButtonColor: '#6e7881',
+        confirmButtonText: 'Sim, preencher!',
+        cancelButtonText: 'Cancelar',
+        customClass: { popup: 'rounded-4' }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          exibirLoader(true);
+          let res = await chamarServidor("preencherAutomaticoTurma", { 
+            turma: turma, 
+            trimestre: trimestre,
+            notaMin: notaMin,
+            notaMax: notaMax
+          });
+          exibirLoader(false);
+          
+          if(res) {
+            notificar(res.mensagem, res.sucesso);
+            if(res.sucesso && document.getElementById("coordSelectTurma").value === turma) {
+              carregarRelatorioPreenchimento(); 
+            }
+          }
+        }
+      });
+    }
+
+    async function auditarDisciplina(disciplina) {
+      let turma = document.getElementById("coordSelectTurma").value;
+      if (!turma || !disciplina) return;
+      disciplinaAuditadaAtual = disciplina;
+
+      exibirLoader(true);
+      let lista = await chamarServidor("getDadosDisciplina", { turma: turma, disciplina: disciplina });
+      exibirLoader(false);
+
+      if (lista && Array.isArray(lista)) {
+        lista.sort((a, b) => {
+          if (a.taxado === b.taxado) return a.nome.localeCompare(b.nome, 'pt-BR'); 
+          return a.taxado ? 1 : -1; 
+        });
+        
+        cacheAlunosCoord = lista;
+        desenharTabelaDiarioCoord();
+        document.getElementById("tituloDiarioCoord").innerText = `${disciplina} — Turma ${turma}`;
+        
+        let painelCoord = document.getElementById("cardDiarioCoord");
+        painelCoord.classList.remove("d-none");
+        painelCoord.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function desenharTabelaDiarioCoord() {
+      let tbody = document.getElementById("tabelaAlunosCorpoCoord");
+      tbody.innerHTML = "";
+
+      if(cacheAlunosCoord.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Nenhum estudante cadastrado nesta disciplina.</td></tr>';
+        return;
+      }
+
+      cacheAlunosCoord.forEach((aluno, i) => {
+        let classeLinha = aluno.taxado ? 'class="text-taxado"' : '';
+        let disabledInput = aluno.taxado ? 'disabled' : '';
+        
+        let val1 = aluno.nota1 !== '' ? Number(String(aluno.nota1).replace(',','.')).toFixed(1).replace('.', ',') : '';
+        let val2 = aluno.nota2 !== '' ? Number(String(aluno.nota2).replace(',','.')).toFixed(1).replace('.', ',') : '';
+        let val3 = aluno.nota3 !== '' ? Number(String(aluno.nota3).replace(',','.')).toFixed(1).replace('.', ',') : '';
+
+        tbody.innerHTML += `
+          <tr ${classeLinha}>
+            <td class="text-center fw-bold text-secondary">${i + 1}</td>
+            <td class="fw-bold text-dark">${aluno.nome}</td>
+            <td><input type="text" inputmode="decimal" value="${val1}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 1, true)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td><input type="text" inputmode="decimal" value="${val2}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 2, true)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td><input type="text" inputmode="decimal" value="${val3}" ${disabledInput} onchange="formatarNotaEAtualizarCache(this, ${i}, 3, true)" class="form-control bg-light border-0 text-center p-1 mx-auto" style="max-width:70px; border-radius: 10px !important; padding: 6px !important;"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch1 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCHCoord(${i}, 1, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch2 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCHCoord(${i}, 2, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+            <td class="text-center"><input type="checkbox" ${aluno.ch3 ? 'checked' : ''} ${disabledInput} onchange="atualizarCacheCHCoord(${i}, 3, this.checked)" class="form-check-input mt-1" style="transform: scale(1.15);"></td>
+          </tr>
+        `;
+      });
+    }
+
+    function atualizarCacheNotaCoord(index, trimestre, valor) { cacheAlunosCoord[index]['nota' + trimestre] = valor; }
+    function atualizarCacheCHCoord(index, trimestre, checked) { cacheAlunosCoord[index]['ch' + trimestre] = checked; }
+
+    async function salvarDiarioCoord() {
+      let turma = document.getElementById("coordSelectTurma").value;
+      let disciplina = disciplinaAuditadaAtual;
+      
+      exibirLoader(true);
+      let res = await chamarServidor("salvarDados", { turma: turma, disciplina: disciplina, dados: cacheAlunosCoord });
+      exibirLoader(false);
+      if(res) {
+        notificar(res.mensagem, res.sucesso);
+        carregarRelatorioPreenchimento(); 
+      }
+    }
+
+    // Funcionalidades Centrais do Coordenador (Aba Cadastro de Estudante)
+    async function carregarListaAlunosCoordBasico() {
+      let turma = document.getElementById("cadAlunoTurma").value;
+      let tbody = document.getElementById("listaAlunosCoordCorpo");
+      
+      if (!turma) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Selecione uma turma para carregar a lista.</td></tr>';
+        return;
+      }
+
+      exibirLoader(true);
+      let lista = await chamarServidor("getListaAlunos", { turma: turma });
+      exibirLoader(false);
+
+      if (lista && Array.isArray(lista)) {
+        lista.sort((a, b) => {
+          if (a.taxado === b.taxado) return a.nome.localeCompare(b.nome, 'pt-BR'); 
+          return a.taxado ? 1 : -1; 
+        });
+        
+        cacheAlunosCadastroCoord = lista;
+        desenharTabelaAlunosCadastroCoord();
+      }
+    }
+
+    function desenharTabelaAlunosCadastroCoord() {
+      let tbody = document.getElementById("listaAlunosCoordCorpo");
+      tbody.innerHTML = "";
+
+      if(cacheAlunosCadastroCoord.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum estudante cadastrado.</td></tr>';
+        return;
+      }
+
+      cacheAlunosCadastroCoord.forEach((aluno, i) => {
+        let classeLinha = aluno.taxado ? 'class="text-taxado"' : '';
+        let statusBadge = aluno.taxado ? '<span class="badge bg-danger">Inativo</span>' : '<span class="badge bg-success">Ativo</span>';
+
+        tbody.innerHTML += `
+          <tr ${classeLinha}>
+            <td class="text-center fw-bold text-secondary">${i + 1}</td>
+            <td class="fw-bold text-dark text-start">${aluno.nome}</td>
+            <td class="text-center">${statusBadge}</td>
+            <td class="text-center">
+              <button onclick="alternarStatusEstudanteCadastroCoord(${aluno.linhaPlanilha}, ${aluno.taxado})" class="btn btn-sm ${aluno.taxado ? 'btn-outline-success' : 'btn-outline-danger'} py-1 px-2 small" style="border-radius: 10px !important; font-size: 0.8rem;">
+                ${aluno.taxado ? '<i class="fa-solid fa-user-check"></i> Ativar' : '<i class="fa-solid fa-user-slash"></i> Inativar'}
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function alternarStatusEstudanteCadastroCoord(linha, statusTaxado) {
+      let turma = document.getElementById("cadAlunoTurma").value;
+      exibirLoader(true);
+      let res = await chamarServidor("alterarStatusAluno", { turma: turma, linhaPlanilha: linha, excluir: !statusTaxado });
+      exibirLoader(false);
+      if(res) { 
+        notificar(res.mensagem, res.sucesso); 
+        carregarListaAlunosCoordBasico(); 
+      }
+    }
+
+    async function executarCadastroEstudante() {
+      let turma = document.getElementById("cadAlunoTurma").value;
+      let nome = document.getElementById("cadAlunoNome").value;
+      if(!turma || !nome) { notificar("Preencha todos os campos!", false); return; }
+
+      exibirLoader(true);
+      let res = await chamarServidor("cadastrarEstudante", { turma: turma, nomeEstudante: nome });
+      exibirLoader(false);
+      if(res) { 
+        notificar(res.mensagem, res.sucesso); 
+        if(res.sucesso) {
+           document.getElementById("cadAlunoNome").value = ""; 
+           carregarListaAlunosCoordBasico();
+        }
+      }
+    }
+
+    async function carregarDisciplinasCadastroProf(turma) {
+      let select = document.getElementById("cadProfDisciplina");
+      select.innerHTML = '<option value="">Carregando...</option>';
+      if(!turma) return;
+      let disc = await chamarServidor("getDisciplinasTodas", { turma: turma });
+      if(disc && Array.isArray(disc)) {
+        select.innerHTML = '<option value="">Selecione...</option>';
+        disc.forEach(d => select.innerHTML += `<option value="${d}">${d}</option>`);
+      }
+    }
+
+    async function executarCadastroProfessor() {
+      let t = document.getElementById("cadProfTurma").value;
+      let n = document.getElementById("cadProfNome").value;
+      let m = document.getElementById("cadProfMasp").value;
+      let d = document.getElementById("cadProfDisciplina").value;
+      if(!t || !n || !m || !d) { notificar("Preencha todos os campos!", false); return; }
+
+      exibirLoader(true);
+      let res = await chamarServidor("cadastrarProfessor", { turma: t, nomeProf: n, maspProf: m, disciplinaProf: d });
+      exibirLoader(false);
+      if(res) { 
+        notificar(res.mensagem, res.sucesso); 
+        if(res.sucesso) {
+          document.getElementById("cadProfNome").value = ""; 
+          document.getElementById("cadProfMasp").value = ""; 
+        }
+      }
+    }
+
+    function mudarAbaCoord(aba) {
+      ['relatorios', 'auto', 'aluno', 'professor'].forEach(a => {
+        let div = document.getElementById(`coordAba${a.charAt(0).toUpperCase() + a.slice(1)}`);
+        if (div) div.classList.add("d-none");
+        
+        let btn = document.getElementById(`btn-menu-${a.substring(0,4)}`);
+        if(btn) {
+          btn.classList.remove("active");
+          btn.classList.add("text-dark");
+        }
+      });
+      document.getElementById("cardDiarioCoord").classList.add("d-none");
+      
+      let divAtiva = document.getElementById(`coordAba${aba.charAt(0).toUpperCase() + aba.slice(1)}`);
+      if (divAtiva) divAtiva.classList.remove("d-none");
+      
+      let activeBtn = document.getElementById(`btn-menu-${aba.substring(0,4)}`);
+      if(activeBtn) {
+        activeBtn.classList.add("active");
+        activeBtn.classList.remove("text-dark");
+      }
+    }
+
+    function exibirLoader(mostrar) {
+      let l = document.getElementById("loader");
+      if(mostrar) l.classList.remove("d-none"); else l.classList.add("d-none");
+    }
+
+    function logout() {
+      dadosUsuarioLogado = {};
+      document.getElementById("painelSistema").classList.add("d-none");
+      document.getElementById("telaLogin").classList.remove("d-none");
+      document.getElementById("maspInput").value = "";
+      document.getElementById("adminPass").value = "";
     }
   </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
