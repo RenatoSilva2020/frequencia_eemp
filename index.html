@@ -1080,13 +1080,32 @@
               <div class="info-turma" style="font-size: 11px; margin-top:2px;">${t.turno}</div>
               <div id="status-card-${t.id}" class="status-container-card"></div>
             `;
+            
+            // LÓGICA ATUALIZADA: Verificação de status 'Realizada' no clique do card
             card.onclick = function() {
+              const acaoPrincipal = () => {
+                const divStatus = document.getElementById(`status-card-${t.id}`);
+                const isRealizada = divStatus && divStatus.innerText.toUpperCase().includes('REALIZADA');
+                
+                if (state.modo === 'diario' && state.perfil === 'Professor' && isRealizada) {
+                  mostrarConfirm("Esta chamada já consta como REALIZADA. Deseja realmente editar/refazer a chamada?", () => {
+                    executarAcaoCard(t, card, gridTurma);
+                  });
+                } else {
+                  executarAcaoCard(t, card, gridTurma);
+                }
+              };
+
               if(alteracoesNaoSalvas && state.turmaId !== t.id) {
                  mostrarConfirm("Descartar os dados atuais e abrir esta turma?", () => {
-                    alteracoesNaoSalvas = false; executarAcaoCard(t, card, gridTurma);
+                    alteracoesNaoSalvas = false; 
+                    acaoPrincipal();
                  });
-              } else { executarAcaoCard(t, card, gridTurma); }
+              } else { 
+                 acaoPrincipal(); 
+              }
             };
+            
             gridTurma.appendChild(card);
           });
           document.getElementById('bloco-turma').style.display = 'block';
